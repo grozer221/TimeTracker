@@ -1,12 +1,12 @@
-import {Button, Modal, Typography} from 'antd';
+import { Button, Modal, Typography } from 'antd';
 import React from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
 import Title from 'antd/lib/typography/Title';
-import {uppercaseToWords} from "../../../../utils/stringUtils";
+import { uppercaseToWords } from "../../../../utils/stringUtils";
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 export const CalendarDaysViewPage = () => {
     const calendarDays = useSelector((s: RootState) => s.calendarDays.calendarDays);

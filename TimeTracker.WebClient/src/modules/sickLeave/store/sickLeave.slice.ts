@@ -1,12 +1,12 @@
-import {GetEntitiesResponse} from "../../../graphQL/types/getEntitiesResponse";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {SickLeaveFilterKind, SickLeaveType} from "../sickLeaveType";
-import {SickLeaveGetInputType} from "../graphQL/sickLeave.queries";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SickLeaveFilterKind, SickLeaveType } from "../sickLeaveType";
+import { SickLeaveGetInputType } from "../graphQL/sickLeave.queries";
 import {
     SickLeaveCreateInputType,
     SickLeaveUpdateInputType,
     SickLeaveUploadFilesInputType
 } from "../graphQL/sickLeave.mutation";
+import { GetEntitiesResponse } from "../../../behaviour";
 
 type InitialState = {
     sickLeaveDays: GetEntitiesResponse<SickLeaveType>
@@ -44,7 +44,7 @@ export const sickLeaveSlice = createSlice({
     name: 'sickLeave',
     initialState,
     reducers: {
-        getByIdAsync: (state, action: PayloadAction<{id: string}>) => state,
+        getByIdAsync: (state, action: PayloadAction<{ id: string }>) => state,
         getById: (state, action: PayloadAction<SickLeaveType>) => {
             state.sickLeaveDay = action.payload
         },
@@ -70,7 +70,7 @@ export const sickLeaveSlice = createSlice({
             state.loadingUpdate = action.payload;
         },
 
-        removeAsync: (state, action: PayloadAction<{id: string}>) => state,
+        removeAsync: (state, action: PayloadAction<{ id: string }>) => state,
         setLoadingRemove: (state, action: PayloadAction<boolean>) => {
             state.loadingRemove = action.payload;
         },

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import moment, {Moment, now} from "moment";
-import {Calendar, Typography} from "antd";
-import {FC, memo} from "react";
-import {TrackKind} from "../../../../graphQL/enums/TrackKind";
-import {Track} from "../../../tracks/graphQL/tracks.types";
+import moment, { Moment, now } from "moment";
+import { Calendar, Typography } from "antd";
+import { FC, memo } from "react";
+import { TrackKind } from "../../../../behaviour/enums/TrackKind";
+import { Track } from "../../../tracks/graphQL/tracks.types";
 import s from './PlateOfHoursWorked.module.css';
-import {uppercaseToWords} from "../../../../utils/stringUtils";
+import { uppercaseToWords } from "../../../../utils/stringUtils";
 
 type Props = {
     tracks: Track[],
@@ -19,9 +19,9 @@ type SelectedFromTrackData = {
     endTime: moment.Moment,
 }
 
-const {Text} = Typography;
+const { Text } = Typography;
 
-export const PlateOfHoursWorked: FC<Props> = memo(({tracks, date}) => {
+export const PlateOfHoursWorked: FC<Props> = memo(({ tracks, date }) => {
     let dateObj = moment(date)
     let today = moment(now())
     if (today.month() !== dateObj.month())
@@ -60,11 +60,11 @@ export const PlateOfHoursWorked: FC<Props> = memo(({tracks, date}) => {
 
             return <div className={[s.day, dayKindClass].join(' ')}>
                 <div className={s.titleAndKind}>
-                    <Text style={{textAlign: 'center'}}>
+                    <Text style={{ textAlign: 'center' }}>
                         {`${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`}
                     </Text>
-                    <Text style={{fontSize: '12px'}}
-                          type="secondary">{uppercaseToWords(thisDayTracks[0].kind)}</Text>
+                    <Text style={{ fontSize: '12px' }}
+                        type="secondary">{uppercaseToWords(thisDayTracks[0].kind)}</Text>
                 </div>
             </div>
         }}

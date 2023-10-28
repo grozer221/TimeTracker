@@ -1,10 +1,10 @@
-import {combineEpics, Epic, ofType} from "redux-observable";
-import {RootState} from "../../../store/store";
-import {catchError, endWith, from, map, mergeMap, of, startWith} from "rxjs";
-import {client} from "../../../graphQL/client";
-import {cacheActions, cacheSlice} from "./cache.slice";
-import {CACHE_REFRESH_APP_MUTATION, CacheRefreshAppData, CacheRefreshAppVars} from "../graphQL/cache.mutations";
-import {notificationsActions} from "../../notifications/store/notifications.slice";
+import { combineEpics, Epic, ofType } from "redux-observable";
+import { RootState } from "../../../behaviour/store";
+import { catchError, endWith, from, map, mergeMap, of, startWith } from "rxjs";
+import { cacheActions, cacheSlice } from "./cache.slice";
+import { CACHE_REFRESH_APP_MUTATION, CacheRefreshAppData, CacheRefreshAppVars } from "../graphQL/cache.mutations";
+import { notificationsActions } from "../../notifications/store/notifications.slice";
+import { client } from "../../../behaviour/client";
 
 export const cacheClearAppEpic: Epic<ReturnType<typeof cacheActions.refreshAppAsync>, any, RootState> = (action$, state$) =>
     action$.pipe(

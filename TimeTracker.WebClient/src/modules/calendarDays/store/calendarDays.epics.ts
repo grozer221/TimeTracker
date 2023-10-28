@@ -1,8 +1,7 @@
-import {combineEpics, Epic, ofType} from "redux-observable";
-import {RootState} from "../../../store/store";
-import {catchError, endWith, from, map, mergeMap, of, startWith} from "rxjs";
-import {client} from "../../../graphQL/client";
-import {calendarDaysActions} from "./calendarDays.slice";
+import { combineEpics, Epic, ofType } from "redux-observable";
+import { RootState } from "../../../behaviour/store";
+import { catchError, endWith, from, map, mergeMap, of, startWith } from "rxjs";
+import { calendarDaysActions } from "./calendarDays.slice";
 import {
     CALENDAR_DAYS_GET_BY_DATE_QUERY,
     CALENDAR_DAYS_GET_QUERY,
@@ -27,8 +26,9 @@ import {
     CalendarDaysUpdateData,
     CalendarDaysUpdateVars
 } from "../graphQL/calendarDays.mutations";
-import {notificationsActions} from "../../notifications/store/notifications.slice";
+import { notificationsActions } from "../../notifications/store/notifications.slice";
 import { navigateActions } from "../../navigate/store/navigate.slice";
+import { client } from "../../../behaviour/client";
 
 export const calendarDaysGetEpic: Epic<ReturnType<typeof calendarDaysActions.getAsync>, any, RootState> = (action$, state$) =>
     action$.pipe(
@@ -36,7 +36,7 @@ export const calendarDaysGetEpic: Epic<ReturnType<typeof calendarDaysActions.get
         mergeMap(action =>
             from(client.query<CalendarDaysGetData, CalendarDaysGetVars>({
                 query: CALENDAR_DAYS_GET_QUERY,
-                variables: {calendarDaysGetInputType: action.payload}
+                variables: { calendarDaysGetInputType: action.payload }
             })).pipe(
                 map(response => calendarDaysActions.addCalendarDays(response.data?.calendarDays.get)),
                 catchError(error => of(notificationsActions.addError(error.message))),
@@ -52,7 +52,7 @@ export const getByDateAsyncEpic: Epic<ReturnType<typeof calendarDaysActions.getB
         mergeMap(action =>
             from(client.query<CalendarDaysGetByDateData, CalendarDaysGetByDateVars>({
                 query: CALENDAR_DAYS_GET_BY_DATE_QUERY,
-                variables: {date: action.payload.date}
+                variables: { date: action.payload.date }
             })).pipe(
                 map(response => calendarDaysActions.setCalendarDayByDate(response.data?.calendarDays.getByDate)),
                 catchError(error => of(notificationsActions.addError(error.message))),
@@ -68,7 +68,7 @@ export const calendarDaysCreateEpic: Epic<ReturnType<typeof calendarDaysActions.
         mergeMap(action =>
             from(client.mutate<CalendarDaysCreateData, CalendarDaysCreateVars>({
                 mutation: CALENDAR_DAYS_CREATE_MUTATION,
-                variables: {calendarDaysCreateInputType: action.payload},
+                variables: { calendarDaysCreateInputType: action.payload },
             })).pipe(
                 mergeMap(response =>
                     response.data
@@ -92,7 +92,7 @@ export const calendarDaysCreateRangeEpic: Epic<ReturnType<typeof calendarDaysAct
         mergeMap(action =>
             from(client.mutate<CalendarDaysCreateRangeData, CalendarDaysCreateRangeVars>({
                 mutation: CALENDAR_DAYS_CREATE_RANGE_MUTATION,
-                variables: {calendarDaysCreateRangeInputType: action.payload},
+                variables: { calendarDaysCreateRangeInputType: action.payload },
             })).pipe(
                 mergeMap(response =>
                     response.data
@@ -116,7 +116,7 @@ export const calendarDaysUpdateEpic: Epic<ReturnType<typeof calendarDaysActions.
         mergeMap(action =>
             from(client.mutate<CalendarDaysUpdateData, CalendarDaysUpdateVars>({
                 mutation: CALENDAR_DAYS_UPDATE_MUTATION,
-                variables: {calendarDaysUpdateInputType: action.payload},
+                variables: { calendarDaysUpdateInputType: action.payload },
             })).pipe(
                 mergeMap(response =>
                     response.data
@@ -139,7 +139,7 @@ export const calendarDaysRemoveEpic: Epic<ReturnType<typeof calendarDaysActions.
         mergeMap(action =>
             from(client.mutate<CalendarDaysRemoveData, CalendarDaysRemoveVars>({
                 mutation: CALENDAR_DAYS_REMOVE_MUTATION,
-                variables: {date: action.payload},
+                variables: { date: action.payload },
             })).pipe(
                 mergeMap(response =>
                     response.data
@@ -162,7 +162,7 @@ export const calendarDaysRemoveRangeEpic: Epic<ReturnType<typeof calendarDaysAct
         mergeMap(action =>
             from(client.mutate<CalendarDaysRemoveRangeData, CalendarDaysRemoveRangeVars>({
                 mutation: CALENDAR_DAYS_REMOVE_RANGE_MUTATION,
-                variables: {calendarDaysRemoveRangeInputType: action.payload}
+                variables: { calendarDaysRemoveRangeInputType: action.payload }
             })).pipe(
                 mergeMap(response =>
                     response.data

@@ -1,24 +1,24 @@
-import {Checkbox, DatePicker, Form, Modal, Select, Tabs, Typography} from 'antd';
-import React, {useState} from 'react';
-import {useNavigate, useSearchParams} from "react-router-dom";
-import {useForm} from "antd/es/form/Form";
-import moment, {Moment} from "moment";
-import {LineOutlined, UnorderedListOutlined} from "@ant-design/icons";
-import {useDispatch, useSelector} from "react-redux";
-import {calendarDaysActions} from "../../store/calendarDays.slice";
-import {RootState} from "../../../../store/store";
-import {DayKind} from "../../../../graphQL/enums/DayKind";
-import {DayOfWeek} from "../../../../graphQL/enums/DayOfWeek";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import {dateRender} from "../../../../convertors/dateRender";
-import {CalendarDaysCreateInputType, CalendarDaysCreateRangeInputType} from "../../graphQL/calendarDays.mutations";
+import { Checkbox, DatePicker, Form, Modal, Select, Tabs, Typography } from 'antd';
+import React, { useState } from 'react';
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useForm } from "antd/es/form/Form";
+import moment, { Moment } from "moment";
+import { LineOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { calendarDaysActions } from "../../store/calendarDays.slice";
+import { RootState } from "../../../../behaviour/store";
+import { DayKind } from "../../../../behaviour/enums/DayKind";
+import { DayOfWeek } from "../../../../behaviour/enums/DayOfWeek";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import { dateRender } from "../../../../convertors/dateRender";
+import { CalendarDaysCreateInputType, CalendarDaysCreateRangeInputType } from "../../graphQL/calendarDays.mutations";
 import Input from "antd/es/input/Input";
-import {formStyles} from "../../../../assets/form";
-import {range} from "../../../../utils/arrayUtils";
+import { formStyles } from "../../../../assets/form";
+import { range } from "../../../../utils/arrayUtils";
 
-const {Title} = Typography;
-const {TabPane} = Tabs;
-const {RangePicker} = DatePicker;
+const { Title } = Typography;
+const { TabPane } = Tabs;
+const { RangePicker } = DatePicker;
 
 type Tab = 'One' | 'Range';
 
@@ -54,7 +54,7 @@ export const CalendarDaysCreatePage = () => {
                 case 'One':
                     const dateFieldName = nameof<FromValues>('date');
                     if (!form.getFieldValue(dateFieldName)) {
-                        form.setFields([{name: dateFieldName, errors: ['Date is required']}])
+                        form.setFields([{ name: dateFieldName, errors: ['Date is required'] }])
                         break
                     }
                     const calendarDaysCreateInputType: CalendarDaysCreateInputType = {
@@ -69,12 +69,12 @@ export const CalendarDaysCreatePage = () => {
                 case 'Range':
                     const fromAndToFieldName = nameof<FromValues>('fromAndTo');
                     if (!form.getFieldValue(fromAndToFieldName)) {
-                        form.setFields([{name: fromAndToFieldName, errors: ['From and to is required']}])
+                        form.setFields([{ name: fromAndToFieldName, errors: ['From and to is required'] }])
                         break
                     }
                     const daysOfWeekFieldName = nameof<FromValues>('daysOfWeek');
                     if (!form.getFieldValue(daysOfWeekFieldName)) {
-                        form.setFields([{name: daysOfWeekFieldName, errors: ['Day of weeks is required']}])
+                        form.setFields([{ name: daysOfWeekFieldName, errors: ['Day of weeks is required'] }])
                         break
                     }
                     const fromAndTo = form.getFieldValue(fromAndToFieldName) as Moment[];
@@ -124,7 +124,7 @@ export const CalendarDaysCreatePage = () => {
             >
                 <Tabs defaultActiveKey={tab} onChange={tab => setTab(tab as Tab)}>
                     <TabPane
-                        tab={<><LineOutlined/>One</>}
+                        tab={<><LineOutlined />One</>}
                         key="One"
                     >
                         <Form.Item
@@ -139,7 +139,7 @@ export const CalendarDaysCreatePage = () => {
                         </Form.Item>
                     </TabPane>
                     <TabPane
-                        tab={<><UnorderedListOutlined/>Range</>}
+                        tab={<><UnorderedListOutlined />Range</>}
                         key="Range"
                     >
                         <Form.Item
@@ -174,12 +174,12 @@ export const CalendarDaysCreatePage = () => {
                     name={nameof<FromValues>('title')}
                     label={'Title'}
                 >
-                    <Input placeholder={'Title'}/>
+                    <Input placeholder={'Title'} />
                 </Form.Item>
                 <Form.Item
                     name={nameof<FromValues>('kind')}
                     label="Kind"
-                    rules={[{required: true, message: 'Kind is required'}]}
+                    rules={[{ required: true, message: 'Kind is required' }]}
                 >
                     <Select className={'w-100'} placeholder={'Kind'}>
                         {(Object.values(DayKind) as Array<DayKind>).map((value) => (
@@ -192,7 +192,7 @@ export const CalendarDaysCreatePage = () => {
                 <Form.Item
                     name={nameof<FromValues>('workHours')}
                     label="Work hours"
-                    rules={[{required: true, message: 'Work hours is required'}]}
+                    rules={[{ required: true, message: 'Work hours is required' }]}
                 >
                     <Select
                         allowClear

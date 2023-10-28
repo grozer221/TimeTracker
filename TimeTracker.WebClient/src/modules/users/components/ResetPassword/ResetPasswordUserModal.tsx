@@ -1,16 +1,16 @@
 import * as React from 'react';
-import {FC, useEffect, useState} from 'react';
-import {Form, Input, Modal, Select, Radio} from "antd";
+import { FC, useEffect, useState } from 'react';
+import { Form, Input, Modal, Select, Radio } from "antd";
 import './CreateUserModal.css'
 import Title from "antd/lib/typography/Title";
-import {useNavigate, useParams} from "react-router-dom";
-import {nameof} from "../../../../utils/stringUtils";
-import {useForm} from "antd/es/form/Form";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState, useAppSelector} from "../../../../store/store";
-import {User} from "../../graphQL/users.types";
-import {usersActions} from "../../store/users.slice";
-import {ResetUserPasswordInput} from "../../graphQL/users.mutations";
+import { useNavigate, useParams } from "react-router-dom";
+import { nameof } from "../../../../utils/stringUtils";
+import { useForm } from "antd/es/form/Form";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, useAppSelector } from "../../../../behaviour/store";
+import { User } from "../../graphQL/users.types";
+import { usersActions } from "../../store/users.slice";
+import { ResetUserPasswordInput } from "../../graphQL/users.mutations";
 
 
 type FormValues = {
@@ -56,29 +56,29 @@ export const ResetPasswordUserModal: FC<Props> = () => {
         >
             <Form
                 form={form}
-                labelCol={{span: 24}}>
+                labelCol={{ span: 24 }}>
                 <Form.Item name={nameof<FormValues>("newPassword")}
-                           label={"Password:"}
-                           rules={[{required: true, message: 'Please input user Password!'}]}>
+                    label={"Password:"}
+                    rules={[{ required: true, message: 'Please input user Password!' }]}>
                     <Input.Password
                         placeholder="Input user password"
                     />
                 </Form.Item>
                 <Form.Item name={nameof<FormValues>("repeatNewPassword")}
-                           label={"Repeat password:"}
-                           dependencies={['password']}
-                           hasFeedback
-                           rules={[{required: true, message: 'Please repeat new password!',},
-                               ({getFieldValue}) => ({
-                                   validator(_, value) {
-                                       if (!value || getFieldValue('newPassword') === value) {
-                                           return Promise.resolve();
-                                       }
-                                       return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                   },
-                               }),
-                           ]}>
-                    <Input.Password placeholder="Repeat password"/>
+                    label={"Repeat password:"}
+                    dependencies={['password']}
+                    hasFeedback
+                    rules={[{ required: true, message: 'Please repeat new password!', },
+                    ({ getFieldValue }) => ({
+                        validator(_, value) {
+                            if (!value || getFieldValue('newPassword') === value) {
+                                return Promise.resolve();
+                            }
+                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                        },
+                    }),
+                    ]}>
+                    <Input.Password placeholder="Repeat password" />
                 </Form.Item>
             </Form>
         </Modal>

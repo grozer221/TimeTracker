@@ -1,6 +1,6 @@
-import {store} from "../store/store";
-import {Role} from "../graphQL/enums/Role";
-import {Permission} from "../graphQL/enums/Permission";
+import { Permission } from "../behaviour/enums/Permission";
+import { Role } from "../behaviour/enums/Role";
+import { store } from "../behaviour/store";
 
 export const isAuthenticated = (): boolean => {
     return store.getState().auth.isAuth
@@ -8,7 +8,7 @@ export const isAuthenticated = (): boolean => {
 
 export const isAdministrator = (): boolean => {
     const auth = store.getState().auth;
-    return isAuthenticated() && auth.authedUser?.role === Role.Administrator
+    return isAuthenticated() && (auth.authedUser?.role === Role.Administrator || auth.authedUser?.role === Role.SuperAdmin)
 }
 
 export const isHavePermission = (permissions: Permission[]): boolean => {

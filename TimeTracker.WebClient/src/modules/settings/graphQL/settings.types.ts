@@ -1,4 +1,4 @@
-import {DayOfWeek} from "../../../graphQL/enums/DayOfWeek";
+import { DayOfWeek } from "../../../behaviour/enums/DayOfWeek";
 
 export type Settings = {
     id: string,

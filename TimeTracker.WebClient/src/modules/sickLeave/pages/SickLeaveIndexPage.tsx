@@ -1,19 +1,19 @@
-import {Button, Popconfirm, Space, Table, Tabs, Tag, Typography} from "antd";
-import React, {FC, useEffect} from "react";
-import {Link, useLocation, useSearchParams} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../../store/store";
-import {ColumnsType} from "antd/es/table";
-import {nameof} from "../../../utils/stringUtils";
-import {isAdministratorOrHavePermissions} from "../../../utils/permissions";
-import {Permission} from "../../../graphQL/enums/Permission";
-import {ButtonUpdate} from "../../../components/ButtonUpdate";
-import {DeleteOutlined, EditOutlined, UploadOutlined, UsergroupAddOutlined, UserOutlined} from "@ant-design/icons";
-import {sickLeaveActions} from "../store/sickLeave.slice";
-import {SickLeaveFilterKind, SickLeaveType} from "../sickLeaveType";
-import {ButtonCreate} from "../../../components/ButtonCreate";
+import { Button, Popconfirm, Space, Table, Tabs, Tag, Typography } from "antd";
+import React, { FC, useEffect } from "react";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../behaviour/store";
+import { ColumnsType } from "antd/es/table";
+import { nameof } from "../../../utils/stringUtils";
+import { isAdministratorOrHavePermissions } from "../../../utils/permissions";
+import { Permission } from "../../../behaviour/enums/Permission";
+import { ButtonUpdate } from "../../../components/ButtonUpdate";
+import { DeleteOutlined, EditOutlined, UploadOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import { sickLeaveActions } from "../store/sickLeave.slice";
+import { SickLeaveFilterKind, SickLeaveType } from "../sickLeaveType";
+import { ButtonCreate } from "../../../components/ButtonCreate";
 
-const {Text} = Typography;
-const {TabPane} = Tabs;
+const { Text } = Typography;
+const { TabPane } = Tabs;
 
 export const SickLeaveIndexPage: FC = () => {
     const location = useLocation();
@@ -31,7 +31,7 @@ export const SickLeaveIndexPage: FC = () => {
         dispatch(sickLeaveActions.getAsync({
             pageNumber,
             pageSize,
-            filter : { kind }
+            filter: { kind }
         }))
     }, [searchParams])
 
@@ -97,20 +97,20 @@ export const SickLeaveIndexPage: FC = () => {
                 return (
                     <Space size={5}>
                         {(isAdministratorOrHavePermissions([Permission.NoteTheAbsenceAndVacation])
-                        ) && <ButtonUpdate to={`update/${sickLeaveDays.id}`} popup={location}/>
+                        ) && <ButtonUpdate to={`update/${sickLeaveDays.id}`} popup={location} />
                         }
-                        <Link to={`upload-files/${sickLeaveDays.id}`} state={{popup: location}}>
-                            <Button shape="circle" type="primary" icon={<UploadOutlined />} size={'small'}/>
+                        <Link to={`upload-files/${sickLeaveDays.id}`} state={{ popup: location }}>
+                            <Button shape="circle" type="primary" icon={<UploadOutlined />} size={'small'} />
                         </Link>
                         {(isAdministratorOrHavePermissions([Permission.NoteTheAbsenceAndVacation])
                         ) && <Popconfirm
                             title={'Sure to remove?'}
-                            onConfirm={() => dispatch(sickLeaveActions.removeAsync({id: sickLeaveDays.id}))}
+                            onConfirm={() => dispatch(sickLeaveActions.removeAsync({ id: sickLeaveDays.id }))}
                             okText="Yes"
                             cancelText="No"
                         >
-                            <Button shape="circle" type="primary" danger icon={<DeleteOutlined/>} size={'small'}/>
-                        </Popconfirm>
+                                <Button shape="circle" type="primary" danger icon={<DeleteOutlined />} size={'small'} />
+                            </Popconfirm>
                         }
                     </Space>
                 )
@@ -122,13 +122,13 @@ export const SickLeaveIndexPage: FC = () => {
     return (
         <div>
             {(isAdministratorOrHavePermissions([Permission.NoteTheAbsenceAndVacation])
-            ) && <ButtonCreate to={'create'} popup={location}/>
+            ) && <ButtonCreate to={'create'} popup={location} />
             }
             <Tabs defaultActiveKey={kind}
-                  onChange={kind => setParams(pageNumber, pageSize, kind)}>
-                <TabPane tab={<span><UserOutlined/>Mine</span>} key={SickLeaveFilterKind.mine}/>
+                onChange={kind => setParams(pageNumber, pageSize, kind)}>
+                <TabPane tab={<span><UserOutlined />Mine</span>} key={SickLeaveFilterKind.mine} />
                 {isAdministratorOrHavePermissions([Permission.NoteTheAbsenceAndVacation]) &&
-                    <TabPane tab={<span><UsergroupAddOutlined/>All</span>} key={SickLeaveFilterKind.all}/>
+                    <TabPane tab={<span><UsergroupAddOutlined />All</span>} key={SickLeaveFilterKind.all} />
                 }
             </Tabs>
             <Table

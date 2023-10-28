@@ -1,6 +1,6 @@
-import {Permission} from "../../../graphQL/enums/Permission";
-import {Role} from "../../../graphQL/enums/Role";
-import {Employment} from "../../../graphQL/enums/Employment";
+import { Permission } from "../../../behaviour/enums/Permission";
+import { Role } from "../../../behaviour/enums/Role";
+import { Employment } from "../../../behaviour/enums/Employment";
 
 export type User = {
     id: string,

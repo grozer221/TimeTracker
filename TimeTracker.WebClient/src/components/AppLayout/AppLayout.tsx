@@ -1,10 +1,10 @@
-import React, {FC, useState} from 'react';
-import {Button, Dropdown, Layout, Menu, Row, Space} from 'antd';
-import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {authActions} from "../../modules/auth/store/auth.slice";
+import React, { FC, useState } from 'react';
+import { Button, Dropdown, Layout, Menu, Row, Space } from 'antd';
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../modules/auth/store/auth.slice";
 import s from './AppLayout.module.css';
-import {AppBreadcrumb} from "../AppBreadcrumb";
+import { AppBreadcrumb } from "../AppBreadcrumb";
 import {
     AppstoreOutlined,
     AuditOutlined,
@@ -20,14 +20,14 @@ import {
     ToolOutlined,
     UsergroupAddOutlined
 } from "@ant-design/icons";
-import {useAppSelector} from "../../store/store";
+import { useAppSelector } from "../../behaviour/store";
 import Logo from '../../assets/images/clockify-logo-with-title.png';
-import {ItemType} from "antd/lib/menu/hooks/useItems";
-import {cacheActions} from "../../modules/cache/store/cache.slice";
-import {isAdministrator, isAdministratorOrHavePermissions} from "../../utils/permissions";
-import {Permission} from "../../graphQL/enums/Permission";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
+import { cacheActions } from "../../modules/cache/store/cache.slice";
+import { isAdministrator, isAdministratorOrHavePermissions } from "../../utils/permissions";
+import { Permission } from '../../behaviour/enums/Permission';
 
-const {Header, Content, Sider} = Layout;
+const { Header, Content, Sider } = Layout;
 
 type Props = {
     children?: React.ReactNode
@@ -35,7 +35,7 @@ type Props = {
 
 export const getHeaderExtraButtonsElement = (): HTMLDivElement => document.getElementById('headerExtraButtons') as HTMLDivElement;
 
-export const AppLayout: FC<Props> = ({children}) => {
+export const AppLayout: FC<Props> = ({ children }) => {
     const [collapsed, setCollapsed] = useState(false);
     const dispatch = useDispatch()
     const authedUser = useAppSelector(s => s.auth.authedUser);
@@ -50,7 +50,7 @@ export const AppLayout: FC<Props> = ({children}) => {
                     label: (
                         <Link to={`/users/${authedUser?.email}`}>
                             <Space>
-                                <ProfileOutlined/>
+                                <ProfileOutlined />
                                 <span>Profile</span>
                             </Space>
                         </Link>
@@ -61,7 +61,7 @@ export const AppLayout: FC<Props> = ({children}) => {
                     label: (
                         <Link to={'/my-settings/security'}>
                             <Space>
-                                <SettingOutlined/>
+                                <SettingOutlined />
                                 <span>My settings</span>
                             </Space>
                         </Link>
@@ -72,7 +72,7 @@ export const AppLayout: FC<Props> = ({children}) => {
                     onClick: () => dispatch(authActions.logoutAsync()),
                     label: (
                         <Space>
-                            <LogoutOutlined/>
+                            <LogoutOutlined />
                             <span>Logout</span>
                         </Space>
                     ),
@@ -84,43 +84,48 @@ export const AppLayout: FC<Props> = ({children}) => {
     const mainMenuItems: ItemType[] = [
         {
             key: '/time-tracker',
-            icon: <FieldTimeOutlined/>,
+            icon: <FieldTimeOutlined />,
             label: <Link to={'./time-tracker'}>Time tracker</Link>,
         },
         {
             key: '/calendar',
-            icon: <CalendarOutlined/>,
+            icon: <CalendarOutlined />,
             label: <Link to={'calendar'}>Calendar</Link>,
         },
         {
             key: '/reports',
-            icon: <BarChartOutlined/>,
+            icon: <BarChartOutlined />,
             label: <Link to={'reports'}>Reports</Link>,
         },
         {
             key: '/vacation-requests',
-            icon: <AuditOutlined/>,
+            icon: <AuditOutlined />,
             label: <Link to={'vacation-requests'}>Vacation requests</Link>,
         },
         {
             key: '/sick-leave-days',
-            icon: <AuditOutlined/>,
+            icon: <AuditOutlined />,
             label: <Link to={'sick-leave-days'}>Sick leave days</Link>,
         },
         {
             key: '/users',
-            icon: <UsergroupAddOutlined/>,
+            icon: <UsergroupAddOutlined />,
             label: <Link to={'users'}>Users</Link>,
         },
         {
+            key: '/companies',
+            icon: <UsergroupAddOutlined />,
+            label: <Link to={'companies'}>Companies</Link>,
+        },
+        {
             key: '/tools',
-            icon: <ToolOutlined/>,
+            icon: <ToolOutlined />,
             label: <div>Tools</div>,
             children: [
                 isAdministratorOrHavePermissions([Permission.UpdateFileManager])
                     ? {
                         key: '/tools/file-manager',
-                        icon: <FileSearchOutlined/>,
+                        icon: <FileSearchOutlined />,
                         label: <Link to={'tools/file-manager'}>File manager</Link>,
                     }
                     : null,
@@ -129,7 +134,7 @@ export const AppLayout: FC<Props> = ({children}) => {
         isAdministratorOrHavePermissions([Permission.UpdateSettings])
             ? {
                 key: '/settings',
-                icon: <SettingOutlined/>,
+                icon: <SettingOutlined />,
                 label: <Link to={'settings/application'}>Settings</Link>,
             }
             : null,
@@ -141,9 +146,9 @@ export const AppLayout: FC<Props> = ({children}) => {
                 <Row justify={'space-between'} align={'middle'}>
                     <Row align={'middle'}>
                         <Button type="default"
-                                icon={<AppstoreOutlined/>}
-                                size={'large'}
-                                onClick={() => setCollapsed(!collapsed)}
+                            icon={<AppstoreOutlined />}
+                            size={'large'}
+                            onClick={() => setCollapsed(!collapsed)}
                         />
                         <Link to={'/time-tracker'}>
                             <img
@@ -159,7 +164,7 @@ export const AppLayout: FC<Props> = ({children}) => {
                         </div>
                         {isAdministrator() &&
                             <Button
-                                icon={<ReloadOutlined/>}
+                                icon={<ReloadOutlined />}
                                 loading={loadingRefreshApp}
                                 onClick={() => dispatch(cacheActions.refreshAppAsync())}
                             >Refresh app cache</Button>
@@ -167,7 +172,7 @@ export const AppLayout: FC<Props> = ({children}) => {
                         <Dropdown overlay={headerMenu}>
                             <Space className={s.name}>
                                 <span>{authedUser?.firstName} {authedUser?.lastName}</span>
-                                <DownOutlined/>
+                                <DownOutlined />
                             </Space>
                         </Dropdown>
                     </Space>
@@ -175,13 +180,13 @@ export const AppLayout: FC<Props> = ({children}) => {
             </Header>
             <Layout>
                 <Sider collapsed={collapsed} onCollapse={setCollapsed} className={s.wrapperMenu}>
-                    <Menu theme="dark" mode="inline" items={mainMenuItems}/>
+                    <Menu theme="dark" mode="inline" items={mainMenuItems} />
                 </Sider>
                 <Layout className="site-layout">
                     <Content className={s.content}>
                         <div className={s.siteLayoutBackground}>
                             <div className={s.breadcrumbs}>
-                                <AppBreadcrumb/>
+                                <AppBreadcrumb />
                             </div>
                             <div>{children}</div>
                         </div>

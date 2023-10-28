@@ -1,8 +1,8 @@
-import {gql} from '@apollo/client';
-import {VACATION_REQUEST_FRAGMENT} from "./vacationRequests.fragments";
-import {GetEntitiesResponse} from "../../../graphQL/types/getEntitiesResponse";
-import {VacationRequest} from "./vacationRequests.types";
-import {VacationRequestStatus} from "../../../graphQL/enums/VacationRequestStatus";
+import { gql } from '@apollo/client';
+import { VACATION_REQUEST_FRAGMENT } from "./vacationRequests.fragments";
+import { VacationRequest } from "./vacationRequests.types";
+import { GetEntitiesResponse } from '../../../behaviour';
+import { VacationRequestStatus } from '../../../behaviour/enums/VacationRequestStatus';
 
 export type VacationRequestsGetByIdData = { vacationRequests: { getById: VacationRequest } }
 export type VacationRequestsGetByIdVars = { id: string }

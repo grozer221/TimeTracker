@@ -1,0 +1,1 @@
+export type { GetEntitiesResponse, Paging } from './types'

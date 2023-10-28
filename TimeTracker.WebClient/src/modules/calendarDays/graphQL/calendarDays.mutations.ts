@@ -1,8 +1,8 @@
-import {gql} from '@apollo/client';
-import {CALENDAR_DAY_FRAGMENT} from "./calendarDays.fragments";
-import {CalendarDay} from "./calendarDays.types";
-import {DayKind} from "../../../graphQL/enums/DayKind";
-import {DayOfWeek} from "../../../graphQL/enums/DayOfWeek";
+import { gql } from '@apollo/client';
+import { CALENDAR_DAY_FRAGMENT } from "./calendarDays.fragments";
+import { CalendarDay } from "./calendarDays.types";
+import { DayKind } from "../../../behaviour/enums/DayKind";
+import { DayOfWeek } from "../../../behaviour/enums/DayOfWeek";
 
 export type CalendarDaysCreateData = { calendarDays: { create: CalendarDay } }
 export type CalendarDaysCreateVars = { calendarDaysCreateInputType: CalendarDaysCreateInputType }

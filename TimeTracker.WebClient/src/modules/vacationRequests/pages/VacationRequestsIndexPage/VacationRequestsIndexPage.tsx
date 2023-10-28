@@ -1,24 +1,24 @@
-import React, {FC, useEffect} from 'react';
-import {useAppDispatch, useAppSelector} from "../../../../store/store";
-import {vacationRequestsActions} from "../../store/vacationRequests.slice";
-import {Button, Popconfirm, Row, Select, Space, Table, Tabs, Tag, Typography} from "antd";
-import {ColumnsType} from "antd/es/table";
-import {VacationRequest} from "../../graphQL/vacationRequests.types";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import {Link, useLocation, useSearchParams} from "react-router-dom";
-import {vacationRequestStatusToTag} from "../../../../convertors/enumToTagConvertors";
-import {ButtonUpdate} from "../../../../components/ButtonUpdate";
-import {ButtonCreate} from "../../../../components/ButtonCreate";
-import {DeleteOutlined, ReloadOutlined, UsergroupAddOutlined, UserOutlined} from "@ant-design/icons";
-import {WithSmallLoading} from "../../../../hocs/WithSmallLoading/WithSmallLoading";
-import {VacationRequestStatus} from "../../../../graphQL/enums/VacationRequestStatus";
-import {usersActions} from "../../../users/store/users.slice";
-import {VacationRequestsFilterKind} from "../../graphQL/vacationRequests.queries";
-import {isAdministratorOrHavePermissions} from "../../../../utils/permissions";
-import {Permission} from "../../../../graphQL/enums/Permission";
+import React, { FC, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from "../../../../behaviour/store";
+import { vacationRequestsActions } from "../../store/vacationRequests.slice";
+import { Button, Popconfirm, Row, Select, Space, Table, Tabs, Tag, Typography } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { VacationRequest } from "../../graphQL/vacationRequests.types";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { vacationRequestStatusToTag } from "../../../../convertors/enumToTagConvertors";
+import { ButtonUpdate } from "../../../../components/ButtonUpdate";
+import { ButtonCreate } from "../../../../components/ButtonCreate";
+import { DeleteOutlined, ReloadOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import { WithSmallLoading } from "../../../../hocs/WithSmallLoading/WithSmallLoading";
+import { usersActions } from "../../../users/store/users.slice";
+import { VacationRequestsFilterKind } from "../../graphQL/vacationRequests.queries";
+import { isAdministratorOrHavePermissions } from "../../../../utils/permissions";
+import { VacationRequestStatus } from '../../../../behaviour/enums/VacationRequestStatus';
+import { Permission } from '../../../../behaviour/enums/Permission';
 
-const {Text} = Typography;
-const {TabPane} = Tabs;
+const { Text } = Typography;
+const { TabPane } = Tabs;
 
 export const VacationRequestsIndexPage: FC = () => {
     const location = useLocation();
@@ -43,7 +43,7 @@ export const VacationRequestsIndexPage: FC = () => {
         dispatch(usersActions.fetchUsersInfinityLoad({
             take: 10,
             skip: 0,
-            filter: {email: '', roles: [], permissions: []}
+            filter: { email: '', roles: [], permissions: [] }
         }))
     }, [])
 
@@ -102,7 +102,7 @@ export const VacationRequestsIndexPage: FC = () => {
         },
         {
             title: <Select
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
                 mode="multiple"
                 placeholder="User"
                 defaultValue={userIds}
@@ -111,7 +111,7 @@ export const VacationRequestsIndexPage: FC = () => {
                 onSearch={value => dispatch(usersActions.fetchUsersInfinityLoad({
                     take: 10,
                     skip: 0,
-                    filter: {email: value, roles: [], permissions: []}
+                    filter: { email: value, roles: [], permissions: [] }
                 }))}
                 maxTagCount={'responsive'}
             >
@@ -139,19 +139,19 @@ export const VacationRequestsIndexPage: FC = () => {
                     <Space size={5}>
                         {(isAdministratorOrHavePermissions([Permission.NoteTheAbsenceAndVacation])
                             || vacationRequest.user.usersWhichCanApproveVacationRequest.some(u => u.id === authedUser?.id)
-                        ) && <ButtonUpdate to={`update/${vacationRequest.id}`} popup={location}/>
+                        ) && <ButtonUpdate to={`update/${vacationRequest.id}`} popup={location} />
                         }
                         {(isAdministratorOrHavePermissions([Permission.NoteTheAbsenceAndVacation])
                             || (vacationRequest.status === VacationRequestStatus.New
                                 && (vacationRequest.userId === authedUser?.id || vacationRequest.user.usersWhichCanApproveVacationRequest.some(u => u.id === authedUser?.id)))
                         ) && <Popconfirm
                             title={'Sure to remove?'}
-                            onConfirm={() => dispatch(vacationRequestsActions.removeAsync({id: vacationRequest.id}))}
+                            onConfirm={() => dispatch(vacationRequestsActions.removeAsync({ id: vacationRequest.id }))}
                             okText="Yes"
                             cancelText="No"
                         >
-                            <Button shape="circle" type="primary" danger icon={<DeleteOutlined/>} size={'small'}/>
-                        </Popconfirm>
+                                <Button shape="circle" type="primary" danger icon={<DeleteOutlined />} size={'small'} />
+                            </Popconfirm>
                         }
 
                     </Space>
@@ -164,21 +164,21 @@ export const VacationRequestsIndexPage: FC = () => {
     return (
         <div>
             <Row align={'middle'} justify={'space-between'}>
-                <ButtonCreate to={'create'} popup={location}/>
+                <ButtonCreate to={'create'} popup={location} />
                 <WithSmallLoading loading={loadingGetAvailableDays}>
                     <Space>
-                        <ReloadOutlined onClick={() => dispatch(vacationRequestsActions.getAvailableDaysAsync())}/>
+                        <ReloadOutlined onClick={() => dispatch(vacationRequestsActions.getAvailableDaysAsync())} />
                         <div>Available days: {availableDays} / {settings?.vacationRequests.amountDaysPerYear}</div>
                     </Space>
                 </WithSmallLoading>
             </Row>
             <Tabs defaultActiveKey={kind}
-                  onChange={kind => setParams(pageNumber, pageSize, statuses, userIds, kind as VacationRequestsFilterKind)}>
-                <TabPane tab={<span><UserOutlined/>Mine</span>} key={VacationRequestsFilterKind.Mine}/>
-                <TabPane tab={<span><UsergroupAddOutlined/>Can approve</span>}
-                         key={VacationRequestsFilterKind.CanApprove}/>
+                onChange={kind => setParams(pageNumber, pageSize, statuses, userIds, kind as VacationRequestsFilterKind)}>
+                <TabPane tab={<span><UserOutlined />Mine</span>} key={VacationRequestsFilterKind.Mine} />
+                <TabPane tab={<span><UsergroupAddOutlined />Can approve</span>}
+                    key={VacationRequestsFilterKind.CanApprove} />
                 {isAdministratorOrHavePermissions([Permission.NoteTheAbsenceAndVacation]) &&
-                    <TabPane tab={<span><UsergroupAddOutlined/>All</span>} key={VacationRequestsFilterKind.All}/>
+                    <TabPane tab={<span><UsergroupAddOutlined />All</span>} key={VacationRequestsFilterKind.All} />
                 }
             </Tabs>
             <Table

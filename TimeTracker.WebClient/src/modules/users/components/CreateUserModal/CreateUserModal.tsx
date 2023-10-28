@@ -1,18 +1,18 @@
 import * as React from 'react';
-import {FC, useState} from 'react';
-import {Form, Input, Modal, Select, Radio} from "antd";
+import { FC, useState } from 'react';
+import { Form, Input, Modal, Select, Radio } from "antd";
 import './CreateUserModal.css'
 import Title from "antd/lib/typography/Title";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import {Permission} from "../../../../graphQL/enums/Permission";
-import {useForm} from "antd/es/form/Form";
-import {useDispatch} from "react-redux";
-import {useAppSelector} from "../../../../store/store";
-import {CreateUserInput} from "../../graphQL/users.mutations";
-import {usersActions} from "../../store/users.slice";
-import {Employment} from "../../../../graphQL/enums/Employment";
-import {navigateActions} from "../../../navigate/store/navigate.slice";
-import {InfiniteScrollSelect} from "../../../../components/InfiniteScrollSelect";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import { Permission } from "../../../../behaviour/enums/Permission";
+import { useForm } from "antd/es/form/Form";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../../../behaviour/store";
+import { CreateUserInput } from "../../graphQL/users.mutations";
+import { usersActions } from "../../store/users.slice";
+import { Employment } from "../../../../behaviour/enums/Employment";
+import { navigateActions } from "../../../navigate/store/navigate.slice";
+import { InfiniteScrollSelect } from "../../../../components/InfiniteScrollSelect";
 
 type FormValues = {
     firstName: string,
@@ -72,37 +72,37 @@ export const CreateUserModal: FC<Props> = () => {
         >
             <Form
                 form={form}
-                labelCol={{span: 24}}>
+                labelCol={{ span: 24 }}>
                 <Form.Item name={nameof<FormValues>("firstName")}
-                           label={"Firstname:"}
-                           rules={[{required: true, message: 'Please input user Firstname!'}]}>
-                    <Input placeholder="Input user firstname"/>
+                    label={"Firstname:"}
+                    rules={[{ required: true, message: 'Please input user Firstname!' }]}>
+                    <Input placeholder="Input user firstname" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("lastName")}
-                           label={"Lastname:"}
-                           rules={[{required: true, message: 'Please input user Lastname!'}]}>
-                    <Input placeholder="Input user lastname"/>
+                    label={"Lastname:"}
+                    rules={[{ required: true, message: 'Please input user Lastname!' }]}>
+                    <Input placeholder="Input user lastname" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("middleName")}
-                           label={"Middle name:"}
-                           rules={[{required: true, message: 'Please input user Middle name!'}]}>
-                    <Input placeholder="Input user Middle name"/>
+                    label={"Middle name:"}
+                    rules={[{ required: true, message: 'Please input user Middle name!' }]}>
+                    <Input placeholder="Input user Middle name" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("email")}
-                           label={"Email:"}
-                           rules={[
-                               {required: true, message: 'Please input user Email!'},
-                               {type: "email", message: "It's not email!"}
-                           ]}>
-                    <Input placeholder="example@gmail.com"/>
+                    label={"Email:"}
+                    rules={[
+                        { required: true, message: 'Please input user Email!' },
+                        { type: "email", message: "It's not email!" }
+                    ]}>
+                    <Input placeholder="example@gmail.com" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("employment")}
-                           label={"Employment:"}
-                           rules={[{required: true, message: 'Please choose user employment!'}]}>
+                    label={"Employment:"}
+                    rules={[{ required: true, message: 'Please choose user employment!' }]}>
                     <Radio.Group>
                         {
                             Object.values(Employment).map(value =>
@@ -113,26 +113,26 @@ export const CreateUserModal: FC<Props> = () => {
                     </Radio.Group>
                 </Form.Item>
                 <Form.Item name={nameof<FormValues>("password")}
-                           label={"Password:"}
-                           rules={[{required: true, message: 'Please input user Password!'}]}>
+                    label={"Password:"}
+                    rules={[{ required: true, message: 'Please input user Password!' }]}>
                     <Input.Password
                         placeholder="Input user password"
                     />
                 </Form.Item>
                 <Form.Item name={nameof<FormValues>("repeatPassword")}
-                           label={"Repeat password:"}
-                           dependencies={['password']}
-                           hasFeedback
-                           rules={[{required: true, message: 'Please confirm password!',},
-                               ({getFieldValue}) => ({
-                                   validator(_, value) {
-                                       if (!value || getFieldValue('password') === value) {
-                                           return Promise.resolve();
-                                       }
-                                       return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                   },
-                               }),
-                           ]}>
+                    label={"Repeat password:"}
+                    dependencies={['password']}
+                    hasFeedback
+                    rules={[{ required: true, message: 'Please confirm password!', },
+                    ({ getFieldValue }) => ({
+                        validator(_, value) {
+                            if (!value || getFieldValue('password') === value) {
+                                return Promise.resolve();
+                            }
+                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                        },
+                    }),
+                    ]}>
                     <Input.Password
                         placeholder="Repeat password"
                     />
@@ -159,7 +159,7 @@ export const CreateUserModal: FC<Props> = () => {
                 <Form.Item
                     label={'Users which can approve vacation request'}
                 >
-                  <InfiniteScrollSelect onChange={setUsersWhichCanApproveVacationRequest}/>
+                    <InfiniteScrollSelect onChange={setUsersWhichCanApproveVacationRequest} />
                 </Form.Item>
             </Form>
         </Modal>

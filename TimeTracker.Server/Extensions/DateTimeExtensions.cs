@@ -1,4 +1,4 @@
-﻿namespace TimeTracker.Business.Extensions
+﻿namespace TimeTracker.Server.Extensions
 {
     public static class DateTimeExtensions
     {

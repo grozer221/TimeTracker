@@ -1,22 +1,22 @@
-import React, {useEffect} from 'react';
-import {Calendar, Row, Space, Typography} from "antd";
-import moment, {Moment} from 'moment';
-import {Link, useLocation} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {calendarDaysActions} from "../../../calendarDays/store/calendarDays.slice";
-import {useAppSelector} from "../../../../store/store";
+import React, { useEffect } from 'react';
+import { Calendar, Row, Space, Typography } from "antd";
+import moment, { Moment } from 'moment';
+import { Link, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { calendarDaysActions } from "../../../calendarDays/store/calendarDays.slice";
+import { useAppSelector } from "../../../../behaviour/store";
 import s from './CalendarPage.module.css';
-import {ButtonCreate} from "../../../../components/ButtonCreate";
-import {DayKind} from "../../../../graphQL/enums/DayKind";
-import {ButtonRemove} from "../../../../components/ButtonRemove";
-import {uppercaseToWords} from "../../../../utils/stringUtils";
-import {isAdministratorOrHavePermissions} from "../../../../utils/permissions";
-import {Loading} from "../../../../components/Loading/Loading";
-import {getDate} from "../../../../utils/dateUtils";
-import {Permission} from "../../../../graphQL/enums/Permission";
-import {ButtonUpdate} from "../../../../components/ButtonUpdate";
+import { ButtonCreate } from "../../../../components/ButtonCreate";
+import { DayKind } from "../../../../behaviour/enums/DayKind";
+import { ButtonRemove } from "../../../../components/ButtonRemove";
+import { uppercaseToWords } from "../../../../utils/stringUtils";
+import { isAdministratorOrHavePermissions } from "../../../../utils/permissions";
+import { Loading } from "../../../../components/Loading/Loading";
+import { getDate } from "../../../../utils/dateUtils";
+import { Permission } from "../../../../behaviour/enums/Permission";
+import { ButtonUpdate } from "../../../../components/ButtonUpdate";
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 export const CalendarPage = () => {
     const location = useLocation();
@@ -70,18 +70,18 @@ export const CalendarPage = () => {
                     break;
             }
             return (
-                <Link to={`days/${currentCalendarDay?.date}`} state={{popup: location}}>
+                <Link to={`days/${currentCalendarDay?.date}`} state={{ popup: location }}>
                     <div className={[s.day, dayKindClass].join(' ')}>
                         <div className={s.titleAndKind}>
-                            <Text style={{textAlign: 'center'}}>{currentCalendarDay?.title}</Text>
-                            <Text style={{fontSize: '12px'}}
-                                  type="secondary">{currentCalendarDay && uppercaseToWords(currentCalendarDay.kind)}</Text>
+                            <Text style={{ textAlign: 'center' }}>{currentCalendarDay?.title}</Text>
+                            <Text style={{ fontSize: '12px' }}
+                                type="secondary">{currentCalendarDay && uppercaseToWords(currentCalendarDay.kind)}</Text>
                         </div>
                         {isAdministratorOrHavePermissions([Permission.UpdateCalendar]) &&
                             <Row align={'bottom'} className={s.buttons}>
                                 <Space size={3}>
-                                    <ButtonUpdate to={`days/update/${currentCalendarDay?.date}`} popup={location}/>
-                                    <ButtonRemove to={`days/remove/${currentCalendarDay?.date}`} popup={location}/>
+                                    <ButtonUpdate to={`days/update/${currentCalendarDay?.date}`} popup={location} />
+                                    <ButtonRemove to={`days/remove/${currentCalendarDay?.date}`} popup={location} />
                                 </Space>
                             </Row>
                         }
@@ -93,7 +93,7 @@ export const CalendarPage = () => {
             return (
                 <div className={s.day}>
                     <Row align={'bottom'} className={s.buttons}>
-                        <ButtonCreate to={`days/create?date=${current.format('YYYY-MM-DD')}`} popup={location}/>
+                        <ButtonCreate to={`days/create?date=${current.format('YYYY-MM-DD')}`} popup={location} />
                     </Row>
                 </div>
             )
@@ -102,12 +102,12 @@ export const CalendarPage = () => {
     return (
         <div className={s.wrapperPage}>
             {loading && <div className={s.absoluteCenter}>
-                <Loading/>
+                <Loading />
             </div>}
             {isAdministratorOrHavePermissions([Permission.UpdateCalendar]) &&
                 <Space size={3}>
-                    <ButtonCreate to={'days/create'} popup={location}/>
-                    <ButtonRemove to={'days/remove'} popup={location}/>
+                    <ButtonCreate to={'days/create'} popup={location} />
+                    <ButtonRemove to={'days/remove'} popup={location} />
                 </Space>
             }
             <Calendar

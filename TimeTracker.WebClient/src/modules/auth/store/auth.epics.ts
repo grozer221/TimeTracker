@@ -1,8 +1,7 @@
-import {combineEpics, Epic, ofType} from "redux-observable";
-import {RootState} from "../../../store/store";
-import {catchError, endWith, from, mergeMap, of, startWith} from "rxjs";
-import {authActions} from "./auth.slice";
-import {client} from "../../../graphQL/client";
+import { combineEpics, Epic, ofType } from "redux-observable";
+import { RootState } from "../../../behaviour/store";
+import { catchError, endWith, from, mergeMap, of, startWith } from "rxjs";
+import { authActions } from "./auth.slice";
 import {
     AUTH_CHANGE_PASSWORD_MUTATION, AUTH_LOG_IN_GOOGLE_MUTATION,
     AUTH_LOG_IN_MUTATION,
@@ -18,13 +17,14 @@ import {
     AuthResetData,
     AuthResetVars
 } from "../graphQL/auth.mutations";
-import {AUTH_ME_QUERY, AuthMeData, AuthMeVars} from "../graphQL/auth.queries";
-import {appActions} from "../../app/store/app.slice";
-import {Role} from "../../../graphQL/enums/Role";
-import {Permission} from "../../../graphQL/enums/Permission";
-import {settingsActions} from "../../settings/store/settings.slice";
-import {notificationsActions} from "../../notifications/store/notifications.slice";
-import {navigateActions} from "../../navigate/store/navigate.slice";
+import { AUTH_ME_QUERY, AuthMeData, AuthMeVars } from "../graphQL/auth.queries";
+import { appActions } from "../../app/store/app.slice";
+import { settingsActions } from "../../settings/store/settings.slice";
+import { notificationsActions } from "../../notifications/store/notifications.slice";
+import { navigateActions } from "../../navigate/store/navigate.slice";
+import { Role } from "../../../behaviour/enums/Role";
+import { Permission } from "../../../behaviour/enums/Permission";
+import { client } from "../../../behaviour/client";
 
 const getSettingsAction = (role?: Role, permissions?: Permission[]) => {
     if (!role && !permissions)
@@ -40,7 +40,7 @@ export const loginEpic: Epic<ReturnType<typeof authActions.userLoginAsync>, any,
         mergeMap(action =>
             from(client.mutate<AuthLoginData, AuthLoginVars>({
                 mutation: AUTH_LOG_IN_MUTATION,
-                variables: {authLoginInputType: action.payload}
+                variables: { authLoginInputType: action.payload }
             })).pipe(
                 mergeMap(response => [
                     settingsActions.getForAdministratorOrHavePermissionUpdateAsync(),
@@ -62,7 +62,7 @@ export const loginGoogleEpic: Epic<ReturnType<typeof authActions.userLoginGoogle
         mergeMap(action =>
             from(client.mutate<AuthLoginGoogleData>({
                 mutation: AUTH_LOG_IN_GOOGLE_MUTATION,
-                variables: {googleJWT: action.payload}
+                variables: { googleJWT: action.payload }
             })).pipe(
                 mergeMap(response => [
                     settingsActions.getForAdministratorOrHavePermissionUpdateAsync(),
@@ -88,7 +88,7 @@ export const meEpic: Epic<ReturnType<typeof authActions.meAsync>, any, RootState
             })).pipe(
                 mergeMap(response => [
                     appActions.setInitialised(true),
-                    authActions.setAuthedUser({user: response.data.auth.me.user, token: response.data.auth.me.token}),
+                    authActions.setAuthedUser({ user: response.data.auth.me.user, token: response.data.auth.me.token }),
                     getSettingsAction(response.data?.auth.me.user.role, response.data?.auth.me.user.permissions),
                 ]),
                 catchError(error => of(
@@ -109,7 +109,7 @@ export const logoutEpic: Epic<ReturnType<typeof authActions.logoutAsync>, any, R
                 mutation: AUTH_LOG_OUT_MUTATION,
             })).pipe(
                 mergeMap(response => [
-                    authActions.setAuthedUser({user: null, token: null}),
+                    authActions.setAuthedUser({ user: null, token: null }),
                     navigateActions.navigate("/auth/login")
                 ]),
                 catchError(error => of(notificationsActions.addError(error.message))),
@@ -123,7 +123,7 @@ export const requestResetPasswordEpic: Epic<ReturnType<typeof authActions.reques
         mergeMap(action =>
             from(client.mutate<AuthRequestResetData, AuthRequestResetVars>({
                 mutation: AUTH_REQUEST_RESET_PASSWORD_MUTATION,
-                variables: {authRequestResetPasswordInputType: action.payload}
+                variables: { authRequestResetPasswordInputType: action.payload }
             })).pipe(
                 mergeMap(response => [
                     notificationsActions.addSuccess("Confirmation link send on your email.")
@@ -139,7 +139,7 @@ export const resetPasswordEpic: Epic<ReturnType<typeof authActions.resetPassword
         mergeMap(action =>
             from(client.mutate<AuthResetData, AuthResetVars>({
                 mutation: AUTH_RESET_PASSWORD_MUTATION,
-                variables: {authResetPasswordInputType: action.payload}
+                variables: { authResetPasswordInputType: action.payload }
             })).pipe(
                 mergeMap(response => [
                     notificationsActions.addSuccess("Password changed!"),
@@ -156,7 +156,7 @@ export const changePasswordEpic: Epic<ReturnType<typeof authActions.changePasswo
         mergeMap(action =>
             from(client.mutate<AuthChangePasswordData, AuthChangePasswordVars>({
                 mutation: AUTH_CHANGE_PASSWORD_MUTATION,
-                variables: {authChangePasswordInputType: action.payload}
+                variables: { authChangePasswordInputType: action.payload }
             })).pipe(
                 mergeMap(response => [
                     notificationsActions.addSuccess("Password successfully changed!"),

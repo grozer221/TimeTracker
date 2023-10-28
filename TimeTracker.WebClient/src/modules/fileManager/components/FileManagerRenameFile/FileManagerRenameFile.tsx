@@ -1,13 +1,13 @@
-import React, {FC} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {Form, Input, message, Modal} from "antd";
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { Form, Input, message, Modal } from "antd";
 import Title from "antd/lib/typography/Title";
-import {formStyles} from "../../../../assets/form";
-import {nameof} from "../../../../utils/stringUtils";
-import {useForm} from "antd/es/form/Form";
-import {FileManagerItem} from "../../graphQL/fileManager.types";
-import {fileManagerActions} from "../../store/fileManager.slice";
+import { formStyles } from "../../../../assets/form";
+import { nameof } from "../../../../utils/stringUtils";
+import { useForm } from "antd/es/form/Form";
+import { FileManagerItem } from "../../graphQL/fileManager.types";
+import { fileManagerActions } from "../../store/fileManager.slice";
 
 type FormValues = {
     toName: string,
@@ -17,7 +17,7 @@ type Props = {
     selectedItem: FileManagerItem | null,
 }
 
-export const FileManagerRenameFile: FC<Props> = ({selectedItem}) => {
+export const FileManagerRenameFile: FC<Props> = ({ selectedItem }) => {
     const dispatch = useDispatch();
     const loadingRenameFile = useSelector((s: RootState) => s.fileManager.loadingRenameFile);
     const isRenameFilePageVisible = useSelector((s: RootState) => s.fileManager.isRenameFilePageVisible);
@@ -32,7 +32,7 @@ export const FileManagerRenameFile: FC<Props> = ({selectedItem}) => {
             }
             await form.validateFields();
             const toName = form.getFieldValue(nameof<FormValues>('toName'));
-            dispatch(fileManagerActions.renameFileAsync({fromPath: selectedItem.path, toName}))
+            dispatch(fileManagerActions.renameFileAsync({ fromPath: selectedItem.path, toName }))
         } catch (e) {
             console.log(e);
         }
@@ -66,7 +66,7 @@ export const FileManagerRenameFile: FC<Props> = ({selectedItem}) => {
                         message: 'To name is required'
                     }]}
                 >
-                    <Input placeholder={'To name'}/>
+                    <Input placeholder={'To name'} />
                 </Form.Item>
             </Form>
         </Modal>

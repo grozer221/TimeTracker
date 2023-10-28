@@ -1,20 +1,20 @@
-import React, {FC, useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from "../../../../store/store";
-import {vacationRequestsActions} from "../../store/vacationRequests.slice";
-import {DatePicker, Form, Modal, Row, Space, Typography} from "antd";
-import {nameof} from "../../../../utils/stringUtils";
-import {useLocation, useNavigate} from "react-router-dom";
-import {Moment} from "moment";
-import {formStyles} from "../../../../assets/form";
+import React, { FC, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from "../../../../behaviour/store";
+import { vacationRequestsActions } from "../../store/vacationRequests.slice";
+import { DatePicker, Form, Modal, Row, Space, Typography } from "antd";
+import { nameof } from "../../../../utils/stringUtils";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Moment } from "moment";
+import { formStyles } from "../../../../assets/form";
 import Input from "antd/es/input/Input";
 import Title from 'antd/lib/typography/Title';
-import {useForm} from "antd/es/form/Form";
-import {VacationRequestsCreateInputType} from "../../graphQL/vacationRequests.mutations";
-import {ReloadOutlined} from "@ant-design/icons";
-import {WithSmallLoading} from "../../../../hocs/WithSmallLoading/WithSmallLoading";
+import { useForm } from "antd/es/form/Form";
+import { VacationRequestsCreateInputType } from "../../graphQL/vacationRequests.mutations";
+import { ReloadOutlined } from "@ant-design/icons";
+import { WithSmallLoading } from "../../../../hocs/WithSmallLoading/WithSmallLoading";
 
-const {RangePicker} = DatePicker;
-const {Text} = Typography;
+const { RangePicker } = DatePicker;
+const { Text } = Typography;
 
 
 type FromValues = {
@@ -99,11 +99,11 @@ export const VacationRequestsCreatePage: FC = () => {
                 initialValues={initialValues}
                 labelCol={formStyles}
             >
-                {!loadingGetAvailableDays && !availableDays && <div className={'errorText'}>You can not create vacation request because you do not have available days</div> }
+                {!loadingGetAvailableDays && !availableDays && <div className={'errorText'}>You can not create vacation request because you do not have available days</div>}
                 <Form.Item
                     name={nameof<FromValues>('startAndEnd')}
                     label={'Start and end'}
-                    rules={[{required: true, message: 'Date start and date end is required'}]}
+                    rules={[{ required: true, message: 'Date start and date end is required' }]}
                 >
                     <RangePicker
                         disabled={loadingGetAvailableDays}
@@ -132,7 +132,7 @@ export const VacationRequestsCreatePage: FC = () => {
                     name={nameof<FromValues>('comment')}
                     label={'Comment'}
                 >
-                    <Input placeholder={'Comment'}/>
+                    <Input placeholder={'Comment'} />
                 </Form.Item>
             </Form>
         </Modal>

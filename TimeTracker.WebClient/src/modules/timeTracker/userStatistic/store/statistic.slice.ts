@@ -1,10 +1,10 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Track} from "../../../tracks/graphQL/tracks.types";
-import {GetTracksByUserIdAndDateInputType, GetTracksInputData} from "../../../tracks/graphQL/tracks.queries";
-import {Statistic} from "../graphQL/statistic.type";
-import {GetStatisticInputType} from "../graphQL/statistic.queries";
-import {TrackKind} from "../../../../graphQL/enums/TrackKind";
-import {TrackCreation} from "../../../../graphQL/enums/TrackCreation";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Track } from "../../../tracks/graphQL/tracks.types";
+import { GetTracksByUserIdAndDateInputType, GetTracksInputData } from "../../../tracks/graphQL/tracks.queries";
+import { Statistic } from "../graphQL/statistic.type";
+import { GetStatisticInputType } from "../graphQL/statistic.queries";
+import { TrackKind } from "../../../../behaviour/enums/TrackKind";
+import { TrackCreation } from "../../../../behaviour/enums/TrackCreation";
 import {
     CreateTrackForOtherUserInput,
     CreateTrackInput,
@@ -33,12 +33,12 @@ const initialState: InitialState = {
     loadingGet: false
 }
 
-export  const  statisticSlice = createSlice({
+export const statisticSlice = createSlice({
     name: 'statistic',
     initialState,
     reducers: {
         getAsync: (state, action: PayloadAction<GetStatisticInputType>) => state,
-        addStatistic: (state, action: PayloadAction<Statistic>) =>{
+        addStatistic: (state, action: PayloadAction<Statistic>) => {
             state.statistic = action.payload
         },
         setLoadingGet: (state, action: PayloadAction<boolean>) => {

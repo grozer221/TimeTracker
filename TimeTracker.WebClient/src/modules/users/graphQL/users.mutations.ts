@@ -1,8 +1,8 @@
-import {gql} from '@apollo/client';
-import {User, UserFilter} from "./users.types";
-import {USER_WITH_USERS_WHICH_CAN_APPROVE_VACATION_REQUESTS_FRAGMENT} from "./users.fragments";
-import {Permission} from "../../../graphQL/enums/Permission";
-import {Employment} from "../../../graphQL/enums/Employment";
+import { gql } from '@apollo/client';
+import { User, UserFilter } from "./users.types";
+import { USER_WITH_USERS_WHICH_CAN_APPROVE_VACATION_REQUESTS_FRAGMENT } from "./users.fragments";
+import { Permission } from "../../../behaviour/enums/Permission";
+import { Employment } from "../../../behaviour/enums/Employment";
 
 // Create user types and mutation
 export type CreateUserData = { users: { create: User } }

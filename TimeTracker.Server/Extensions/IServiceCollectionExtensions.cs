@@ -6,6 +6,8 @@ using GraphQL;
 using GraphQL.Server;
 using GraphQL.SystemTextJson;
 
+using Microsoft.Extensions.DependencyInjection.Extensions;
+
 using Quartz;
 
 using System.Reflection;
@@ -50,8 +52,13 @@ namespace TimeTracker.Server.Extensions
                 .AddGraphQLAuthorization(options =>
                 {
                     options.AddPolicy(AuthPolicies.Authenticated, p => p.RequireAuthenticatedUser());
-                    options.AddPolicy(AuthPolicies.Employee, p => p.RequireClaim(ClaimTypes.Role, Role.Employee.ToString(), Role.Administrator.ToString()));
-                    options.AddPolicy(AuthPolicies.Administrator, p => p.RequireClaim(ClaimTypes.Role, Role.Administrator.ToString()));
+                    options.AddPolicy(AuthPolicies.Employee, p => p.RequireClaim(
+                        ClaimTypes.Role,
+                        Role.Employee.ToString(),
+                        Role.Admin.ToString(),
+                        Role.SuperAdmin.ToString()));
+                    options.AddPolicy(AuthPolicies.Admin, p => p.RequireClaim(ClaimTypes.Role, Role.Admin.ToString(), Role.SuperAdmin.ToString()));
+                    options.AddPolicy(AuthPolicies.SuperAdmin, p => p.RequireClaim(ClaimTypes.Role, Role.SuperAdmin.ToString()));
                 });
 
             return services;
@@ -133,6 +140,28 @@ namespace TimeTracker.Server.Extensions
 
             services.AddScoped<SettingsManager>();
             services.AddScoped<CalendarDayManager>();
+            return services;
+        }
+
+        public static IServiceCollection AddInjectableServices(this IServiceCollection services)
+        {
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            var loadedPaths = loadedAssemblies.Where(a => !a.IsDynamic).Select(a => a.Location).ToArray();
+            var referencedPaths = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.dll");
+            var toLoad = referencedPaths.Where(r => !loadedPaths.Contains(r, StringComparer.InvariantCultureIgnoreCase)).ToList();
+            toLoad.ForEach(path => loadedAssemblies.Add(AppDomain.CurrentDomain.Load(AssemblyName.GetAssemblyName(path))));
+
+            var implementationTypes = loadedAssemblies
+                .SelectMany(asembly => asembly.GetTypes())
+                .Where(type => type.IsDefined(typeof(InjectableServiceAttribute)));
+
+            foreach (var implementationType in implementationTypes)
+            {
+                var injectableServiceAttribute = implementationType.GetCustomAttribute(typeof(InjectableServiceAttribute), true) as InjectableServiceAttribute;
+                var serviceType = injectableServiceAttribute.ServiceType == null ? implementationType : injectableServiceAttribute.ServiceType;
+                services.TryAdd(new ServiceDescriptor(serviceType, implementationType, injectableServiceAttribute.ServiceLifetime));
+            }
+
             return services;
         }
     }

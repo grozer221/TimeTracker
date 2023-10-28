@@ -1,21 +1,21 @@
-import {DatePicker, Form, Modal, Select} from "antd";
-import {Moment} from "moment";
-import React, {FC, useEffect} from "react";
-import {useNavigate} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../../store/store";
-import {useForm} from "antd/es/form/Form";
-import {nameof} from "../../../utils/stringUtils";
+import { DatePicker, Form, Modal, Select } from "antd";
+import { Moment } from "moment";
+import React, { FC, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../behaviour/store";
+import { useForm } from "antd/es/form/Form";
+import { nameof } from "../../../utils/stringUtils";
 import Title from "antd/lib/typography/Title";
-import {formStyles} from "../../../assets/form";
+import { formStyles } from "../../../assets/form";
 import Input from "antd/es/input/Input";
-import {SickLeaveCreateInputType} from "../graphQL/sickLeave.mutation";
-import {sickLeaveActions} from "../store/sickLeave.slice";
-import {User} from "../../users/graphQL/users.types";
-import {usersActions} from "../../users/store/users.slice";
-import {Employment} from "../../../graphQL/enums/Employment";
-import {Role} from "../../../graphQL/enums/Role";
+import { SickLeaveCreateInputType } from "../graphQL/sickLeave.mutation";
+import { sickLeaveActions } from "../store/sickLeave.slice";
+import { User } from "../../users/graphQL/users.types";
+import { usersActions } from "../../users/store/users.slice";
+import { Employment } from "../../../behaviour/enums/Employment";
+import { Role } from "../../../behaviour/enums/Role";
 
-const {RangePicker} = DatePicker;
+const { RangePicker } = DatePicker;
 
 
 type FormValues = {
@@ -33,7 +33,7 @@ export const SickLeaveCreatePage: FC = () => {
 
     useEffect(() => {
         dispatch(usersActions.fetchUsersInfinityLoad({
-            filter: {email: '', permissions: [], roles: []},
+            filter: { email: '', permissions: [], roles: [] },
             take: 100,
             skip: 0,
         }))
@@ -82,16 +82,16 @@ export const SickLeaveCreatePage: FC = () => {
                 <Form.Item
                     name={nameof<FormValues>('startAndEnd')}
                     label={'Start and end'}
-                    rules={[{required: true, message: 'Date start and date end is required'}]}
+                    rules={[{ required: true, message: 'Date start and date end is required' }]}
                 >
-                    <RangePicker/>
+                    <RangePicker />
 
                 </Form.Item>
                 <Form.Item
                     name={nameof<FormValues>('comment')}
                     label={'Comment'}
                 >
-                    <Input placeholder={'Comment'}/>
+                    <Input placeholder={'Comment'} />
                 </Form.Item>
                 <Form.Item
                     name={nameof<FormValues>("userId")}
@@ -103,7 +103,7 @@ export const SickLeaveCreatePage: FC = () => {
                         filterOption={false}
                         onSearch={(email) => {
                             dispatch(usersActions.fetchUsersInfinityLoad({
-                                filter: {email, permissions: [], roles: []},
+                                filter: { email, permissions: [], roles: [] },
                                 take: 100,
                                 skip: 0,
                             }))

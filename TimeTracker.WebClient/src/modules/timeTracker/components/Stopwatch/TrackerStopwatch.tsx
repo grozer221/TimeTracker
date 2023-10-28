@@ -1,24 +1,24 @@
-import React, {FC, useEffect, useState} from "react";
-import {Button, ButtonProps, Col, Divider, Form, Input, Row} from "antd";
-import {Track} from "../../../tracks/graphQL/tracks.types";
-import {useDispatch} from "react-redux";
+import React, { FC, useEffect, useState } from "react";
+import { Button, ButtonProps, Col, Divider, Form, Input, Row } from "antd";
+import { Track } from "../../../tracks/graphQL/tracks.types";
+import { useDispatch } from "react-redux";
 import moment from "moment";
-import {toUTCDateTime} from "../../../../convertors/toUTCDateTime";
-import {nameof} from "../../../../utils/stringUtils";
-import {MinusCircleOutlined, PlusCircleOutlined} from "@ant-design/icons";
-import {TrackKind} from "../../../../graphQL/enums/TrackKind";
-import {useForm} from "antd/es/form/Form";
+import { toUTCDateTime } from "../../../../convertors/toUTCDateTime";
+import { nameof } from "../../../../utils/stringUtils";
+import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { TrackKind } from "../../../../behaviour/enums/TrackKind";
+import { useForm } from "antd/es/form/Form";
 import {
     CreateTrackForOtherUserInput,
     CreateTrackInput,
     RemoveTrackInput,
     UpdateTrackInput
 } from "../../../tracks/graphQL/tracks.mutations";
-import {TrackerPanel} from "./TrackerPanel";
+import { TrackerPanel } from "./TrackerPanel";
 import s from './TrackerStopwatch.module.css'
-import {PayloadAction} from "@reduxjs/toolkit";
-import {TrackCreation} from "../../../../graphQL/enums/TrackCreation";
-import {tracksAction} from "../../../tracks/store/tracks.slice";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { TrackCreation } from "../../../../behaviour/enums/TrackCreation";
+import { tracksAction } from "../../../tracks/store/tracks.slice";
 
 type FormValues = {
     title: string,
@@ -37,7 +37,7 @@ type stopwatchProps = {
 
 
 
-export const Stopwatch: FC<stopwatchProps> = ({track, crudCallbacks}) => {
+export const Stopwatch: FC<stopwatchProps> = ({ track, crudCallbacks }) => {
     const dispatch = useDispatch()
     const [button, setButton] = useState<ButtonProps>()
     const [buttonText, setButtonText] = useState('')
@@ -45,7 +45,7 @@ export const Stopwatch: FC<stopwatchProps> = ({track, crudCallbacks}) => {
 
     const StartButton = {
         htmlType: 'submit',
-        icon: <PlusCircleOutlined/>
+        icon: <PlusCircleOutlined />
     } as ButtonProps
 
     const OnEndTrack = () => {
@@ -66,11 +66,11 @@ export const Stopwatch: FC<stopwatchProps> = ({track, crudCallbacks}) => {
 
     const StopButton = {
         danger: true,
-        icon: <MinusCircleOutlined/>,
+        icon: <MinusCircleOutlined />,
         onClick: OnEndTrack
     } as ButtonProps
 
-    useEffect(()=>{
+    useEffect(() => {
         track ? setButton(StopButton) : setButton(StartButton)
         track ? setButtonText('Stop') : setButtonText('Start')
     }, [track])
@@ -97,7 +97,7 @@ export const Stopwatch: FC<stopwatchProps> = ({track, crudCallbacks}) => {
                 <Row gutter={24}>
                     <Col span={18}>
                         <Form.Item name={nameof<FormValues>('title')}>
-                            <Input placeholder={'Title'}/>
+                            <Input placeholder={'Title'} />
                         </Form.Item>
                     </Col>
                     <Col span={6}>
@@ -111,7 +111,7 @@ export const Stopwatch: FC<stopwatchProps> = ({track, crudCallbacks}) => {
                     </Col>
                 </Row>
             </Form>
-            <Divider/>
+            <Divider />
             {track ? (
                 <TrackerPanel track={track} />
             ) : (<></>)}

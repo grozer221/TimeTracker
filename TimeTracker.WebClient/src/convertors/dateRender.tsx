@@ -1,9 +1,9 @@
-import React, {CSSProperties} from "react";
-import {DayKind} from "../graphQL/enums/DayKind";
-import {Moment} from "moment";
-import {CalendarDay} from "../modules/calendarDays/graphQL/calendarDays.types";
-import {Tooltip} from "antd";
-import {uppercaseToWords} from "../utils/stringUtils";
+import React, { CSSProperties } from "react";
+import { DayKind } from "../behaviour/enums/DayKind";
+import { Moment } from "moment";
+import { CalendarDay } from "../modules/calendarDays/graphQL/calendarDays.types";
+import { Tooltip } from "antd";
+import { uppercaseToWords } from "../utils/stringUtils";
 
 export const dateRender = (current: Moment, calendarDays: CalendarDay[]) => {
     const style: CSSProperties = {};

@@ -1,7 +1,7 @@
-import {gql} from '@apollo/client';
-import {SETTINGS_FRAGMENT} from "./settings.fragments";
-import {Settings} from "./settings.types";
-import {DayOfWeek} from "../../../graphQL/enums/DayOfWeek";
+import { gql } from '@apollo/client';
+import { SETTINGS_FRAGMENT } from "./settings.fragments";
+import { Settings } from "./settings.types";
+import { DayOfWeek } from "../../../behaviour/enums/DayOfWeek";
 
 export type SettingsEmploymentUpdateData = { settings: { updateEmployment: Settings } }
 export type SettingsEmploymentUpdateVars = { settingsEmploymentUpdateInputType: SettingsEmploymentUpdateInputType }

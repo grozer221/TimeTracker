@@ -1,12 +1,12 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {CalendarDay} from "../graphQL/calendarDays.types";
-import {getDateNow} from "../../../utils/dateUtils";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { CalendarDay } from "../graphQL/calendarDays.types";
+import { getDateNow } from "../../../utils/dateUtils";
 import {
     CalendarDaysCreateInputType,
     CalendarDaysCreateRangeInputType,
     CalendarDaysUpdateInputType
 } from "../graphQL/calendarDays.mutations";
-import {DayOfWeek} from "../../../graphQL/enums/DayOfWeek";
+import { DayOfWeek } from "../../../behaviour/enums/DayOfWeek";
 
 
 type InitialState = {
@@ -35,7 +35,7 @@ export const calendarDaysSlice = createSlice({
     name: 'calendarDays',
     initialState,
     reducers: {
-        getByDateAsync: (state, action: PayloadAction<{date: string}>) => state,
+        getByDateAsync: (state, action: PayloadAction<{ date: string }>) => state,
         setLoadingGetByDate: (state, action: PayloadAction<boolean>) => {
             state.loadingGetByDate = action.payload;
         },

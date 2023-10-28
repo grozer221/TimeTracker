@@ -1,6 +1,8 @@
 ﻿using GraphQL.Types;
+
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.CalendarDays;
+using TimeTracker.Server.GraphQL.Modules.Companies;
 using TimeTracker.Server.GraphQL.Modules.ExcelExport;
 using TimeTracker.Server.GraphQL.Modules.FileManager;
 using TimeTracker.Server.GraphQL.Modules.Settings;
@@ -23,23 +25,23 @@ namespace TimeTracker.Server.GraphQL
             Field<NonNullGraphType<TracksQueries>>()
                 .Name("Tracks")
                 .Resolve(_ => new { });
-            
+
             Field<NonNullGraphType<UsersQueries>>()
                 .Name("Users")
                 .Resolve(_ => new { });
-            
+
             Field<NonNullGraphType<CalendarDaysQueries>>()
                 .Name("CalendarDays")
                 .Resolve(_ => new { });
-            
+
             Field<NonNullGraphType<SettingsQueries>>()
                 .Name("Settings")
                 .Resolve(_ => new { });
-            
+
             Field<NonNullGraphType<FileManagerQueries>>()
                 .Name("FileManager")
                 .Resolve(_ => new { });
-            
+
             Field<NonNullGraphType<VacationRequestsQueries>>()
                 .Name("VacationRequests")
                 .Resolve(_ => new { });
@@ -54,6 +56,10 @@ namespace TimeTracker.Server.GraphQL
 
             Field<NonNullGraphType<SickLeaveQueries>>()
                 .Name("SickLeave")
+                .Resolve(_ => new { });
+
+            Field<NonNullGraphType<CompaniesQueries>>()
+                .Name("Companies")
                 .Resolve(_ => new { });
         }
     }

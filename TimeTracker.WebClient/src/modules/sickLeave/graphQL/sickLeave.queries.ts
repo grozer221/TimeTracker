@@ -1,8 +1,8 @@
-import {gql} from '@apollo/client';
-import {VacationRequest} from "../../vacationRequests/graphQL/vacationRequests.types";
-import {GetEntitiesResponse} from "../../../graphQL/types/getEntitiesResponse";
-import {SickLeaveFilter, SickLeaveType} from "../sickLeaveType";
-import {SICK_LEAVE_FRAGMENT} from "./sickLeave.fragments";
+import { gql } from '@apollo/client';
+import { VacationRequest } from "../../vacationRequests/graphQL/vacationRequests.types";
+import { SickLeaveFilter, SickLeaveType } from "../sickLeaveType";
+import { SICK_LEAVE_FRAGMENT } from "./sickLeave.fragments";
+import { GetEntitiesResponse } from '../../../behaviour';
 
 export type SickLeaveGetByIdData = { sickLeave: { getById: SickLeaveType } }
 export type SickLeaveGetByIdVars = { id: string }

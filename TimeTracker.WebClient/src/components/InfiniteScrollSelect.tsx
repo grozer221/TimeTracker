@@ -1,10 +1,10 @@
-import {FC, useEffect, useState} from "react";
-import {usersActions} from "../modules/users/store/users.slice";
-import {Select} from "antd";
+import { FC, useEffect, useState } from "react";
+import { usersActions } from "../modules/users/store/users.slice";
+import { Select } from "antd";
 import * as React from "react";
-import {User} from "../modules/users/graphQL/users.types";
-import {useAppSelector} from "../store/store";
-import {useDispatch} from "react-redux";
+import { User } from "../modules/users/graphQL/users.types";
+import { useAppSelector } from "../behaviour/store";
+import { useDispatch } from "react-redux";
 
 type Props = {
     notFetchedUsers?: User[],
@@ -12,7 +12,7 @@ type Props = {
     initialValues?: string[]
 }
 
-export const InfiniteScrollSelect: FC<Props> = ({notFetchedUsers, onChange, initialValues}) => {
+export const InfiniteScrollSelect: FC<Props> = ({ notFetchedUsers, onChange, initialValues }) => {
     const dispatch = useDispatch()
 
     let usersInfinityLoad = useAppSelector(s => s.users.usersInfinityLoad)
@@ -23,7 +23,7 @@ export const InfiniteScrollSelect: FC<Props> = ({notFetchedUsers, onChange, init
 
     useEffect(() => {
         dispatch(usersActions.fetchUsersInfinityLoad({
-            filter: {email: ''},
+            filter: { email: '' },
             take: usersPageSize,
             skip: 0,
         }))
@@ -43,7 +43,7 @@ export const InfiniteScrollSelect: FC<Props> = ({notFetchedUsers, onChange, init
                 if (currentPage < (usersInfinityLoad?.total || 0)) {
                     target.scrollTo(0, target.scrollHeight)
                     dispatch(usersActions.fetchUsersInfinityLoad({
-                        filter: {email: usersForVacationEmail},
+                        filter: { email: usersForVacationEmail },
                         take: usersPageSize,
                         skip: currentPage + 1,
                     }))
@@ -54,7 +54,7 @@ export const InfiniteScrollSelect: FC<Props> = ({notFetchedUsers, onChange, init
         onSearch={(email) => {
             setUsersForVacationEmail(email)
             dispatch(usersActions.fetchUsersInfinityLoad({
-                filter: {email},
+                filter: { email },
                 take: usersPageSize,
                 skip: 0,
             }))

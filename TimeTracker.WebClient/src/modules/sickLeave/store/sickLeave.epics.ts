@@ -1,10 +1,9 @@
-import {combineEpics, Epic, ofType} from "redux-observable";
-import {RootState} from "../../../store/store";
-import {catchError, endWith, from, mergeMap, of, startWith} from "rxjs";
-import {client} from "../../../graphQL/client";
-import {notificationsActions} from "../../notifications/store/notifications.slice";
-import {navigateActions} from "../../navigate/store/navigate.slice";
-import {sickLeaveActions} from "./sickLeave.slice";
+import { combineEpics, Epic, ofType } from "redux-observable";
+import { RootState } from "../../../behaviour/store";
+import { catchError, endWith, from, mergeMap, of, startWith } from "rxjs";
+import { notificationsActions } from "../../notifications/store/notifications.slice";
+import { navigateActions } from "../../navigate/store/navigate.slice";
+import { sickLeaveActions } from "./sickLeave.slice";
 import {
     SICK_LEAVE_GET_BY_ID_QUERY, SICK_LEAVE_GET_QUERY,
     SickLeaveGetByIdData,
@@ -23,7 +22,8 @@ import {
     SickLeaveUpdateData,
     SickLeaveUpdateVars, SickLeaveUploadFilesData, SickLeaveUploadFilesVars
 } from "../graphQL/sickLeave.mutation";
-import {vacationRequestsActions} from "../../vacationRequests/store/vacationRequests.slice";
+import { vacationRequestsActions } from "../../vacationRequests/store/vacationRequests.slice";
+import { client } from "../../../behaviour/client";
 
 
 export const getByIdAsyncEpic: Epic<ReturnType<typeof sickLeaveActions.getByIdAsync>, any, RootState> = (action$, state$) =>
@@ -32,7 +32,7 @@ export const getByIdAsyncEpic: Epic<ReturnType<typeof sickLeaveActions.getByIdAs
         mergeMap(action =>
             from(client.query<SickLeaveGetByIdData, SickLeaveGetByIdVars>({
                 query: SICK_LEAVE_GET_BY_ID_QUERY,
-                variables: {id: action.payload.id}
+                variables: { id: action.payload.id }
             })).pipe(
                 mergeMap(response => [
                     sickLeaveActions.getById(response.data.sickLeave.getById)
@@ -50,7 +50,7 @@ export const getAsyncEpic: Epic<ReturnType<typeof sickLeaveActions.getAsync>, an
         mergeMap(action =>
             from(client.query<SickLeaveGetData, SickLeaveGetVars>({
                 query: SICK_LEAVE_GET_QUERY,
-                variables: {sickLeaveGetInputType: action.payload}
+                variables: { sickLeaveGetInputType: action.payload }
             })).pipe(
                 mergeMap(response => [
                     sickLeaveActions.get(response.data.sickLeave.get),
@@ -69,7 +69,7 @@ export const createAsyncEpic: Epic<ReturnType<typeof sickLeaveActions.createAsyn
         mergeMap(action =>
             from(client.query<SickLeaveCreateData, SickLeaveCreateVars>({
                 query: SICK_LEAVE_CREATE_MUTATION,
-                variables: {sickLeaveCreateInputType: action.payload}
+                variables: { sickLeaveCreateInputType: action.payload }
             })).pipe(
                 mergeMap(response => {
                     const sickLeaveGetInputType = state$.value.sickLeave.sickLeaveGetInputType;
@@ -93,7 +93,7 @@ export const updateAsyncEpic: Epic<ReturnType<typeof sickLeaveActions.updateAsyn
         mergeMap(action =>
             from(client.query<SickLeaveUpdateData, SickLeaveUpdateVars>({
                 query: SICK_LEAVE_UPDATE_MUTATION,
-                variables: {sickLeaveUpdateInputType: action.payload}
+                variables: { sickLeaveUpdateInputType: action.payload }
             })).pipe(
                 mergeMap(response => {
                     const sickLeaveGetInputType = state$.value.sickLeave.sickLeaveGetInputType;
@@ -117,7 +117,7 @@ export const uploadFilesAsyncEpic: Epic<ReturnType<typeof sickLeaveActions.uploa
         mergeMap(action =>
             from(client.query<SickLeaveUploadFilesData, SickLeaveUploadFilesVars>({
                 query: SICK_LEAVE_UPLOAD_FILES_MUTATION,
-                variables: {sickLeaveUploadFilesInputType: action.payload}
+                variables: { sickLeaveUploadFilesInputType: action.payload }
             })).pipe(
                 mergeMap(response => {
                     const sickLeaveGetInputType = state$.value.sickLeave.sickLeaveGetInputType;
@@ -142,7 +142,7 @@ export const removeAsyncEpic: Epic<ReturnType<typeof sickLeaveActions.removeAsyn
         mergeMap(action =>
             from(client.query<SickLeaveRemoveData, SickLeaveRemoveVars>({
                 query: SICK_LEAVE_REMOVE_MUTATION,
-                variables: {id: action.payload.id}
+                variables: { id: action.payload.id }
             })).pipe(
                 mergeMap(response => {
                     const sickLeaveGetInputType = state$.value.sickLeave.sickLeaveGetInputType;

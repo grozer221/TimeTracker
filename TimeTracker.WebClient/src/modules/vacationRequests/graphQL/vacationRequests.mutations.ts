@@ -1,7 +1,7 @@
-import {gql} from '@apollo/client';
-import {VACATION_REQUEST_FRAGMENT} from "./vacationRequests.fragments";
-import {VacationRequest} from "./vacationRequests.types";
-import {VacationRequestStatus} from "../../../graphQL/enums/VacationRequestStatus";
+import { gql } from '@apollo/client';
+import { VACATION_REQUEST_FRAGMENT } from "./vacationRequests.fragments";
+import { VacationRequest } from "./vacationRequests.types";
+import { VacationRequestStatus } from "../../../behaviour/enums/VacationRequestStatus";
 
 export type VacationRequestsCreateData = { vacationRequests: { create: VacationRequest } }
 export type VacationRequestsCreateVars = { vacationRequestsCreateInputType: VacationRequestsCreateInputType }

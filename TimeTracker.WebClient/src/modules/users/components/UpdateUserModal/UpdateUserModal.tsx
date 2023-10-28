@@ -1,20 +1,20 @@
 import * as React from 'react';
-import {Form, Input, Modal, Radio, Select} from "antd";
-import {FC, useEffect, useState,} from "react";
+import { Form, Input, Modal, Radio, Select } from "antd";
+import { FC, useEffect, useState, } from "react";
 import Title from "antd/lib/typography/Title";
-import {useParams} from "react-router-dom";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import {Permission} from "../../../../graphQL/enums/Permission";
-import {useForm} from "antd/es/form/Form";
-import {useDispatch, useSelector} from "react-redux";
-import {User} from "../../graphQL/users.types";
-import {usersActions} from "../../store/users.slice";
-import {RootState, useAppSelector} from "../../../../store/store";
-import {UpdateUserInput} from "../../graphQL/users.mutations";
-import {Employment} from "../../../../graphQL/enums/Employment";
-import {navigateActions} from "../../../navigate/store/navigate.slice";
-import {InfiniteScrollSelect} from "../../../../components/InfiniteScrollSelect";
-import {Loading} from "../../../../components/Loading/Loading";
+import { useParams } from "react-router-dom";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import { Permission } from "../../../../behaviour/enums/Permission";
+import { useForm } from "antd/es/form/Form";
+import { useDispatch, useSelector } from "react-redux";
+import { User } from "../../graphQL/users.types";
+import { usersActions } from "../../store/users.slice";
+import { RootState, useAppSelector } from "../../../../behaviour/store";
+import { UpdateUserInput } from "../../graphQL/users.mutations";
+import { Employment } from "../../../../behaviour/enums/Employment";
+import { navigateActions } from "../../../navigate/store/navigate.slice";
+import { InfiniteScrollSelect } from "../../../../components/InfiniteScrollSelect";
+import { Loading } from "../../../../components/Loading/Loading";
 
 type FormValues = {
     firstName: string,
@@ -38,7 +38,7 @@ export const UpdateUserModal: FC<Props> = () => {
 
     useEffect(() => {
         dispatch(usersActions.getUserByEmailAsync(email))
-        dispatch(usersActions.fetchUsersInfinityLoad({filter: {email: ""}, skip: 0, take: usersPageSize}))
+        dispatch(usersActions.fetchUsersInfinityLoad({ filter: { email: "" }, skip: 0, take: usersPageSize }))
     }, [])
 
     let user = useSelector((s: RootState) => s.users.userProfile) as User
@@ -49,7 +49,7 @@ export const UpdateUserModal: FC<Props> = () => {
         user ? user.usersWhichCanApproveVacationRequest.map(u => u.id) : []
     )
 
-    if (user === null || usersInfinityLoad === null) return <Loading/>
+    if (user === null || usersInfinityLoad === null) return <Loading />
 
     let notFetchedUsers = user.usersWhichCanApproveVacationRequest.filter(user => {
         return !usersInfinityLoad?.entities.find(u => u.id === user.id);
@@ -93,7 +93,7 @@ export const UpdateUserModal: FC<Props> = () => {
         >
             <Form
                 form={form}
-                labelCol={{span: 24}}
+                labelCol={{ span: 24 }}
                 initialValues={{
                     firstName: user.firstName,
                     lastName: user.lastName,
@@ -104,33 +104,33 @@ export const UpdateUserModal: FC<Props> = () => {
                 } as FormValues}
             >
                 <Form.Item name={nameof<FormValues>("firstName")}
-                           label={"Firstname:"}
-                           rules={[{required: true, message: 'Please input user Firstname!'}]}
+                    label={"Firstname:"}
+                    rules={[{ required: true, message: 'Please input user Firstname!' }]}
                 >
-                    <Input placeholder="Input user firstname"/>
+                    <Input placeholder="Input user firstname" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("lastName")}
-                           label={"Lastname:"}
-                           rules={[{required: true, message: 'Please input user Lastname!'}]}>
-                    <Input placeholder="Input user lastname"/>
+                    label={"Lastname:"}
+                    rules={[{ required: true, message: 'Please input user Lastname!' }]}>
+                    <Input placeholder="Input user lastname" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("middleName")}
-                           label={"Middle name:"}
-                           rules={[{required: true, message: 'Please input user Middle name!'}]}>
-                    <Input placeholder="Input user Middle name"/>
+                    label={"Middle name:"}
+                    rules={[{ required: true, message: 'Please input user Middle name!' }]}>
+                    <Input placeholder="Input user Middle name" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("email")}
-                           label={"Email:"}
-                           rules={[{required: true, message: 'Please input user Email!'}]}>
-                    <Input placeholder="example@gmail.com"/>
+                    label={"Email:"}
+                    rules={[{ required: true, message: 'Please input user Email!' }]}>
+                    <Input placeholder="example@gmail.com" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("employment")}
-                           label={"Employment:"}
-                           rules={[{required: true, message: 'Please choose user employment!'}]}>
+                    label={"Employment:"}
+                    rules={[{ required: true, message: 'Please choose user employment!' }]}>
                     <Radio.Group>
                         {
                             Object.values(Employment).map(value =>
@@ -163,8 +163,8 @@ export const UpdateUserModal: FC<Props> = () => {
                     label={'Users which can approve vacation request'}
                 >
                     <InfiniteScrollSelect notFetchedUsers={notFetchedUsers}
-                                          initialValues={usersWhichCanApproveVacationRequest}
-                                          onChange={setUsersWhichCanApproveVacationRequest}/>
+                        initialValues={usersWhichCanApproveVacationRequest}
+                        onChange={setUsersWhichCanApproveVacationRequest} />
                 </Form.Item>
             </Form>
         </Modal>

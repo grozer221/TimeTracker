@@ -1,27 +1,27 @@
-import React, {FC, useState} from 'react';
-import {Row, Tabs} from "antd";
-import {AppstoreOutlined, ClockCircleOutlined, MailOutlined, UserOutlined} from "@ant-design/icons";
-import {SettingsEmploymentUpdate} from "../../components/SettingsEmploymentUpdate/SettingsEmploymentUpdate";
-import {useNavigate, useParams} from "react-router-dom";
-import {SettingsTasksUpdate} from "../../components/SettingsTasksUpdate/SettingsTasksUpdate";
-import {SettingsApplicationUpdate} from "../../components/SettingsApplicationUpdate/SettingsApplicationUpdate";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {Loading} from "../../../../components/Loading/Loading";
-import {SettingsEmailUpdate} from "../../components/SettingsEmailUpdate/SettingsEmailUpdate";
+import React, { FC, useState } from 'react';
+import { Row, Tabs } from "antd";
+import { AppstoreOutlined, ClockCircleOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
+import { SettingsEmploymentUpdate } from "../../components/SettingsEmploymentUpdate/SettingsEmploymentUpdate";
+import { useNavigate, useParams } from "react-router-dom";
+import { SettingsTasksUpdate } from "../../components/SettingsTasksUpdate/SettingsTasksUpdate";
+import { SettingsApplicationUpdate } from "../../components/SettingsApplicationUpdate/SettingsApplicationUpdate";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { Loading } from "../../../../components/Loading/Loading";
+import { SettingsEmailUpdate } from "../../components/SettingsEmailUpdate/SettingsEmailUpdate";
 import {
     SettingsVacationRequestsUpdate
 } from "../../components/SettingsVacationRequestsUpdate/SettingsVacationRequestsUpdate";
-import {isAdministratorOrHavePermissions} from "../../../../utils/permissions";
-import {Permission} from "../../../../graphQL/enums/Permission";
-import {Error} from "../../../../components/Error/Error";
+import { isAdministratorOrHavePermissions } from "../../../../utils/permissions";
+import { Permission } from "../../../../behaviour/enums/Permission";
+import { Error } from "../../../../components/Error/Error";
 
-const {TabPane} = Tabs;
+const { TabPane } = Tabs;
 
 type Tab = 'application' | 'employment' | 'vacation-requests' | 'tasks' | 'email';
 
 export const SettingsPage: FC = () => {
-    const {tab} = useParams();
+    const { tab } = useParams();
     const navigate = useNavigate();
     const initialised = useSelector((s: RootState) => s.app.initialised);
     const settingsLoadingGet = useSelector((s: RootState) => s.settings.loadingGet);
@@ -33,48 +33,48 @@ export const SettingsPage: FC = () => {
         navigate(`/settings/${tab}`)
     }
 
-    if(!isAdministratorOrHavePermissions([Permission.UpdateSettings]))
-        return <Error statusCode={403}/>
+    if (!isAdministratorOrHavePermissions([Permission.UpdateSettings]))
+        return <Error statusCode={403} />
 
     if (!initialised || settingsLoadingGet || authLoadingMe)
-        return <Loading/>
+        return <Loading />
 
     return (
         <Row>
             <Tabs
                 defaultActiveKey={tab || 'application'}
                 onChange={onChangeTabHandler}
-                style={{width: '100%'}}
+                style={{ width: '100%' }}
             >
                 <TabPane
-                    tab={<span><AppstoreOutlined/>Application</span>}
+                    tab={<span><AppstoreOutlined />Application</span>}
                     key="application"
                 >
-                    {selectedTab === 'application' && <SettingsApplicationUpdate/>}
+                    {selectedTab === 'application' && <SettingsApplicationUpdate />}
                 </TabPane>
                 <TabPane
-                    tab={<span><UserOutlined/>Employment</span>}
+                    tab={<span><UserOutlined />Employment</span>}
                     key="employment"
                 >
-                    {selectedTab === 'employment' && <SettingsEmploymentUpdate/>}
+                    {selectedTab === 'employment' && <SettingsEmploymentUpdate />}
                 </TabPane>
                 <TabPane
-                    tab={<span><UserOutlined/>Vacation requests</span>}
+                    tab={<span><UserOutlined />Vacation requests</span>}
                     key="vacation-requests"
                 >
-                    {selectedTab === 'vacation-requests' && <SettingsVacationRequestsUpdate/>}
+                    {selectedTab === 'vacation-requests' && <SettingsVacationRequestsUpdate />}
                 </TabPane>
                 <TabPane
-                    tab={<span><ClockCircleOutlined/>Tasks</span>}
+                    tab={<span><ClockCircleOutlined />Tasks</span>}
                     key="tasks"
                 >
-                    {selectedTab === 'tasks' && <SettingsTasksUpdate/>}
+                    {selectedTab === 'tasks' && <SettingsTasksUpdate />}
                 </TabPane>
                 <TabPane
-                    tab={<span><MailOutlined/>Email</span>}
+                    tab={<span><MailOutlined />Email</span>}
                     key="email"
                 >
-                    {selectedTab === 'email' && <SettingsEmailUpdate/>}
+                    {selectedTab === 'email' && <SettingsEmailUpdate />}
                 </TabPane>
             </Tabs>
         </Row>

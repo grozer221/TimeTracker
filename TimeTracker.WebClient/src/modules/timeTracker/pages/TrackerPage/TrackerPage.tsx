@@ -1,14 +1,14 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate, useSearchParams} from "react-router-dom";
-import {Col, DatePicker, Row} from 'antd';
-import {useDispatch} from "react-redux";
-import {tracksAction} from "../../../tracks/store/tracks.slice";
-import {useAppSelector} from "../../../../store/store";
-import {isAuthenticated} from "../../../../utils/permissions";
-import {TrackKind} from "../../../../graphQL/enums/TrackKind";
-import {Stopwatch} from "../../components/Stopwatch/TrackerStopwatch";
-import moment, {now} from "moment";
-import {TracksTable} from "../../components/TracksTable/TracksTable";
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Col, DatePicker, Row } from 'antd';
+import { useDispatch } from "react-redux";
+import { tracksAction } from "../../../tracks/store/tracks.slice";
+import { useAppSelector } from "../../../../behaviour/store";
+import { isAuthenticated } from "../../../../utils/permissions";
+import { TrackKind } from "../../../../behaviour/enums/TrackKind";
+import { Stopwatch } from "../../components/Stopwatch/TrackerStopwatch";
+import moment, { now } from "moment";
+import { TracksTable } from "../../components/TracksTable/TracksTable";
 import s from "./TrackerPage.module.css"
 import {
     CreateTrackForOtherUserInput,
@@ -16,9 +16,9 @@ import {
     RemoveTrackInput,
     UpdateTrackInput
 } from "../../../tracks/graphQL/tracks.mutations";
-import {Employment} from "../../../../graphQL/enums/Employment";
-import {TracksStatistic} from "../../components/Statistic/TracksStatistic";
-import {statisticAction} from "../../userStatistic/store/statistic.slice";
+import { Employment } from "../../../../behaviour/enums/Employment";
+import { TracksStatistic } from "../../components/Statistic/TracksStatistic";
+import { statisticAction } from "../../userStatistic/store/statistic.slice";
 
 type DataType = {
     id: string
@@ -69,40 +69,40 @@ export const TrackerPage: React.FC = () => {
     }, [isAuth])
 
     useEffect(() => {
-        dispatch(statisticAction.setGetStatisticInputData({UserId: userId, Date: date}))
-        dispatch(statisticAction.getAsync({UserId: userId, Date: date}))
+        dispatch(statisticAction.setGetStatisticInputData({ UserId: userId, Date: date }))
+        dispatch(statisticAction.getAsync({ UserId: userId, Date: date }))
     }, [tracks])
 
     useEffect(() => {
         dispatch(tracksAction.getCurrentAsync())
-        dispatch(tracksAction.setGetTracksInputData({UserId: userId, Date: date}))
-        dispatch(tracksAction.getTracksByUserIdAndDate({UserId: userId, Date: date}))
+        dispatch(tracksAction.setGetTracksInputData({ UserId: userId, Date: date }))
+        dispatch(tracksAction.getTracksByUserIdAndDate({ UserId: userId, Date: date }))
     }, [setSearchParams])
 
     useEffect(() => {
         dispatch(tracksAction.getCurrentAsync())
-        dispatch(tracksAction.setGetTracksInputData({UserId: userId, Date: date}))
-        dispatch(tracksAction.getTracksByUserIdAndDate({UserId: userId, Date: date}))
+        dispatch(tracksAction.setGetTracksInputData({ UserId: userId, Date: date }))
+        dispatch(tracksAction.getTracksByUserIdAndDate({ UserId: userId, Date: date }))
     }, [date])
 
 
     return (
         <>
             {employment === Employment.PartTime ?
-                <Stopwatch track={currentTrack} crudCallbacks={{create, update, remove}}/> :
+                <Stopwatch track={currentTrack} crudCallbacks={{ create, update, remove }} /> :
                 <></>}
-            <Row style={{marginTop: 10, marginBottom: 10}}>
+            <Row style={{ marginTop: 10, marginBottom: 10 }}>
                 <Col span={20}><b><TracksStatistic /></b></Col>
                 <Col span={4}>
                     <DatePicker className={s.date_picker} picker={"month"} defaultValue={moment(now())} onChange={e => {
                         if (e != null)
                             setDate(e.toISOString())
-                    }}/>
+                    }} />
 
                 </Col>
             </Row>
             <TracksTable tracks={tracks} date={date} loading={loadingGet} canEditDateOrKind={canEditDateOrKind}
-                         crudCallbacks={{create, update, remove}}/>
+                crudCallbacks={{ create, update, remove }} />
         </>
     );
 };

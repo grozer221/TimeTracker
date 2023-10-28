@@ -1,16 +1,16 @@
 import * as React from 'react';
-import {FC} from 'react';
-import {DatePicker, Form, Input, Modal, Radio} from "antd";
+import { FC } from 'react';
+import { DatePicker, Form, Input, Modal, Radio } from "antd";
 import Title from "antd/lib/typography/Title";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import {useForm} from "antd/es/form/Form";
-import {useDispatch} from "react-redux";
-import {useAppSelector} from "../../../../store/store";
-import {usersActions} from "../../store/users.slice";
-import {navigateActions} from "../../../navigate/store/navigate.slice";
-import {TrackKind} from "../../../../graphQL/enums/TrackKind";
-import {tracksAction} from "../../../tracks/store/tracks.slice";
-import {TrackCreation} from "../../../../graphQL/enums/TrackCreation";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import { useForm } from "antd/es/form/Form";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../../../behaviour/store";
+import { usersActions } from "../../store/users.slice";
+import { navigateActions } from "../../../navigate/store/navigate.slice";
+import { TrackKind } from "../../../../behaviour/enums/TrackKind";
+import { tracksAction } from "../../../tracks/store/tracks.slice";
+import { TrackCreation } from "../../../../behaviour/enums/TrackCreation";
 
 type FormValues = {
     title: string,
@@ -18,7 +18,7 @@ type FormValues = {
     time: string,
 }
 
-const {RangePicker} = DatePicker;
+const { RangePicker } = DatePicker;
 
 type Props = {};
 export const CreateTrackModal: FC<Props> = () => {
@@ -66,16 +66,16 @@ export const CreateTrackModal: FC<Props> = () => {
         >
             <Form
                 form={form}
-                labelCol={{span: 24}}>
+                labelCol={{ span: 24 }}>
                 <Form.Item name={nameof<FormValues>("title")}
-                           label={"Title:"}>
-                    <Input placeholder="Input title"/>
+                    label={"Title:"}>
+                    <Input placeholder="Input title" />
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("kind")}
-                           label={"Kind:"}
-                           initialValue={TrackKind.Working}
-                           rules={[{required: true, message: "select kind!"}]}
+                    label={"Kind:"}
+                    initialValue={TrackKind.Working}
+                    rules={[{ required: true, message: "select kind!" }]}
                 >
                     <Radio.Group >
                         {
@@ -88,13 +88,13 @@ export const CreateTrackModal: FC<Props> = () => {
                 </Form.Item>
 
                 <Form.Item name={nameof<FormValues>("time")}
-                           label={"Time:"}
-                           rules={[{required: true, message: "select time range!"}]}
+                    label={"Time:"}
+                    rules={[{ required: true, message: "select time range!" }]}
                 >
                     <RangePicker showTime format="YYYY-MM-DD HH:mm:ss"
-                                 disabledDate={(currentDate) =>
-                                     today.getMonth() !== +currentDate.month() || today.getFullYear() !== +currentDate.year()
-                                 }/>
+                        disabledDate={(currentDate) =>
+                            today.getMonth() !== +currentDate.month() || today.getFullYear() !== +currentDate.year()
+                        } />
                 </Form.Item>
             </Form>
         </Modal>

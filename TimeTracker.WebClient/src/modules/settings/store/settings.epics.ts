@@ -1,7 +1,6 @@
-import {combineEpics, Epic, ofType} from "redux-observable";
-import {RootState} from "../../../store/store";
-import {catchError, endWith, from, map, mergeMap, of, startWith} from "rxjs";
-import {client} from "../../../graphQL/client";
+import { combineEpics, Epic, ofType } from "redux-observable";
+import { RootState } from "../../../behaviour/store";
+import { catchError, endWith, from, map, mergeMap, of, startWith } from "rxjs";
 import {
     SETTINGS_GET_FOR_ADMINISTRATOR_OR_HAVE_PERMISSION_UPDATE_QUERY,
     SETTINGS_GET_FOR_EMPLOYEE_QUERY,
@@ -26,8 +25,9 @@ import {
     SettingsVacationRequestsUpdateData,
     SettingsVacationRequestsUpdateVars
 } from "../graphQL/settings.mutations";
-import {notificationsActions} from "../../notifications/store/notifications.slice";
-import {settingsActions} from "./settings.slice";
+import { notificationsActions } from "../../notifications/store/notifications.slice";
+import { settingsActions } from "./settings.slice";
+import { client } from "../../../behaviour/client";
 
 export const getForAdministratorOrHavePermissionUpdateEpic: Epic<ReturnType<typeof settingsActions.getForAdministratorOrHavePermissionUpdateAsync>, any, RootState> = (action$, state$) =>
     action$.pipe(
@@ -80,12 +80,12 @@ export const settingsEmploymentUpdateEpic: Epic<ReturnType<typeof settingsAction
         mergeMap(action =>
             from(client.mutate<SettingsEmploymentUpdateData, SettingsEmploymentUpdateVars>({
                 mutation: SETTINGS_EMPLOYMENT_UPDATE_MUTATION,
-                variables: {settingsEmploymentUpdateInputType: action.payload},
+                variables: { settingsEmploymentUpdateInputType: action.payload },
             })).pipe(
                 mergeMap(response => [
-                        settingsActions.setSettings(response.data?.settings.updateEmployment),
-                        notificationsActions.addSuccess('Settings employment successfully saved')
-                    ]
+                    settingsActions.setSettings(response.data?.settings.updateEmployment),
+                    notificationsActions.addSuccess('Settings employment successfully saved')
+                ]
                 ),
                 catchError(error => of(notificationsActions.addError(error.message))),
                 startWith(settingsActions.setLoadingUpdate(true)),
@@ -100,12 +100,12 @@ export const settingsApplicationUpdateEpic: Epic<ReturnType<typeof settingsActio
         mergeMap(action =>
             from(client.mutate<SettingsApplicationUpdateData, SettingsApplicationUpdateVars>({
                 mutation: SETTINGS_APPLICATION_UPDATE_MUTATION,
-                variables: {settingsApplicationUpdateInputType: action.payload},
+                variables: { settingsApplicationUpdateInputType: action.payload },
             })).pipe(
                 mergeMap(response => [
-                        settingsActions.setSettings(response.data?.settings.updateApplication),
-                        notificationsActions.addSuccess('Settings application successfully saved')
-                    ]
+                    settingsActions.setSettings(response.data?.settings.updateApplication),
+                    notificationsActions.addSuccess('Settings application successfully saved')
+                ]
                 ),
                 catchError(error => of(notificationsActions.addError(error.message))),
                 startWith(settingsActions.setLoadingUpdate(true)),
@@ -120,7 +120,7 @@ export const settingsTasksUpdateEpic: Epic<ReturnType<typeof settingsActions.upd
         mergeMap(action =>
             from(client.mutate<SettingsTasksUpdateData, SettingsTasksUpdateVars>({
                 mutation: SETTINGS_TASKS_UPDATE_MUTATION,
-                variables: {settingsTasksUpdateInputType: action.payload},
+                variables: { settingsTasksUpdateInputType: action.payload },
             })).pipe(
                 mergeMap(response =>
                     response.data
@@ -144,7 +144,7 @@ export const settingsEmailUpdateEpic: Epic<ReturnType<typeof settingsActions.upd
         mergeMap(action =>
             from(client.mutate<SettingsEmailUpdateData, SettingsEmailUpdateVars>({
                 mutation: SETTINGS_EMAIL_UPDATE_MUTATION,
-                variables: {settingsEmailUpdateInputType: action.payload},
+                variables: { settingsEmailUpdateInputType: action.payload },
             })).pipe(
                 mergeMap(response =>
                     response.data
@@ -168,7 +168,7 @@ export const updateVacationRequestsEpic: Epic<ReturnType<typeof settingsActions.
         mergeMap(action =>
             from(client.mutate<SettingsVacationRequestsUpdateData, SettingsVacationRequestsUpdateVars>({
                 mutation: SETTINGS_VACATION_REQUESTS_UPDATE_MUTATION,
-                variables: {settingsVacationRequestsUpdateInputType: action.payload},
+                variables: { settingsVacationRequestsUpdateInputType: action.payload },
             })).pipe(
                 mergeMap(response =>
                     response.data

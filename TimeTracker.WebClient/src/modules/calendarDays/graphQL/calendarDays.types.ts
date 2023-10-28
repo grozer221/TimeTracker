@@ -1,4 +1,4 @@
-import {DayKind} from "../../../graphQL/enums/DayKind";
+import { DayKind } from "../../../behaviour/enums/DayKind";
 
 export type CalendarDay = {
     id: string,

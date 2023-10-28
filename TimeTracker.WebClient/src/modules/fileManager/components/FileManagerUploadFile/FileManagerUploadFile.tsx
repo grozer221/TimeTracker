@@ -1,11 +1,11 @@
-import React, {ChangeEvent, FC, useContext, useEffect, useRef, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {Button, Form, FormInstance, Input, InputRef, message, Modal, Popconfirm, Table} from "antd";
+import React, { ChangeEvent, FC, useContext, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { Button, Form, FormInstance, Input, InputRef, message, Modal, Popconfirm, Table } from "antd";
 import Title from "antd/lib/typography/Title";
-import {DeleteOutlined, UploadOutlined} from "@ant-design/icons";
+import { DeleteOutlined, UploadOutlined } from "@ant-design/icons";
 import s from './FileManagerUploadFile.module.css';
-import {fileManagerActions} from "../../store/fileManager.slice";
+import { fileManagerActions } from "../../store/fileManager.slice";
 
 type EditableTableProps = Parameters<typeof Table>[0];
 
@@ -41,7 +41,7 @@ export const FileManagerUploadFile: FC = () => {
             render: (_, record: any) =>
                 <Popconfirm title="Sure to remove?" onConfirm={() => handleDelete(record.key)}>
                     <Button
-                        icon={<DeleteOutlined/>}
+                        icon={<DeleteOutlined />}
                         shape={'circle'}
                         danger
                         size={'small'}
@@ -97,7 +97,7 @@ export const FileManagerUploadFile: FC = () => {
             message.error('Choose a files')
             return;
         }
-        dispatch(fileManagerActions.uploadFilesAsync({folderPath, files: uploadFiles}))
+        dispatch(fileManagerActions.uploadFilesAsync({ folderPath, files: uploadFiles }))
     }
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +127,7 @@ export const FileManagerUploadFile: FC = () => {
                     <>
                         <Button
                             type={'primary'}
-                            icon={<UploadOutlined/>}
+                            icon={<UploadOutlined />}
                             onClick={() => hiddenFileInput.current?.click()}
                         />
                         <input
@@ -135,7 +135,7 @@ export const FileManagerUploadFile: FC = () => {
                             multiple
                             ref={hiddenFileInput}
                             onChange={handleChange}
-                            style={{display: 'none'}}
+                            style={{ display: 'none' }}
                         />
                     </>
                 }
@@ -163,7 +163,7 @@ interface EditableRowProps {
     index: number;
 }
 
-const EditableRow: React.FC<EditableRowProps> = ({index, ...props}) => {
+const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
     const [form] = Form.useForm();
     return (
         <Form form={form} component={false}>
@@ -184,14 +184,14 @@ interface EditableCellProps {
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
-                                                       title,
-                                                       editable,
-                                                       children,
-                                                       dataIndex,
-                                                       record,
-                                                       handleSave,
-                                                       ...restProps
-                                                   }) => {
+    title,
+    editable,
+    children,
+    dataIndex,
+    record,
+    handleSave,
+    ...restProps
+}) => {
     const [editing, setEditing] = useState(false);
     const inputRef = useRef<InputRef>(null);
     const form = useContext(EditableContext)!;
@@ -204,7 +204,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
     const toggleEdit = () => {
         setEditing(!editing);
-        form.setFieldsValue({[dataIndex]: record[dataIndex]});
+        form.setFieldsValue({ [dataIndex]: record[dataIndex] });
     };
 
     const save = async () => {
@@ -212,7 +212,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
             const values = await form.validateFields();
 
             toggleEdit();
-            handleSave({...record, ...values});
+            handleSave({ ...record, ...values });
         } catch (errInfo) {
             console.log('Save failed:', errInfo);
         }
@@ -223,7 +223,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     if (editable) {
         childNode = editing ? (
             <Form.Item
-                style={{margin: 0}}
+                style={{ margin: 0 }}
                 name={dataIndex}
                 rules={[
                     {
@@ -232,10 +232,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
                     },
                 ]}
             >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save}/>
+                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
             </Form.Item>
         ) : (
-            <div className={s.editableCellValueWrap} style={{paddingRight: 24}} onClick={toggleEdit}>
+            <div className={s.editableCellValueWrap} style={{ paddingRight: 24 }} onClick={toggleEdit}>
                 {children}
             </div>
         );

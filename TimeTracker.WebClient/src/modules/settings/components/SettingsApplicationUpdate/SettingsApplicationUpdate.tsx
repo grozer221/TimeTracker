@@ -1,24 +1,24 @@
-import {Col, Form, Image, Input, Row, Typography} from 'antd';
-import React, {FC, useState} from 'react';
-import {useForm} from "antd/es/form/Form";
-import {formStyles} from "../../../../assets/form";
-import {SettingsApplicationUpdateInputType} from "../../graphQL/settings.mutations";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {nameof} from "../../../../utils/stringUtils";
-import {linkRegexPattern} from "../../../../utils/regexUtils";
-import {ExtraHeaderButtons} from "../../../../components/ExtraHeaderButtons";
-import {FileManagerOpenButton} from "../../../fileManager/components/FileManagerOpenButton";
-import {FileManagerItem} from "../../../fileManager/graphQL/fileManager.types";
-import {settingsActions} from "../../store/settings.slice";
+import { Col, Form, Image, Input, Row, Typography } from 'antd';
+import React, { FC, useState } from 'react';
+import { useForm } from "antd/es/form/Form";
+import { formStyles } from "../../../../assets/form";
+import { SettingsApplicationUpdateInputType } from "../../graphQL/settings.mutations";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { nameof } from "../../../../utils/stringUtils";
+import { linkRegexPattern } from "../../../../utils/regexUtils";
+import { ExtraHeaderButtons } from "../../../../components/ExtraHeaderButtons";
+import { FileManagerOpenButton } from "../../../fileManager/components/FileManagerOpenButton";
+import { FileManagerItem } from "../../../fileManager/graphQL/fileManager.types";
+import { settingsActions } from "../../store/settings.slice";
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 type FormValues = {
     title?: string,
 };
 
-export const SettingsApplicationUpdate: FC = ({}) => {
+export const SettingsApplicationUpdate: FC = ({ }) => {
     const [form] = useForm();
     const dispatch = useDispatch();
     const settingsLoadingUpdate = useSelector((s: RootState) => s.settings.loadingUpdate)
@@ -72,7 +72,7 @@ export const SettingsApplicationUpdate: FC = ({}) => {
                         label="Title"
                         name={nameof<FormValues>('title')}
                     >
-                        <Input placeholder={'Title'}/>
+                        <Input placeholder={'Title'} />
                     </Form.Item>
                 </Col>
             </Row>
@@ -91,7 +91,7 @@ export const SettingsApplicationUpdate: FC = ({}) => {
                         <Input.Group compact>
                             <Input
                                 placeholder={'Favicon url'}
-                                style={{width: 'calc(100% - 32px)'}}
+                                style={{ width: 'calc(100% - 32px)' }}
                                 value={faviconUrl}
                                 onChange={e => setFaviconUrl(e.target.value)}
                             />
@@ -107,7 +107,7 @@ export const SettingsApplicationUpdate: FC = ({}) => {
                     </div>
                     {faviconUrl && !form.getFieldError('faviconUrl').length &&
                         <div className={'imagePreview'}>
-                            <Image src={faviconUrl}/>
+                            <Image src={faviconUrl} />
                         </div>
                     }
                 </Col>
@@ -125,7 +125,7 @@ export const SettingsApplicationUpdate: FC = ({}) => {
                         <Input.Group compact>
                             <Input
                                 placeholder={'Logo url'}
-                                style={{width: 'calc(100% - 32px)'}}
+                                style={{ width: 'calc(100% - 32px)' }}
                                 value={logoUrl}
                                 onChange={e => setLogoUrl(e.target.value)}
                             />
@@ -141,7 +141,7 @@ export const SettingsApplicationUpdate: FC = ({}) => {
                     </div>
                     {logoUrl && !form.getFieldError('logoUrl').length &&
                         <div className={'imagePreview'}>
-                            <Image src={logoUrl}/>
+                            <Image src={logoUrl} />
                         </div>
                     }
                 </Col>

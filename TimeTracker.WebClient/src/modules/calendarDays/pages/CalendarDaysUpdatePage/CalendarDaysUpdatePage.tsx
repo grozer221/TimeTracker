@@ -1,19 +1,19 @@
-import {DatePicker, Form, Input, Modal, Select} from 'antd';
-import React, {useEffect} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import {useForm} from "antd/es/form/Form";
-import moment, {Moment} from "moment";
-import {useDispatch, useSelector} from "react-redux";
-import {calendarDaysActions} from "../../store/calendarDays.slice";
-import {RootState} from "../../../../store/store";
-import {DayKind} from "../../../../graphQL/enums/DayKind";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import {dateRender} from "../../../../convertors/dateRender";
+import { DatePicker, Form, Input, Modal, Select } from 'antd';
+import React, { useEffect } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { useForm } from "antd/es/form/Form";
+import moment, { Moment } from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { calendarDaysActions } from "../../store/calendarDays.slice";
+import { RootState } from "../../../../behaviour/store";
+import { DayKind } from "../../../../behaviour/enums/DayKind";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import { dateRender } from "../../../../convertors/dateRender";
 import Title from 'antd/lib/typography/Title';
-import {formStyles} from "../../../../assets/form";
-import {DayOfWeek} from "../../../../graphQL/enums/DayOfWeek";
-import {range} from "../../../../utils/arrayUtils";
-import {Loading} from "../../../../components/Loading/Loading";
+import { formStyles } from "../../../../assets/form";
+import { DayOfWeek } from "../../../../behaviour/enums/DayOfWeek";
+import { range } from "../../../../utils/arrayUtils";
+import { Loading } from "../../../../components/Loading/Loading";
 
 type FromValues = {
     id?: string,
@@ -41,7 +41,7 @@ export const CalendarDaysUpdatePage = () => {
 
     useEffect(() => {
         if (!dayInUpdate)
-            dispatch(calendarDaysActions.getByDateAsync({date: date || ''}));
+            dispatch(calendarDaysActions.getByDateAsync({ date: date || '' }));
     }, [])
 
     const onFinish = async () => {
@@ -81,7 +81,7 @@ export const CalendarDaysUpdatePage = () => {
             onCancel={() => navigate(-1)}
         >
             {loadingGetByDate && !dayInUpdate
-                ? <Loading/>
+                ? <Loading />
                 : <Form
                     name="CalendarDaysUpdateForm"
                     form={form}
@@ -93,7 +93,7 @@ export const CalendarDaysUpdatePage = () => {
                         name={nameof<FromValues>('id')}
                         className={'invisible'}
                     >
-                        <Input type={'hidden'}/>
+                        <Input type={'hidden'} />
                     </Form.Item>
                     <Form.Item
                         name={nameof<FromValues>('date')}
@@ -109,12 +109,12 @@ export const CalendarDaysUpdatePage = () => {
                         name={nameof<FromValues>('title')}
                         label={'Title'}
                     >
-                        <Input placeholder={'Title'}/>
+                        <Input placeholder={'Title'} />
                     </Form.Item>
                     <Form.Item
                         name={nameof<FromValues>('kind')}
                         label="Kind"
-                        rules={[{required: true, message: 'Kind is required'}]}
+                        rules={[{ required: true, message: 'Kind is required' }]}
                     >
                         <Select className={'w-100'} placeholder={'Kind'}>
                             {(Object.values(DayKind) as Array<DayKind>).map((value) => (
@@ -127,7 +127,7 @@ export const CalendarDaysUpdatePage = () => {
                     <Form.Item
                         name={nameof<FromValues>('workHours')}
                         label="Work hours"
-                        rules={[{required: true, message: 'Work hours is required'}]}
+                        rules={[{ required: true, message: 'Work hours is required' }]}
                     >
                         <Select
                             allowClear

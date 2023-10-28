@@ -1,19 +1,19 @@
-import React, {FC, useEffect} from 'react';
-import {useAppDispatch, useAppSelector} from "../../../../store/store";
-import {vacationRequestsActions} from "../../store/vacationRequests.slice";
-import {DatePicker, Form, Input, Modal, Radio, Typography} from "antd";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {formStyles} from "../../../../assets/form";
+import React, { FC, useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from "../../../../behaviour/store";
+import { vacationRequestsActions } from "../../store/vacationRequests.slice";
+import { DatePicker, Form, Input, Modal, Radio, Typography } from "antd";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { formStyles } from "../../../../assets/form";
 import Title from 'antd/lib/typography/Title';
-import {useForm} from "antd/es/form/Form";
-import {VacationRequestStatus} from "../../../../graphQL/enums/VacationRequestStatus";
-import {VacationRequestsUpdateStatusInputType} from "../../graphQL/vacationRequests.mutations";
-import moment, {Moment} from "moment";
-import {Loading} from "../../../../components/Loading/Loading";
+import { useForm } from "antd/es/form/Form";
+import { VacationRequestStatus } from "../../../../behaviour/enums/VacationRequestStatus";
+import { VacationRequestsUpdateStatusInputType } from "../../graphQL/vacationRequests.mutations";
+import moment, { Moment } from "moment";
+import { Loading } from "../../../../components/Loading/Loading";
 
-const {RangePicker} = DatePicker;
-const {Text} = Typography;
+const { RangePicker } = DatePicker;
+const { Text } = Typography;
 
 
 type FromValues = {
@@ -40,7 +40,7 @@ export const VacationRequestsUpdatePage: FC = () => {
 
     useEffect(() => {
         if (!vacationRequestInUpdate) {
-            dispatch(vacationRequestsActions.getByIdAsync({id}))
+            dispatch(vacationRequestsActions.getByIdAsync({ id }))
         }
         if (!availableDays) {
             dispatch(vacationRequestsActions.getAvailableDaysAsync())
@@ -81,7 +81,7 @@ export const VacationRequestsUpdatePage: FC = () => {
             onCancel={() => navigate(-1)}
         >
             {loadingGetById || loadingGet || !vacationRequestInUpdate
-                ? <Loading/>
+                ? <Loading />
                 : <Form
                     name="VacationRequestsUpdateForm"
                     form={form}
@@ -93,13 +93,13 @@ export const VacationRequestsUpdatePage: FC = () => {
                         name={nameof<FromValues>('id')}
                         className={'invisible'}
                     >
-                        <Input type={'hidden'}/>
+                        <Input type={'hidden'} />
                     </Form.Item>
 
                     <Form.Item
                         name={nameof<FromValues>('status')}
                         label={'Status'}
-                        rules={[{required: true, message: 'Status is required'}]}
+                        rules={[{ required: true, message: 'Status is required' }]}
                     >
                         <Radio.Group>
                             {(Object.values(VacationRequestStatus) as Array<VacationRequestStatus>).map((value) => (
@@ -112,22 +112,22 @@ export const VacationRequestsUpdatePage: FC = () => {
                     <Form.Item
                         name={nameof<FromValues>('startAndEnd')}
                         label={'Start and end'}
-                        rules={[{required: true, message: 'Date start and date end is required'}]}
+                        rules={[{ required: true, message: 'Date start and date end is required' }]}
                     >
-                        <RangePicker disabled={true}/>
+                        <RangePicker disabled={true} />
 
                     </Form.Item>
                     <Form.Item
                         name={nameof<FromValues>('comment')}
                         label={'Comment'}
                     >
-                        <Input placeholder={'Comment'} disabled={true}/>
+                        <Input placeholder={'Comment'} disabled={true} />
                     </Form.Item>
                     <Form.Item
                         name={nameof<FromValues>('user')}
                         label={'User'}
                     >
-                        <Input placeholder={'User'} disabled={true}/>
+                        <Input placeholder={'User'} disabled={true} />
                     </Form.Item>
                 </Form>
             }

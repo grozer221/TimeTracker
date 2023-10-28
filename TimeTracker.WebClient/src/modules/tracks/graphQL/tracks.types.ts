@@ -1,5 +1,5 @@
-import {TrackKind} from "../../../graphQL/enums/TrackKind";
-import {TrackCreation} from "../../../graphQL/enums/TrackCreation";
+import { TrackKind } from "../../../behaviour/enums/TrackKind";
+import { TrackCreation } from "../../../behaviour/enums/TrackCreation";
 
 export type Track = {
     id: string

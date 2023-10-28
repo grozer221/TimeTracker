@@ -3,3 +3,8 @@ export type GetEntitiesResponse<T> = {
     pageSize: number,
     total: number,
 }
+
+export type Paging = {
+    pageNumber: number;
+    pageSize: number;
+}

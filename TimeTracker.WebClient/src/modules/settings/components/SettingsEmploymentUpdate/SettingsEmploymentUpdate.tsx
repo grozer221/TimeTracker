@@ -1,15 +1,15 @@
-import {Col, Form, Row, Select, TimePicker} from 'antd';
-import React, {FC} from 'react';
-import {useForm} from "antd/es/form/Form";
-import {formStyles} from "../../../../assets/form";
-import {SettingsEmploymentUpdateInputType} from "../../graphQL/settings.mutations";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {nameof} from "../../../../utils/stringUtils";
-import {range} from "../../../../utils/arrayUtils";
-import {ExtraHeaderButtons} from "../../../../components/ExtraHeaderButtons";
-import {settingsActions} from "../../store/settings.slice";
-import moment, {Moment} from "moment";
+import { Col, Form, Row, Select, TimePicker } from 'antd';
+import React, { FC } from 'react';
+import { useForm } from "antd/es/form/Form";
+import { formStyles } from "../../../../assets/form";
+import { SettingsEmploymentUpdateInputType } from "../../graphQL/settings.mutations";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { nameof } from "../../../../utils/stringUtils";
+import { range } from "../../../../utils/arrayUtils";
+import { ExtraHeaderButtons } from "../../../../components/ExtraHeaderButtons";
+import { settingsActions } from "../../store/settings.slice";
+import moment, { Moment } from "moment";
 
 type FormValues = {
     workdayStartAt?: Moment,
@@ -48,16 +48,16 @@ export const SettingsEmploymentUpdate: FC = () => {
                     <Form.Item
                         label="Workday start at"
                         name={nameof<FormValues>('workdayStartAt')}
-                        rules={[{required: true, message: 'Workday start at is required'}]}
+                        rules={[{ required: true, message: 'Workday start at is required' }]}
                     >
-                        <TimePicker placeholder={'Workday start at'}/>
+                        <TimePicker placeholder={'Workday start at'} />
                     </Form.Item>
                 </Col>
                 <Col span={8}>
                     <Form.Item
                         label="Hours in workday"
                         name={nameof<FormValues>('hoursInWorkday')}
-                        rules={[{required: true, message: 'Hours in workday is required'}]}
+                        rules={[{ required: true, message: 'Hours in workday is required' }]}
                     >
                         <Select
                             allowClear

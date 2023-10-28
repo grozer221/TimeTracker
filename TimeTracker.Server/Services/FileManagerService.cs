@@ -1,12 +1,14 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+
 using System.Text.RegularExpressions;
+
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.FileManager;
 
 namespace TimeTracker.Server.Services
 {
-    public class FileManagerService 
+    public class FileManagerService
     {
         public const string UsersAvatarsFolder = "Images/UsersAvatars";
         public const string SickLeavesFolder = "SickLeaves";
@@ -31,7 +33,7 @@ namespace TimeTracker.Server.Services
         public async Task<IEnumerable<FileManagerItem>> GetInFolderAsync(string folderPath)
         {
             var searchFolders = string.IsNullOrEmpty(folderPath)
-                ? await cloudinary.RootFoldersAsync() 
+                ? await cloudinary.RootFoldersAsync()
                 : await cloudinary.SubFoldersAsync(folderPath);
             var folders = searchFolders.Folders?.Select(f => new FileManagerItem
             {
@@ -53,9 +55,9 @@ namespace TimeTracker.Server.Services
                 Permissions = GetPermissionsForFile(httpContextAccessor.HttpContext.GetRole(), r.Url, r.FileName),
             });
             var result = new List<FileManagerItem>();
-            if(folders != null)
+            if (folders != null)
                 result.AddRange(folders);
-            if(files != null)
+            if (files != null)
                 result.AddRange(files);
             return result;
         }
@@ -146,7 +148,7 @@ namespace TimeTracker.Server.Services
             if (result.Error != null)
                 throw new Exception(result.Error.Message);
         }
-        
+
         public async Task RemoveFolderAsync(string folderPath)
         {
             if (GetPermissionsForFolder(httpContextAccessor.HttpContext.GetRole(), folderPath) == FileManagerItemPermissions.Read)
@@ -158,7 +160,7 @@ namespace TimeTracker.Server.Services
 
         private FileManagerItemPermissions GetPermissionsForFile(Business.Enums.Role role, string filePath, string fileName)
         {
-            if (role == Business.Enums.Role.Administrator)
+            if (role == Business.Enums.Role.Admin)
                 return FileManagerItemPermissions.ReadAndWrite;
             foreach (var protectedFolder in ProtectedFolders)
             {
@@ -167,10 +169,10 @@ namespace TimeTracker.Server.Services
             }
             return FileManagerItemPermissions.ReadAndWrite;
         }
-        
+
         private FileManagerItemPermissions GetPermissionsForFolder(Business.Enums.Role role, string folderPath)
         {
-            if (role == Business.Enums.Role.Administrator)
+            if (role == Business.Enums.Role.Admin)
                 return FileManagerItemPermissions.ReadAndWrite;
             foreach (var protectedFolder in ProtectedFolders)
             {
@@ -189,12 +191,12 @@ namespace TimeTracker.Server.Services
             string resourceTypeString = publicIdMatch.Groups[1].Value;
             return publicIdMatch.Groups[2].Value;
         }
-        
+
         private string GetPublicIdFromFilaName(string fileName)
         {
             return Regex.Replace(fileName, @".\w+$", string.Empty);
         }
-        
+
         private string GetResourseTypeFromPath(string path)
         {
             var publicIdMatch = Regex.Match(path, @"\/(\w+)\/upload\/\w+\/(.+)");

@@ -1,7 +1,7 @@
-import React, {FC, useEffect, useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {FileManagerItem, FileManagerItemKind, FileManagerItemPermissions} from "../../graphQL/fileManager.types";
+import React, { FC, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { FileManagerItem, FileManagerItemKind, FileManagerItemPermissions } from "../../graphQL/fileManager.types";
 import {
     CloudDownloadOutlined,
     CopyOutlined,
@@ -15,19 +15,19 @@ import {
     RollbackOutlined
 } from "@ant-design/icons";
 import s from './FileManagerGetInFolderPage.module.css';
-import {Breadcrumb, Button, Popconfirm, Space, Tooltip} from "antd";
-import {Loading} from "../../../../components/Loading/Loading";
-import {capitalize, uppercaseToWords} from "../../../../utils/stringUtils";
-import {FileManagerCreateFolder} from "../../components/FileManagerCreateFolder/FileManagerCreateFolder";
-import {FileManagerUploadFile} from "../../components/FileManagerUploadFile/FileManagerUploadFile";
-import {FileManagerRenameFile} from "../../components/FileManagerRenameFile/FileManagerRenameFile";
-import {fileManagerActions} from '../../store/fileManager.slice';
+import { Breadcrumb, Button, Popconfirm, Space, Tooltip } from "antd";
+import { Loading } from "../../../../components/Loading/Loading";
+import { capitalize, uppercaseToWords } from "../../../../utils/stringUtils";
+import { FileManagerCreateFolder } from "../../components/FileManagerCreateFolder/FileManagerCreateFolder";
+import { FileManagerUploadFile } from "../../components/FileManagerUploadFile/FileManagerUploadFile";
+import { FileManagerRenameFile } from "../../components/FileManagerRenameFile/FileManagerRenameFile";
+import { fileManagerActions } from '../../store/fileManager.slice';
 
 type Props = {
     onSelectFile?: (item: FileManagerItem) => void
 };
 
-export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
+export const FileManagerGetInFolderPage: FC<Props> = ({ onSelectFile }) => {
     const dispatch = useDispatch();
     const items = useSelector((s: RootState) => s.fileManager.items);
     const loadingGetInFolder = useSelector((s: RootState) => s.fileManager.loadingGetInFolder);
@@ -79,15 +79,15 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
 
     return (
         <Space direction={'vertical'} className={s.wrapperPage}>
-            {isCreateFolderPageVisible && <FileManagerCreateFolder/>}
-            {isUploadFilesPageVisible && <FileManagerUploadFile/>}
-            {isRenameFilePageVisible && <FileManagerRenameFile selectedItem={selectedItem}/>}
+            {isCreateFolderPageVisible && <FileManagerCreateFolder />}
+            {isUploadFilesPageVisible && <FileManagerUploadFile />}
+            {isRenameFilePageVisible && <FileManagerRenameFile selectedItem={selectedItem} />}
             <Space size={20}>
                 <Space>
                     <Tooltip title="Step back">
                         <Button
                             type={'primary'}
-                            icon={<RollbackOutlined/>}
+                            icon={<RollbackOutlined />}
                             size={'small'}
                             onClick={onStepBack}
                             disabled={!folderPath || loadingGetInFolder}
@@ -95,7 +95,7 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
                     </Tooltip>
                     <Tooltip title="Reload">
                         <Button
-                            icon={<ReloadOutlined/>} size={'small'}
+                            icon={<ReloadOutlined />} size={'small'}
                             onClick={getInFolder}
                             disabled={loadingGetInFolder}
                         />
@@ -104,7 +104,7 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
                 <Space>
                     <Tooltip title="Create folder">
                         <Button
-                            icon={<FolderAddOutlined/>}
+                            icon={<FolderAddOutlined />}
                             size={'small'}
                             onClick={() => dispatch(fileManagerActions.setIsCreateFolderPageVisible(true))}
                             disabled={loadingCreateFolder}
@@ -112,7 +112,7 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
                     </Tooltip>
                     <Tooltip title="Upload files">
                         <Button
-                            icon={<FileAddOutlined/>}
+                            icon={<FileAddOutlined />}
                             size={'small'}
                             onClick={() => dispatch(fileManagerActions.setIsUploadFilesPageVisible(true))}
                             disabled={loadingUploadFiles}
@@ -121,7 +121,7 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
                     <Tooltip title="Download">
                         <a href={selectedItem?.path} target={'_blank'}>
                             <Button
-                                icon={<CloudDownloadOutlined/>}
+                                icon={<CloudDownloadOutlined />}
                                 size={'small'}
                                 disabled={!(selectedItem?.kind === FileManagerItemKind.File)}
                             />
@@ -129,7 +129,7 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
                     </Tooltip>
                     <Tooltip title="Copy to clipboard">
                         <Button
-                            icon={<CopyOutlined/>}
+                            icon={<CopyOutlined />}
                             size={'small'}
                             disabled={!(selectedItem?.kind === FileManagerItemKind.File)}
                             onClick={() => navigator.clipboard.writeText(selectedItem?.path || '')}
@@ -139,7 +139,7 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
                 <Space>
                     <Tooltip title="Rename">
                         <Button
-                            icon={<EditOutlined/>}
+                            icon={<EditOutlined />}
                             size={'small'}
                             disabled={!(selectedItem?.kind === FileManagerItemKind.File) || selectedItem?.permissions === FileManagerItemPermissions.Read}
                             onClick={() => dispatch(fileManagerActions.setIsRenameFilePageVisible(true))}
@@ -159,7 +159,7 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
                             <Button
                                 loading={loadingRemove}
                                 danger
-                                icon={<DeleteOutlined/>}
+                                icon={<DeleteOutlined />}
                                 size={'small'}
                                 disabled={!selectedItem || selectedItem?.permissions === FileManagerItemPermissions.Read}
                             />
@@ -169,25 +169,25 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
             </Space>
             <table className={[s.tableFileManager, loadingGetInFolder ? s.loading : ''].join(' ')}>
                 <thead>
-                <tr className={s.theader}>
-                    <th colSpan={2}>Name</th>
-                    <th>Permissions</th>
-                    <th>Created at</th>
-                </tr>
+                    <tr className={s.theader}>
+                        <th colSpan={2}>Name</th>
+                        <th>Permissions</th>
+                        <th>Created at</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {items.map(item => (
-                    <tr key={item.path}
-                        onDoubleClick={(e) => onDoubleClick(item)}
-                        onClick={() => setSelectedItem(item)}
-                        className={item === selectedItem ? s.selected : ''}
-                    >
-                        <td>{item.kind === FileManagerItemKind.File ? <FileOutlined/> : <FolderOpenFilled/>}</td>
-                        <td>{item.name}</td>
-                        <td>{uppercaseToWords(item.permissions)}</td>
-                        <td>{item.createdAt}</td>
-                    </tr>
-                ))}
+                    {items.map(item => (
+                        <tr key={item.path}
+                            onDoubleClick={(e) => onDoubleClick(item)}
+                            onClick={() => setSelectedItem(item)}
+                            className={item === selectedItem ? s.selected : ''}
+                        >
+                            <td>{item.kind === FileManagerItemKind.File ? <FileOutlined /> : <FolderOpenFilled />}</td>
+                            <td>{item.name}</td>
+                            <td>{uppercaseToWords(item.permissions)}</td>
+                            <td>{item.createdAt}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
             <Breadcrumb separator=">">
@@ -203,7 +203,7 @@ export const FileManagerGetInFolderPage: FC<Props> = ({onSelectFile}) => {
             </Breadcrumb>
             {loadingGetInFolder &&
                 <div className={'absoluteCenter'}>
-                    <Loading/>
+                    <Loading />
                 </div>
             }
         </Space>

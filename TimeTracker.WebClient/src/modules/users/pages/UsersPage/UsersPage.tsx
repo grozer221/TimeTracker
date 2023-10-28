@@ -1,27 +1,27 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
     isAdministrator,
     isAdministratorOrHavePermissions,
     isAuthenticated,
     isHavePermission
 } from "../../../../utils/permissions";
-import {useDispatch} from "react-redux";
-import {useAppSelector} from "../../../../store/store";
-import {Link, useLocation} from "react-router-dom";
-import {Role} from "../../../../graphQL/enums/Role";
-import {Permission} from "../../../../graphQL/enums/Permission";
-import {User} from "../../graphQL/users.types";
-import {Button, Col, Divider, Dropdown, Menu, Row, Space, Table, TableProps, Tag} from "antd";
-import {ColumnsType} from "antd/es/table";
-import {DownCircleFilled, UserAddOutlined} from '@ant-design/icons';
-import {uppercaseToWords} from "../../../../utils/stringUtils";
-import {usersActions} from "../../store/users.slice";
-import {ExcelExportButton} from "../../../../components/ExcelExportButton";
-import {Employment} from "../../../../graphQL/enums/Employment";
-import {getColumnSearchProps} from "../../components/parrtial/ColumnSerach";
-import {ItemType} from "antd/lib/menu/hooks/useItems";
-import {navigateActions} from "../../../navigate/store/navigate.slice";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../../../behaviour/store";
+import { Link, useLocation } from "react-router-dom";
+import { Role } from "../../../../behaviour/enums/Role";
+import { Permission } from "../../../../behaviour/enums/Permission";
+import { User } from "../../graphQL/users.types";
+import { Button, Col, Divider, Dropdown, Menu, Row, Space, Table, TableProps, Tag } from "antd";
+import { ColumnsType } from "antd/es/table";
+import { DownCircleFilled, UserAddOutlined } from '@ant-design/icons';
+import { uppercaseToWords } from "../../../../utils/stringUtils";
+import { usersActions } from "../../store/users.slice";
+import { ExcelExportButton } from "../../../../components/ExcelExportButton";
+import { getColumnSearchProps } from "../../components/parrtial/ColumnSerach";
+import { ItemType } from "antd/lib/menu/hooks/useItems";
+import { navigateActions } from "../../../navigate/store/navigate.slice";
 import moment from "moment/moment";
+import { Employment } from '../../../../behaviour/enums/Employment';
 
 export const UsersPage = React.memo(() => {
     const isAuth = useAppSelector(s => s.auth.isAuth)
@@ -73,18 +73,18 @@ export const UsersPage = React.memo(() => {
         if (isAdministratorOrHavePermissions([Permission.UpdateUsers])) {
             if (userId !== authedUser!.id) {
                 items.push(
-                    {key: '1', label: (<Link to={"update/" + userEmail} state={{popup: location}}>Update</Link>)},
-                    {key: '2', label: (<Link to={"remove/" + userEmail} state={{popup: location}}>Remove</Link>)})
+                    { key: '1', label: (<Link to={"update/" + userEmail} state={{ popup: location }}>Update</Link>) },
+                    { key: '2', label: (<Link to={"remove/" + userEmail} state={{ popup: location }}>Remove</Link>) })
             }
             items.push({
                 key: '3',
-                label: (<Link to={"reset-password/" + userId} state={{popup: location}}>Reset password</Link>)
+                label: (<Link to={"reset-password/" + userId} state={{ popup: location }}>Reset password</Link>)
             })
         }
 
-        items.push({key: '4', label: <Link to={"profile/" + userEmail}>Profile</Link>})
+        items.push({ key: '4', label: <Link to={"profile/" + userEmail}>Profile</Link> })
 
-        return <Menu items={items}/>
+        return <Menu items={items} />
     }
 
     // columns structure for table
@@ -108,11 +108,11 @@ export const UsersPage = React.memo(() => {
         {
             title: 'Role', dataIndex: 'role', key: 'role',
             filters: Object.values(Role).map(value => {
-                return {text: uppercaseToWords(value), value: value}
+                return { text: uppercaseToWords(value), value: value }
             }),
             render: (role, user) => {
                 return <Tag key={role}
-                            color={role === Role.Administrator ? 'gold' : 'geekblue'}>
+                    color={role === Role.Administrator ? 'gold' : 'geekblue'}>
                     {uppercaseToWords(role)}
                 </Tag>
             }
@@ -120,7 +120,7 @@ export const UsersPage = React.memo(() => {
         {
             title: 'Permissions', dataIndex: 'permissions', key: 'permissions',
             filters: Object.values(Permission).map(value => {
-                return {text: uppercaseToWords(value), value: value}
+                return { text: uppercaseToWords(value), value: value }
             }),
             render: (permissions: Permission[], user) => {
                 return user.permissions.map(p => <Tag key={p} color={'blue'}>{uppercaseToWords(p)}</Tag>)
@@ -130,7 +130,7 @@ export const UsersPage = React.memo(() => {
             title: 'Employments', dataIndex: 'employment', key: 'employment',
             filterMultiple: false,
             filters: Object.values(Employment).map(value => {
-                return {text: uppercaseToWords(value), value: value}
+                return { text: uppercaseToWords(value), value: value }
             }),
             render: (employment: Employment, user) => (
                 <Tag key={employment} color={employment === Employment.FullTime ? 'green' : 'yellow'}>
@@ -151,7 +151,7 @@ export const UsersPage = React.memo(() => {
             render: (text, record, index) => (
                 <Space size="middle" wrap>
                     <Dropdown overlay={menu(record.email, record.id)}>
-                        <DownCircleFilled/>
+                        <DownCircleFilled />
                     </Dropdown>
                 </Space>
             ),
@@ -163,20 +163,20 @@ export const UsersPage = React.memo(() => {
                 <Row justify="space-between" align={'middle'}>
                     <Col>
                         {isAdministratorOrHavePermissions([Permission.UpdateUsers]) &&
-                            <Link to={"create"} state={{popup: location}}>
-                                <Button type="primary" icon={<UserAddOutlined/>}> Add User</Button>
+                            <Link to={"create"} state={{ popup: location }}>
+                                <Button type="primary" icon={<UserAddOutlined />}> Add User</Button>
                             </Link>
                         }
                     </Col>
                     <Col>
                         {isAdministratorOrHavePermissions([Permission.ExportUsersToExcel]) &&
-                            <Link to={"createReport"} state={{popup: location}}>
-                                <ExcelExportButton/>
+                            <Link to={"createReport"} state={{ popup: location }}>
+                                <ExcelExportButton />
                             </Link>
                         }
                     </Col>
                 </Row>
-                <Divider/>
+                <Divider />
             </>
         }
         <Table

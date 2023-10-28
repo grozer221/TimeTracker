@@ -1,18 +1,18 @@
-import {Button, DatePicker, Form, Input, message, Modal, Popconfirm, Row, Table} from "antd";
-import moment, {Moment} from "moment";
-import React, {ChangeEvent, FC, useEffect, useRef, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../../store/store";
-import {useForm} from "antd/es/form/Form";
-import {nameof} from "../../../utils/stringUtils";
+import { Button, DatePicker, Form, Input, message, Modal, Popconfirm, Row, Table } from "antd";
+import moment, { Moment } from "moment";
+import React, { ChangeEvent, FC, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../behaviour/store";
+import { useForm } from "antd/es/form/Form";
+import { nameof } from "../../../utils/stringUtils";
 import Title from "antd/lib/typography/Title";
-import {formStyles} from "../../../assets/form";
-import {sickLeaveActions} from "../store/sickLeave.slice";
-import {Loading} from "../../../components/Loading/Loading";
-import {DeleteOutlined, UploadOutlined} from "@ant-design/icons";
-import {ColumnsType} from "antd/es/table";
+import { formStyles } from "../../../assets/form";
+import { sickLeaveActions } from "../store/sickLeave.slice";
+import { Loading } from "../../../components/Loading/Loading";
+import { DeleteOutlined, UploadOutlined } from "@ant-design/icons";
+import { ColumnsType } from "antd/es/table";
 
-const {RangePicker} = DatePicker;
+const { RangePicker } = DatePicker;
 
 type FromValues = {
     id: string,
@@ -38,7 +38,7 @@ export const SickLeaveUploadFilesPage: FC = () => {
 
     useEffect(() => {
         if (!sickLeaveDayInUpdate) {
-            dispatch(sickLeaveActions.getByIdAsync({id}))
+            dispatch(sickLeaveActions.getByIdAsync({ id }))
         }
     }, [])
 
@@ -79,9 +79,9 @@ export const SickLeaveUploadFilesPage: FC = () => {
             width: '50px',
             render: (_, file) =>
                 <Popconfirm title="Sure to remove?"
-                            onConfirm={() => setUploadedFiles(uploadedFiles.filter(f => f !== file))}>
+                    onConfirm={() => setUploadedFiles(uploadedFiles.filter(f => f !== file))}>
                     <Button
-                        icon={<DeleteOutlined/>}
+                        icon={<DeleteOutlined />}
                         shape={'circle'}
                         danger
                         size={'small'}
@@ -105,7 +105,7 @@ export const SickLeaveUploadFilesPage: FC = () => {
                     onConfirm={() => setUploadFiles(uploadFiles.filter(f => f !== file))}
                 >
                     <Button
-                        icon={<DeleteOutlined/>}
+                        icon={<DeleteOutlined />}
                         shape={'circle'}
                         danger
                         size={'small'}
@@ -132,7 +132,7 @@ export const SickLeaveUploadFilesPage: FC = () => {
         >
             {
                 loadingGet || loadingGetById || !sickLeaveDayInUpdate
-                    ? <Loading/>
+                    ? <Loading />
                     : <Form
                         name="SickLeaveUploadFilesForm"
                         form={form}
@@ -144,26 +144,26 @@ export const SickLeaveUploadFilesPage: FC = () => {
                             name={nameof<FromValues>('id')}
                             className={'invisible'}
                         >
-                            <Input type={'hidden'}/>
+                            <Input type={'hidden'} />
                         </Form.Item>
                         <Form.Item
                             name={nameof<FromValues>('startAndEnd')}
                             label={'Start and end'}
-                            rules={[{required: true, message: 'Date start and date end is required'}]}
+                            rules={[{ required: true, message: 'Date start and date end is required' }]}
                         >
-                            <RangePicker disabled={true}/>
+                            <RangePicker disabled={true} />
                         </Form.Item>
                         <Form.Item
                             name={nameof<FromValues>('comment')}
                             label={'Comment'}
                         >
-                            <Input placeholder={'Comment'} disabled={true}/>
+                            <Input placeholder={'Comment'} disabled={true} />
                         </Form.Item>
                         <Form.Item
                             name={nameof<FromValues>('user')}
                             label={'User'}
                         >
-                            <Input placeholder={'User'} disabled={true}/>
+                            <Input placeholder={'User'} disabled={true} />
                         </Form.Item>
                         <Table
                             title={() => <div>Uploaded files</div>}
@@ -180,7 +180,7 @@ export const SickLeaveUploadFilesPage: FC = () => {
                                         <Button
                                             shape="circle"
                                             type="primary"
-                                            icon={<UploadOutlined/>}
+                                            icon={<UploadOutlined />}
                                             size={'small'}
                                             onClick={() => inputFileRef.current?.click()}
                                         />
@@ -189,7 +189,7 @@ export const SickLeaveUploadFilesPage: FC = () => {
                                             multiple
                                             ref={inputFileRef}
                                             onChange={handleChange}
-                                            style={{display: 'none'}}
+                                            style={{ display: 'none' }}
                                         />
                                     </div>
                                 </Row>

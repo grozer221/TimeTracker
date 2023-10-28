@@ -1,5 +1,5 @@
-import {VacationRequestStatus} from "../../../graphQL/enums/VacationRequestStatus";
-import {User} from "../../users/graphQL/users.types";
+import { VacationRequestStatus } from "../../../behaviour/enums/VacationRequestStatus";
+import { User } from "../../users/graphQL/users.types";
 
 export type VacationRequest = {
     id: string,

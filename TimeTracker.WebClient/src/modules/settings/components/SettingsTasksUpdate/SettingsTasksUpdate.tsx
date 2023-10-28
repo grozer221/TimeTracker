@@ -1,16 +1,16 @@
-import {Col, Form, Row, Select, Space, Switch, TimePicker} from 'antd';
-import React, {FC} from 'react';
-import {useForm} from "antd/es/form/Form";
-import {formStyles} from "../../../../assets/form";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import moment, {Moment} from "moment";
-import {ExtraHeaderButtons} from "../../../../components/ExtraHeaderButtons";
+import { Col, Form, Row, Select, Space, Switch, TimePicker } from 'antd';
+import React, { FC } from 'react';
+import { useForm } from "antd/es/form/Form";
+import { formStyles } from "../../../../assets/form";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import moment, { Moment } from "moment";
+import { ExtraHeaderButtons } from "../../../../components/ExtraHeaderButtons";
 import Title from "antd/lib/typography/Title";
-import {DayOfWeek} from "../../../../graphQL/enums/DayOfWeek";
-import {SettingsTasksUpdateInputType} from "../../graphQL/settings.mutations";
-import {settingsActions} from "../../store/settings.slice";
+import { DayOfWeek } from "../../../../behaviour/enums/DayOfWeek";
+import { SettingsTasksUpdateInputType } from "../../graphQL/settings.mutations";
+import { settingsActions } from "../../store/settings.slice";
 
 type FormValues = {
     autoCreateTracks_IsEnabled: boolean,
@@ -72,10 +72,10 @@ export const SettingsTasksUpdate: FC = () => {
                 <Space>
                     <Form.Item
                         name={nameof<FormValues>('autoCreateTracks_IsEnabled')}
-                        style={{marginBottom: 0}}
+                        style={{ marginBottom: 0 }}
                     >
                         <Switch size={'small'}
-                                defaultChecked={initialValues.autoCreateTracks_IsEnabled}/>
+                            defaultChecked={initialValues.autoCreateTracks_IsEnabled} />
                     </Form.Item>
                     <Title level={4}>Auto create tracks</Title>
                 </Space>
@@ -98,9 +98,9 @@ export const SettingsTasksUpdate: FC = () => {
                 <Space>
                     <Form.Item
                         name={nameof<FormValues>('autoCreateDaysOff_IsEnabled')}
-                        style={{marginBottom: 0}}
+                        style={{ marginBottom: 0 }}
                     >
-                        <Switch size={'small'} defaultChecked={initialValues.autoCreateDaysOff_IsEnabled}/>
+                        <Switch size={'small'} defaultChecked={initialValues.autoCreateDaysOff_IsEnabled} />
                     </Form.Item>
                     <Title level={4}>Auto create days off</Title>
                 </Space>

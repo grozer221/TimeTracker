@@ -20,6 +20,7 @@ builder.Services.AddJwtAuthorization();
 builder.Services.AddMsSql();
 builder.Services.AddCaching();
 builder.Services.AddTasks();
+builder.Services.AddInjectableServices();
 
 var app = builder.Build();
 

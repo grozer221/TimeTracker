@@ -1,18 +1,18 @@
-import {DatePicker, Form, Input, Modal, Typography} from "antd";
-import moment, {Moment} from "moment";
-import React, {FC, useEffect} from "react";
-import {useLocation, useNavigate, useParams} from "react-router-dom";
-import {useAppDispatch, useAppSelector} from "../../../store/store";
-import {useForm} from "antd/es/form/Form";
-import {nameof} from "../../../utils/stringUtils";
+import { DatePicker, Form, Input, Modal, Typography } from "antd";
+import moment, { Moment } from "moment";
+import React, { FC, useEffect } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../behaviour/store";
+import { useForm } from "antd/es/form/Form";
+import { nameof } from "../../../utils/stringUtils";
 import Title from "antd/lib/typography/Title";
-import {formStyles} from "../../../assets/form";
-import {sickLeaveActions} from "../store/sickLeave.slice";
-import {SickLeaveUpdateInputType} from "../graphQL/sickLeave.mutation";
-import {Loading} from "../../../components/Loading/Loading";
+import { formStyles } from "../../../assets/form";
+import { sickLeaveActions } from "../store/sickLeave.slice";
+import { SickLeaveUpdateInputType } from "../graphQL/sickLeave.mutation";
+import { Loading } from "../../../components/Loading/Loading";
 
-const {RangePicker} = DatePicker;
-const {Text} = Typography;
+const { RangePicker } = DatePicker;
+const { Text } = Typography;
 
 
 type FromValues = {
@@ -37,7 +37,7 @@ export const SickLeaveUpdatePage: FC = () => {
 
     useEffect(() => {
         if (!sickLeaveDayInUpdate) {
-            dispatch(sickLeaveActions.getByIdAsync({id}))
+            dispatch(sickLeaveActions.getByIdAsync({ id }))
         }
     }, [])
 
@@ -79,7 +79,7 @@ export const SickLeaveUpdatePage: FC = () => {
         >
             {
                 loadingGet || loadingGetById || !sickLeaveDayInUpdate
-                    ? <Loading/>
+                    ? <Loading />
                     :
                     <Form
                         name="SickLeaveUpdateForm"
@@ -92,27 +92,27 @@ export const SickLeaveUpdatePage: FC = () => {
                             name={nameof<FromValues>('id')}
                             className={'invisible'}
                         >
-                            <Input type={'hidden'}/>
+                            <Input type={'hidden'} />
                         </Form.Item>
                         <Form.Item
                             name={nameof<FromValues>('startAndEnd')}
                             label={'Start and end'}
-                            rules={[{required: true, message: 'Date start and date end is required'}]}
+                            rules={[{ required: true, message: 'Date start and date end is required' }]}
                         >
-                            <RangePicker/>
+                            <RangePicker />
 
                         </Form.Item>
                         <Form.Item
                             name={nameof<FromValues>('comment')}
                             label={'Comment'}
                         >
-                            <Input placeholder={'Comment'}/>
+                            <Input placeholder={'Comment'} />
                         </Form.Item>
                         <Form.Item
                             name={nameof<FromValues>('user')}
                             label={'User'}
                         >
-                            <Input placeholder={'User'} disabled={true}/>
+                            <Input placeholder={'User'} disabled={true} />
                         </Form.Item>
                     </Form>
             }

@@ -1,20 +1,20 @@
-import React, {FC, useState} from 'react';
-import {DatePicker, DatePickerProps} from 'antd';
-import {tracksAction} from "../../../tracks/store/tracks.slice";
-import {useDispatch} from "react-redux";
-import {Track} from "../../../tracks/graphQL/tracks.types";
+import React, { FC, useState } from 'react';
+import { DatePicker, DatePickerProps } from 'antd';
+import { tracksAction } from "../../../tracks/store/tracks.slice";
+import { useDispatch } from "react-redux";
+import { Track } from "../../../tracks/graphQL/tracks.types";
 import moment from "moment";
-import {UpdateTrackInput} from "../../../tracks/graphQL/tracks.mutations";
-import {PayloadAction} from "@reduxjs/toolkit";
-import {notificationsActions} from "../../../notifications/store/notifications.slice";
-import {useAppSelector} from "../../../../store/store";
+import { UpdateTrackInput } from "../../../tracks/graphQL/tracks.mutations";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { notificationsActions } from "../../../notifications/store/notifications.slice";
+import { useAppSelector } from "../../../../behaviour/store";
 
 type Props = {
     track: Track,
     updateCallback: (updateTrackInput: UpdateTrackInput) => PayloadAction<UpdateTrackInput, string>
 }
 
-export const TrackStartTimeEdit: FC<Props> = ({track, updateCallback}) => {
+export const TrackStartTimeEdit: FC<Props> = ({ track, updateCallback }) => {
     let startTime = track.startTime
     const startTimeMoment = moment(new Date(startTime))
     const userEmail = useAppSelector(s => s.auth.authedUser?.email) as string
@@ -34,7 +34,7 @@ export const TrackStartTimeEdit: FC<Props> = ({track, updateCallback}) => {
         }
         const startTime = value!.toDate()
         const endTime = new Date(track.endTime)
-        if(startTime > endTime){
+        if (startTime > endTime) {
             dispatch(notificationsActions.addError("Start time can't be upper than end time!"))
             setPickerValue(startTimeMoment)
             return

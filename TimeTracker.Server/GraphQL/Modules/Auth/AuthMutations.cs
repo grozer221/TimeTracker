@@ -110,7 +110,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
                     var user = authRegisterInput.ToModel();
                     user.Password = user.Password.CreateMD5WithSalt(out var salt);
                     user.Salt = salt;
-                    user.Role = Role.Administrator;
+                    user.Role = Role.SuperAdmin;
                     user.Permissions = new List<Permission>();
                     user = await userRepository.CreateAsync(user);
                     AceessTokenModel token = new AceessTokenModel
@@ -169,7 +169,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
                         User = impersonateUser,
                     };
                 })
-                .AuthorizeWith(AuthPolicies.Administrator);
+                .AuthorizeWith(AuthPolicies.Admin);
 
             Field<NonNullGraphType<BooleanGraphType>, bool>()
                 .Name("RequestResetPassword")

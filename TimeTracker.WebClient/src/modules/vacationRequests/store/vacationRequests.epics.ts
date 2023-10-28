@@ -1,8 +1,7 @@
-import {combineEpics, Epic, ofType} from "redux-observable";
-import {RootState} from "../../../store/store";
-import {catchError, endWith, from, mergeMap, of, startWith} from "rxjs";
-import {client} from "../../../graphQL/client";
-import {vacationRequestsActions} from "./vacationRequests.slice";
+import { combineEpics, Epic, ofType } from "redux-observable";
+import { RootState } from "../../../behaviour/store";
+import { catchError, endWith, from, mergeMap, of, startWith } from "rxjs";
+import { vacationRequestsActions } from "./vacationRequests.slice";
 import {
     VACATION_REQUESTS_GET_AVAILABLE_DAYS_QUERY,
     VACATION_REQUESTS_GET_BY_ID_QUERY,
@@ -14,7 +13,7 @@ import {
     VacationRequestsGetData,
     VacationRequestsGetVars
 } from "../graphQL/vacationRequests.queries";
-import {notificationsActions} from "../../notifications/store/notifications.slice";
+import { notificationsActions } from "../../notifications/store/notifications.slice";
 import {
     VACATION_REQUESTS_CREATE_MUTATION,
     VACATION_REQUESTS_REMOVE_MUTATION,
@@ -26,7 +25,8 @@ import {
     VacationRequestsUpdateStatusData,
     VacationRequestsUpdateStatusVars
 } from "../graphQL/vacationRequests.mutations";
-import {navigateActions} from "../../navigate/store/navigate.slice";
+import { navigateActions } from "../../navigate/store/navigate.slice";
+import { client } from "../../../behaviour/client";
 
 export const getAvailableDaysAsyncEpic: Epic<ReturnType<typeof vacationRequestsActions.getAvailableDaysAsync>, any, RootState> = (action$, state$) =>
     action$.pipe(
@@ -51,7 +51,7 @@ export const getByIdAsyncEpic: Epic<ReturnType<typeof vacationRequestsActions.ge
         mergeMap(action =>
             from(client.query<VacationRequestsGetByIdData, VacationRequestsGetByIdVars>({
                 query: VACATION_REQUESTS_GET_BY_ID_QUERY,
-                variables: {id: action.payload.id}
+                variables: { id: action.payload.id }
             })).pipe(
                 mergeMap(response => [
                     vacationRequestsActions.setVacationRequests({
@@ -73,7 +73,7 @@ export const getAsyncEpic: Epic<ReturnType<typeof vacationRequestsActions.getAsy
         mergeMap(action =>
             from(client.query<VacationRequestsGetData, VacationRequestsGetVars>({
                 query: VACATION_REQUESTS_GET_QUERY,
-                variables: {vacationRequestsGetInputType: action.payload}
+                variables: { vacationRequestsGetInputType: action.payload }
             })).pipe(
                 mergeMap(response => {
                     return response.errors?.length
@@ -97,7 +97,7 @@ export const createAsyncEpic: Epic<ReturnType<typeof vacationRequestsActions.cre
         mergeMap(action =>
             from(client.query<VacationRequestsCreateData, VacationRequestsCreateVars>({
                 query: VACATION_REQUESTS_CREATE_MUTATION,
-                variables: {vacationRequestsCreateInputType: action.payload}
+                variables: { vacationRequestsCreateInputType: action.payload }
             })).pipe(
                 mergeMap(response => {
                     const vacationRequestsGetInputType = state$.value.vacationRequests.vacationRequestsGetInputType;
@@ -122,7 +122,7 @@ export const updateStatusAsyncEpic: Epic<ReturnType<typeof vacationRequestsActio
         mergeMap(action =>
             from(client.query<VacationRequestsUpdateStatusData, VacationRequestsUpdateStatusVars>({
                 query: VACATION_REQUESTS_UPDATE_STATUS_MUTATION,
-                variables: {vacationRequestsUpdateStatusInputType: action.payload}
+                variables: { vacationRequestsUpdateStatusInputType: action.payload }
             })).pipe(
                 mergeMap(response => {
                     const vacationRequestsGetInputType = state$.value.vacationRequests.vacationRequestsGetInputType;
@@ -148,7 +148,7 @@ export const removeAsyncEpic: Epic<ReturnType<typeof vacationRequestsActions.rem
         mergeMap(action =>
             from(client.query<VacationRequestsRemoveData, VacationRequestsRemoveVars>({
                 query: VACATION_REQUESTS_REMOVE_MUTATION,
-                variables: {id: action.payload.id}
+                variables: { id: action.payload.id }
             })).pipe(
                 mergeMap(response => {
                     const vacationRequestsGetInputType = state$.value.vacationRequests.vacationRequestsGetInputType;

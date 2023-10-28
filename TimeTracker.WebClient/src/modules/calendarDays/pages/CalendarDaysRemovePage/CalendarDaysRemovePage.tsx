@@ -1,20 +1,20 @@
-import {DatePicker, Form, Modal, Select, Tabs} from 'antd';
-import React, {useState} from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import {useForm} from "antd/es/form/Form";
-import moment, {Moment} from "moment";
-import {LineOutlined, UnorderedListOutlined} from "@ant-design/icons";
-import {useDispatch, useSelector} from "react-redux";
-import {calendarDaysActions} from "../../store/calendarDays.slice";
-import {RootState} from "../../../../store/store";
-import {DayOfWeek} from "../../../../graphQL/enums/DayOfWeek";
-import {nameof, uppercaseToWords} from "../../../../utils/stringUtils";
-import {dateRender} from "../../../../convertors/dateRender";
+import { DatePicker, Form, Modal, Select, Tabs } from 'antd';
+import React, { useState } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
+import { useForm } from "antd/es/form/Form";
+import moment, { Moment } from "moment";
+import { LineOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { calendarDaysActions } from "../../store/calendarDays.slice";
+import { RootState } from "../../../../behaviour/store";
+import { DayOfWeek } from "../../../../behaviour/enums/DayOfWeek";
+import { nameof, uppercaseToWords } from "../../../../utils/stringUtils";
+import { dateRender } from "../../../../convertors/dateRender";
 import Title from "antd/lib/typography/Title";
-import {formStyles} from "../../../../assets/form";
+import { formStyles } from "../../../../assets/form";
 
-const {TabPane} = Tabs;
-const {RangePicker} = DatePicker;
+const { TabPane } = Tabs;
+const { RangePicker } = DatePicker;
 
 type Tab = 'One' | 'Range';
 
@@ -41,7 +41,7 @@ export const CalendarDaysRemovePage = () => {
                 case 'One':
                     const dateInputName = nameof<FromValues>('date');
                     if (!form.getFieldValue(dateInputName)) {
-                        form.setFields([{name: dateInputName, errors: ['Date is required']}])
+                        form.setFields([{ name: dateInputName, errors: ['Date is required'] }])
                         break
                     }
                     dispatch(calendarDaysActions.removeAsync((form.getFieldValue(dateInputName) as Moment).format('YYYY-MM-DD')));
@@ -49,12 +49,12 @@ export const CalendarDaysRemovePage = () => {
                 case 'Range':
                     const fromAndToFieldName = nameof<FromValues>('fromAndTo');
                     if (!form.getFieldValue(fromAndToFieldName)) {
-                        form.setFields([{name: fromAndToFieldName, errors: ['From and to is required']}])
+                        form.setFields([{ name: fromAndToFieldName, errors: ['From and to is required'] }])
                         break
                     }
                     const daysOfWeekFieldName = nameof<FromValues>('daysOfWeek');
                     if (!form.getFieldValue(daysOfWeekFieldName)) {
-                        form.setFields([{name: daysOfWeekFieldName, errors: ['Day of weeks is required']}])
+                        form.setFields([{ name: daysOfWeekFieldName, errors: ['Day of weeks is required'] }])
                         break
                     }
                     const fromAndTo = form.getFieldValue(fromAndToFieldName) as Moment[];
@@ -83,8 +83,8 @@ export const CalendarDaysRemovePage = () => {
             confirmLoading={loading}
             visible={true}
             onOk={() => form.submit()}
-            cancelButtonProps={{type: 'primary'}}
-            okButtonProps={{danger: true}}
+            cancelButtonProps={{ type: 'primary' }}
+            okButtonProps={{ danger: true }}
             okText={'Remove'}
             onCancel={() => navigate(-1)}
         >
@@ -97,7 +97,7 @@ export const CalendarDaysRemovePage = () => {
             >
                 <Tabs defaultActiveKey={tab} onChange={tab => setTab(tab as Tab)}>
                     <TabPane
-                        tab={<><LineOutlined/>One</>}
+                        tab={<><LineOutlined />One</>}
                         key="One"
                     >
                         <Form.Item
@@ -111,7 +111,7 @@ export const CalendarDaysRemovePage = () => {
                         </Form.Item>
                     </TabPane>
                     <TabPane
-                        tab={<><UnorderedListOutlined/>Range</>}
+                        tab={<><UnorderedListOutlined />Range</>}
                         key="Range"
                     >
                         <Form.Item

@@ -1,12 +1,12 @@
-import React, {FC, useEffect} from "react";
-import {Button, Checkbox, Form, Input, Row} from "antd";
-import {useDispatch, useSelector} from "react-redux";
-import {authActions} from "../../store/auth.slice";
-import {AuthLoginInputType} from "../../graphQL/auth.mutations";
+import React, { FC, useEffect } from "react";
+import { Button, Checkbox, Form, Input, Row } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../../store/auth.slice";
+import { AuthLoginInputType } from "../../graphQL/auth.mutations";
 import './AuthLoginPage.css'
-import {RootState} from "../../../../store/store";
-import {Link, useNavigate} from "react-router-dom";
-import {ButtonGoogleSignIn} from "../../../../components/ButtonGoogleSignIn";
+import { RootState } from "../../../../behaviour/store";
+import { Link, useNavigate } from "react-router-dom";
+import { ButtonGoogleSignIn } from "../../../../components/ButtonGoogleSignIn";
 
 export const AuthLoginPage: FC = () => {
     const dispatch = useDispatch()
@@ -26,7 +26,7 @@ export const AuthLoginPage: FC = () => {
         <div className="login-box">
             <Form
                 name="login-form"
-                initialValues={{remember: true}}
+                initialValues={{ remember: true }}
                 onFinish={onFinish}
             >
                 <p className="form-title">Welcome back</p>
@@ -35,18 +35,18 @@ export const AuthLoginPage: FC = () => {
                 <Form.Item
                     name="email"
                     rules={[
-                        {required: true, message: 'Email is required'},
-                        {type: 'email', message: 'It is not email'},
+                        { required: true, message: 'Email is required' },
+                        { type: 'email', message: 'It is not email' },
                     ]}
                 >
-                    <Input placeholder="Email"/>
+                    <Input placeholder="Email" />
                 </Form.Item>
 
                 <Form.Item
                     name="password"
-                    rules={[{required: true, message: 'Password is required'}]}
+                    rules={[{ required: true, message: 'Password is required' }]}
                 >
-                    <Input.Password placeholder="Password"/>
+                    <Input.Password placeholder="Password" />
                 </Form.Item>
 
                 <Form.Item>
@@ -61,7 +61,7 @@ export const AuthLoginPage: FC = () => {
                     </Button>
                 </Form.Item>
                 <Form.Item>
-                    <ButtonGoogleSignIn/>
+                    <ButtonGoogleSignIn />
                 </Form.Item>
             </Form>
         </div>

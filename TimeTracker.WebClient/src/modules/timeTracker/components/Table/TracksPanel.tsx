@@ -1,21 +1,21 @@
-import React, {FC} from 'react';
-import {Pagination, PaginationProps} from 'antd';
+import React, { FC } from 'react';
+import { Pagination, PaginationProps } from 'antd';
 import s from '../../pages/TrackerPage/TrackerPage.module.css'
-import {Track} from "../../../tracks/graphQL/tracks.types";
-import {TracksHeader} from "./TracksHeader";
-import {useAppSelector} from "../../../../store/store";
-import {tracksAction} from "../../../tracks/store/tracks.slice";
-import {TrackKind} from "../../../../graphQL/enums/TrackKind";
-import {useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
-import {TrackInfo} from "./TrackInfo";
+import { Track } from "../../../tracks/graphQL/tracks.types";
+import { TracksHeader } from "./TracksHeader";
+import { useAppSelector } from "../../../../behaviour/store";
+import { tracksAction } from "../../../tracks/store/tracks.slice";
+import { TrackKind } from "../../../../behaviour/enums/TrackKind";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { TrackInfo } from "./TrackInfo";
 
 type Props = {
     tracks: Track[],
     searchParams: URLSearchParams
 }
 
-export const TracksPanel: FC<Props> =({tracks, searchParams})=>{
+export const TracksPanel: FC<Props> = ({ tracks, searchParams }) => {
     const pageNumber = searchParams.get('pageNumber') || '1'
     const totalPages = useAppSelector(s => s.tracks.total)
     const dispatch = useDispatch()
@@ -33,12 +33,12 @@ export const TracksPanel: FC<Props> =({tracks, searchParams})=>{
             kind: Object.values(TrackKind)[indexOfS]
         }))
     }
-    return(
+    return (
         <>
             <div className={s.container}>
-                <TracksHeader/>
+                <TracksHeader />
                 {tracks.map((track) => (
-                    <TrackInfo track={track}/>
+                    <TrackInfo track={track} />
                 ))}
                 <Pagination
                     showQuickJumper
@@ -46,7 +46,7 @@ export const TracksPanel: FC<Props> =({tracks, searchParams})=>{
                     defaultCurrent={parseInt(pageNumber)}
                     total={totalPages}
                     onChange={onChange}
-                    style={{margin: '2px'}}
+                    style={{ margin: '2px' }}
                 />
             </div>
         </>

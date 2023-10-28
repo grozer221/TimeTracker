@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {User, UserFilter} from "../graphQL/users.types";
 import {CreateUserInput, RemoveUserInput, ResetUserPasswordInput, UpdateUserInput} from "../graphQL/users.mutations";
-import {GetEntitiesResponse} from "../../../graphQL/types/getEntitiesResponse";
 import {Track} from "../../tracks/graphQL/tracks.types";
 import {GetTracksByUserIdAndDateInputType} from "../../tracks/graphQL/tracks.queries";
 import {RemoveTrackInput, UpdateTrackInput} from "../../tracks/graphQL/tracks.mutations";
+import { GetEntitiesResponse } from "../../../behaviour";
 
 type InitialState = {
     users: User[],

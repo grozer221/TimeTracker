@@ -1,27 +1,27 @@
-import React, {useEffect, useState} from "react";
-import {isAdministratorOrHavePermissions, isAuthenticated} from "../../../../utils/permissions";
-import {RootState, useAppSelector} from "../../../../store/store";
-import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {usersActions} from "../../store/users.slice";
-import {Loading} from "../../../../components/Loading/Loading";
-import {Button, Card, Col, DatePicker, Descriptions, Divider, Row, Space, Tag} from "antd";
-import {uppercaseToWords} from "../../../../utils/stringUtils";
-import {Employment} from "../../../../graphQL/enums/Employment";
+import React, { useEffect, useState } from "react";
+import { isAdministratorOrHavePermissions, isAuthenticated } from "../../../../utils/permissions";
+import { RootState, useAppSelector } from "../../../../behaviour/store";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { usersActions } from "../../store/users.slice";
+import { Loading } from "../../../../components/Loading/Loading";
+import { Button, Card, Col, DatePicker, Descriptions, Divider, Row, Space, Tag } from "antd";
+import { uppercaseToWords } from "../../../../utils/stringUtils";
 import Title from "antd/lib/typography/Title";
-import moment, {now} from "moment/moment";
-import {TracksTable} from "../../../timeTracker/components/TracksTable/TracksTable";
-import {PlusOutlined} from "@ant-design/icons";
-import {Permission} from "../../../../graphQL/enums/Permission";
-import {tracksAction} from "../../../tracks/store/tracks.slice";
+import moment, { now } from "moment/moment";
+import { TracksTable } from "../../../timeTracker/components/TracksTable/TracksTable";
+import { PlusOutlined } from "@ant-design/icons";
+import { tracksAction } from "../../../tracks/store/tracks.slice";
 import {
     CreateTrackForOtherUserInput, CreateTrackInput,
     RemoveTrackInput,
     UpdateTrackInput
 } from "../../../tracks/graphQL/tracks.mutations";
-import {PlateOfHoursWorked} from "../../components/PlateOfHoursWorked/PlateOfHoursWorked";
-import {statisticAction} from "../../../timeTracker/userStatistic/store/statistic.slice";
-import {TracksStatistic} from "../../../timeTracker/components/Statistic/TracksStatistic";
+import { PlateOfHoursWorked } from "../../components/PlateOfHoursWorked/PlateOfHoursWorked";
+import { statisticAction } from "../../../timeTracker/userStatistic/store/statistic.slice";
+import { TracksStatistic } from "../../../timeTracker/components/Statistic/TracksStatistic";
+import { Permission } from "../../../../behaviour/enums/Permission";
+import { Employment } from "../../../../behaviour/enums/Employment";
 
 
 export const UsersProfilePage = () => {
@@ -69,9 +69,9 @@ export const UsersProfilePage = () => {
     }, [isAuth])
 
     useEffect(() => {
-        if (userProfile != null){
-            dispatch(statisticAction.setGetStatisticInputData({UserId: userProfile!.id, Date: date}))
-            dispatch(statisticAction.getAsync({UserId: userProfile!.id, Date: date}))
+        if (userProfile != null) {
+            dispatch(statisticAction.setGetStatisticInputData({ UserId: userProfile!.id, Date: date }))
+            dispatch(statisticAction.getAsync({ UserId: userProfile!.id, Date: date }))
         }
     }, [tracks])
 
@@ -81,12 +81,12 @@ export const UsersProfilePage = () => {
 
     useEffect(() => {
         if (userProfile != null)
-            dispatch(usersActions.getTracksByUserIdAndDate({UserId: userProfile.id, Date: date}))
+            dispatch(usersActions.getTracksByUserIdAndDate({ UserId: userProfile.id, Date: date }))
     }, [userProfile])
 
     useEffect(() => {
         if (userProfile != null)
-            dispatch(usersActions.getTracksByUserIdAndDate({UserId: userProfile.id, Date: date}))
+            dispatch(usersActions.getTracksByUserIdAndDate({ UserId: userProfile.id, Date: date }))
     }, [date])
 
     useEffect(() => {
@@ -95,7 +95,7 @@ export const UsersProfilePage = () => {
         }
     }, []);
 
-    if (userProfile == null) return <Loading/>
+    if (userProfile == null) return <Loading />
     if (tracks == null) tracks = []
 
     return <>
@@ -117,42 +117,42 @@ export const UsersProfilePage = () => {
                 </Descriptions.Item>
             </Descriptions>
         </Card>
-        <Row style={{marginTop: 10, marginBottom: 10}}>
-            <Col span={20}/>
+        <Row style={{ marginTop: 10, marginBottom: 10 }}>
+            <Col span={20} />
             <Col span={4}>
                 <DatePicker picker={"month"} defaultValue={moment(now())} onChange={e => {
                     if (e != null)
                         setDate(e.toISOString())
-                }}/>
+                }} />
             </Col>
         </Row>
         <Card title={<Title level={5}>Worked days time: </Title>}>
-            <PlateOfHoursWorked tracks={tracks} date={date}/>
+            <PlateOfHoursWorked tracks={tracks} date={date} />
         </Card>
-        <Divider/>
+        <Divider />
         <Card size={"small"}
-              title={
-                  <Row justify="space-between" align={'middle'}>
-                      <Col >
-                          <Title level={5}>Tracks: </Title>
-                      </Col>
-                      <Col span={20}>
-                          <TracksStatistic/>
-                      </Col>
-                      <Col >
-                          {
-                              editable ?
-                                  <Link to={"create-track"} state={{popup: location}}>
-                                      <Button shape={"circle"} type={"primary"} icon={<PlusOutlined/>}></Button>
-                                  </Link> : ""
-                          }
-                      </Col>
-                  </Row>
-              }>
+            title={
+                <Row justify="space-between" align={'middle'}>
+                    <Col >
+                        <Title level={5}>Tracks: </Title>
+                    </Col>
+                    <Col span={20}>
+                        <TracksStatistic />
+                    </Col>
+                    <Col >
+                        {
+                            editable ?
+                                <Link to={"create-track"} state={{ popup: location }}>
+                                    <Button shape={"circle"} type={"primary"} icon={<PlusOutlined />}></Button>
+                                </Link> : ""
+                        }
+                    </Col>
+                </Row>
+            }>
             <TracksTable tracks={tracks}
-                         date={date} loading={userTracksLoading}
-                         canEditDateOrKind={canEditDateOrKind}
-                         crudCallbacks={{create, update, remove}}
+                date={date} loading={userTracksLoading}
+                canEditDateOrKind={canEditDateOrKind}
+                crudCallbacks={{ create, update, remove }}
             />
         </Card>
     </>

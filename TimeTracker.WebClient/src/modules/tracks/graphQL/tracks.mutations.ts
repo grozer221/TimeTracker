@@ -1,15 +1,15 @@
-import {gql} from "@apollo/client";
-import {TRACK_FRAGMENT} from "./tracks.fragments";
-import {Track} from "./tracks.types";
-import {TrackKind} from "../../../graphQL/enums/TrackKind";
-import {TrackCreation} from "../../../graphQL/enums/TrackCreation";
+import { gql } from "@apollo/client";
+import { TRACK_FRAGMENT } from "./tracks.fragments";
+import { Track } from "./tracks.types";
+import { TrackKind } from "../../../behaviour/enums/TrackKind";
+import { TrackCreation } from "../../../behaviour/enums/TrackCreation";
 
-export type CreateTrack = { tracks: {create: Track} }
+export type CreateTrack = { tracks: { create: Track } }
 export type CreateTrackInput = {
     title: string,
     kind: TrackKind
 }
-export type CreateTrackInputType = { TrackData: CreateTrackInput}
+export type CreateTrackInputType = { TrackData: CreateTrackInput }
 
 export const TRACK_CREATE_MUTATION = gql`
     ${TRACK_FRAGMENT}
@@ -22,11 +22,11 @@ export const TRACK_CREATE_MUTATION = gql`
     }    
 `
 
-export type RemoveTrack = { tracks: {remove: string}}
+export type RemoveTrack = { tracks: { remove: string } }
 export type RemoveTrackInput = {
     id: string
 }
-export type RemoveTrackInputType = { TrackData: RemoveTrackInput}
+export type RemoveTrackInputType = { TrackData: RemoveTrackInput }
 
 export const TRACK_REMOVE_MUTATION = gql`
     mutation RemoveTask($TrackData: TrackRemoveInputType!){
@@ -36,7 +36,7 @@ export const TRACK_REMOVE_MUTATION = gql`
     }
 `
 
-export type UpdateTrack = {tracks: {update: Track}}
+export type UpdateTrack = { tracks: { update: Track } }
 export type UpdateTrackInput = {
     id: string,
     title: string,
@@ -46,7 +46,7 @@ export type UpdateTrackInput = {
     startTime: string,
     endTime: string
 }
-export type UpdateTrackInputType = {TrackData: UpdateTrackInput}
+export type UpdateTrackInputType = { TrackData: UpdateTrackInput }
 
 export const TRACK_UPDATE_MUTATION = gql`
     ${TRACK_FRAGMENT}
@@ -58,7 +58,7 @@ export const TRACK_UPDATE_MUTATION = gql`
         }
     }
 `
-export type CreateTrackForOtherUserResponseType = { tracks: {createOther: Track} }
+export type CreateTrackForOtherUserResponseType = { tracks: { createOther: Track } }
 export type CreateTrackForOtherUserInput = {
     userId: string,
     title: String,
@@ -67,7 +67,7 @@ export type CreateTrackForOtherUserInput = {
     startTime: string,
     endTime: string,
 }
-export type CreateTrackForOtherUserInputType = { TrackData: CreateTrackForOtherUserInput}
+export type CreateTrackForOtherUserInputType = { TrackData: CreateTrackForOtherUserInput }
 
 export const TRACK_CREATE_FOR_OTHER_USER_MUTATION = gql`
     ${TRACK_FRAGMENT}

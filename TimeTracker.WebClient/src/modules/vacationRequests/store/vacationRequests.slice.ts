@@ -1,11 +1,11 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {GetEntitiesResponse} from "../../../graphQL/types/getEntitiesResponse";
-import {VacationRequest} from "../graphQL/vacationRequests.types";
-import {VacationRequestsFilterKind, VacationRequestsGetInputType} from "../graphQL/vacationRequests.queries";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { VacationRequest } from "../graphQL/vacationRequests.types";
+import { VacationRequestsFilterKind, VacationRequestsGetInputType } from "../graphQL/vacationRequests.queries";
 import {
     VacationRequestsCreateInputType,
     VacationRequestsUpdateStatusInputType
 } from "../graphQL/vacationRequests.mutations";
+import { GetEntitiesResponse } from "../../../behaviour";
 
 type InitialState = {
     availableDays: number,
@@ -47,7 +47,7 @@ export const vacationRequestsSlice = createSlice({
     name: 'vacationRequests',
     initialState,
     reducers: {
-        getByIdAsync: (state, action: PayloadAction<{id: string}>) => state,
+        getByIdAsync: (state, action: PayloadAction<{ id: string }>) => state,
         setLoadingGetById: (state, action: PayloadAction<boolean>) => {
             state.loadingGetById = action.payload
         },
@@ -82,7 +82,7 @@ export const vacationRequestsSlice = createSlice({
             state.loadingUpdate = action.payload;
         },
 
-        removeAsync: (state, action: PayloadAction<{id: string}>) => state,
+        removeAsync: (state, action: PayloadAction<{ id: string }>) => state,
         setLoadingRemove: (state, action: PayloadAction<boolean>) => {
             state.loadingRemove = action.payload;
         },

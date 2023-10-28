@@ -1,13 +1,13 @@
-import React, {FC} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {Form, Modal} from "antd";
-import {formStyles} from "../../../../assets/form";
-import {nameof} from "../../../../utils/stringUtils";
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { Form, Modal } from "antd";
+import { formStyles } from "../../../../assets/form";
+import { nameof } from "../../../../utils/stringUtils";
 import Input from "antd/es/input/Input";
-import {useForm} from "antd/es/form/Form";
+import { useForm } from "antd/es/form/Form";
 import Title from "antd/lib/typography/Title";
-import {fileManagerActions} from "../../store/fileManager.slice";
+import { fileManagerActions } from "../../store/fileManager.slice";
 
 type FormValues = {
     newFolderName: string,
@@ -21,7 +21,7 @@ export const FileManagerCreateFolder: FC = () => {
     const folderPath = useSelector((s: RootState) => s.fileManager.folderPath);
 
     const onFinish = (values: FormValues) => {
-        dispatch(fileManagerActions.createFolderAsync({folderPath, newFolderName: values.newFolderName}))
+        dispatch(fileManagerActions.createFolderAsync({ folderPath, newFolderName: values.newFolderName }))
     }
 
     const initialValues: FormValues = {
@@ -48,7 +48,7 @@ export const FileManagerCreateFolder: FC = () => {
                     name={nameof<FormValues>('newFolderName')}
                     label={'New folder name'}
                 >
-                    <Input placeholder={'New folder name'}/>
+                    <Input placeholder={'New folder name'} />
                 </Form.Item>
             </Form>
         </Modal>

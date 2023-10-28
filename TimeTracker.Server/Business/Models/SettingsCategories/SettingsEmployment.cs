@@ -1,4 +1,4 @@
-﻿using TimeTracker.Business.Extensions;
+﻿using TimeTracker.Server.Extensions;
 
 namespace TimeTracker.Business.Models.SettingsCategories
 {

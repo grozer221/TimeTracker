@@ -1,7 +1,6 @@
-import {combineEpics, Epic, ofType} from "redux-observable";
-import {RootState} from "../../../store/store";
-import {catchError, endWith, from, map, mergeMap, of, startWith} from "rxjs";
-import {client} from "../../../graphQL/client";
+import { combineEpics, Epic, ofType } from "redux-observable";
+import { RootState } from "../../../behaviour/store";
+import { catchError, endWith, from, map, mergeMap, of, startWith } from "rxjs";
 import {
     FILE_MANAGER_GET_IN_FOLDER_QUERY,
     FileManagerGetInFolderData,
@@ -20,8 +19,9 @@ import {
     FileManagerUploadFilesData,
     FileManagerUploadFilesVars
 } from "../graphQL/fileManager.mutations";
-import {fileManagerActions} from "./fileManager.slice";
-import {notificationsActions} from "../../notifications/store/notifications.slice";
+import { fileManagerActions } from "./fileManager.slice";
+import { notificationsActions } from "../../notifications/store/notifications.slice";
+import { client } from "../../../behaviour/client";
 
 export const getInFolderEpic: Epic<ReturnType<typeof fileManagerActions.getInFolderAsync>, any, RootState> = (action$, state$) =>
     action$.pipe(
@@ -29,7 +29,7 @@ export const getInFolderEpic: Epic<ReturnType<typeof fileManagerActions.getInFol
         mergeMap(action =>
             from(client.query<FileManagerGetInFolderData, FileManagerGetInFolderVars>({
                 query: FILE_MANAGER_GET_IN_FOLDER_QUERY,
-                variables: {folderPath: action.payload}
+                variables: { folderPath: action.payload }
             })).pipe(
                 map(response => fileManagerActions.setItems(response.data.fileManager.getInFolder)),
                 catchError(error => of(notificationsActions.addError(error.message))),
@@ -45,7 +45,7 @@ export const createFolderEpic: Epic<ReturnType<typeof fileManagerActions.createF
         mergeMap(action =>
             from(client.mutate<FileManagerCreateFolderData, FileManagerCreateFolderVars>({
                 mutation: FILE_MANAGER_CREATE_FOLDER_MUTATION,
-                variables: {fileManagerCreateFolderInputType: action.payload}
+                variables: { fileManagerCreateFolderInputType: action.payload }
             })).pipe(
                 mergeMap(response => [
                     fileManagerActions.getInFolderAsync(state$.value.fileManager.folderPath),
@@ -64,7 +64,7 @@ export const uploadFilesEpic: Epic<ReturnType<typeof fileManagerActions.uploadFi
         mergeMap(action =>
             from(client.mutate<FileManagerUploadFilesData, FileManagerUploadFilesVars>({
                 mutation: FILE_MANAGER_UPLOAD_FILES_MUTATION,
-                variables: {fileManagerUploadFilesInputType: action.payload}
+                variables: { fileManagerUploadFilesInputType: action.payload }
             })).pipe(
                 mergeMap(response => [
                     fileManagerActions.getInFolderAsync(state$.value.fileManager.folderPath),
@@ -83,7 +83,7 @@ export const renameFileEpic: Epic<ReturnType<typeof fileManagerActions.renameFil
         mergeMap(action =>
             from(client.mutate<FileManagerRenameFileData, FileManagerRenameFileVars>({
                 mutation: FILE_MANAGER_RENAME_FILE_MUTATION,
-                variables: {fileManagerRenameInputType: action.payload}
+                variables: { fileManagerRenameInputType: action.payload }
             })).pipe(
                 mergeMap(response => [
                     fileManagerActions.getInFolderAsync(state$.value.fileManager.folderPath),
@@ -102,7 +102,7 @@ export const removeEpic: Epic<ReturnType<typeof fileManagerActions.removeAsync>,
         mergeMap(action =>
             from(client.mutate<FileManagerRemoveData, FileManagerRemoveVars>({
                 mutation: FILE_MANAGER_REMOVE_MUTATION,
-                variables: {fileManagerRemoveInputType: action.payload}
+                variables: { fileManagerRemoveInputType: action.payload }
             })).pipe(
                 map(response => fileManagerActions.getInFolderAsync(state$.value.fileManager.folderPath)),
                 catchError(error => of(notificationsActions.addError(error.message))),

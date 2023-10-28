@@ -1,14 +1,14 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Track} from "../graphQL/tracks.types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Track } from "../graphQL/tracks.types";
 import {
     CreateTrackForOtherUserInput,
     CreateTrackInput,
     RemoveTrackInput,
     UpdateTrackInput
 } from "../graphQL/tracks.mutations";
-import {GetTracksByUserIdAndDateInputType, GetTracksInputData} from "../graphQL/tracks.queries";
-import {TrackKind} from "../../../graphQL/enums/TrackKind";
-import {TrackCreation} from "../../../graphQL/enums/TrackCreation";
+import { GetTracksByUserIdAndDateInputType, GetTracksInputData } from "../graphQL/tracks.queries";
+import { TrackKind } from "../../../behaviour/enums/TrackKind";
+import { TrackCreation } from "../../../behaviour/enums/TrackCreation";
 
 
 type InitialState = {
@@ -45,14 +45,14 @@ const initialState: InitialState = {
     }
 }
 
-export  const  tracksSlice = createSlice({
+export const tracksSlice = createSlice({
     name: 'tracks',
     initialState,
     reducers: {
         getAsync: (state, action: PayloadAction<GetTracksInputData>) => state,
         getTracksByUserIdAndDate: (state, action: PayloadAction<GetTracksByUserIdAndDateInputType>) => state,
-        getCurrentAsync: (state, action: PayloadAction<void> ) => state,
-        addTracks: (state, action: PayloadAction<Track[]>) =>{
+        getCurrentAsync: (state, action: PayloadAction<void>) => state,
+        addTracks: (state, action: PayloadAction<Track[]>) => {
             state.tracks = action.payload
         },
         setLoadingGet: (state, action: PayloadAction<boolean>) => {
@@ -61,7 +61,7 @@ export  const  tracksSlice = createSlice({
         setCurrentTrack: (state, action: PayloadAction<Track>) => {
             state.currentTrack = action.payload
         },
-        updateTracksMetrics: (state, action: PayloadAction<{total: number, pageSize: number, trackKind: string}>) => {
+        updateTracksMetrics: (state, action: PayloadAction<{ total: number, pageSize: number, trackKind: string }>) => {
             state.total = action.payload.total
             state.pageSize = action.payload.pageSize
         },

@@ -1,19 +1,19 @@
-import {Col, Form, Input, InputNumber, Row} from 'antd';
-import React, {FC} from 'react';
-import {useForm} from "antd/es/form/Form";
-import {formStyles} from "../../../../assets/form";
-import {SettingsEmailUpdateInputType, SettingsVacationRequestsUpdateInputType} from "../../graphQL/settings.mutations";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
-import {nameof} from "../../../../utils/stringUtils";
-import {ExtraHeaderButtons} from "../../../../components/ExtraHeaderButtons";
-import {settingsActions} from "../../store/settings.slice";
+import { Col, Form, Input, InputNumber, Row } from 'antd';
+import React, { FC } from 'react';
+import { useForm } from "antd/es/form/Form";
+import { formStyles } from "../../../../assets/form";
+import { SettingsEmailUpdateInputType, SettingsVacationRequestsUpdateInputType } from "../../graphQL/settings.mutations";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
+import { nameof } from "../../../../utils/stringUtils";
+import { ExtraHeaderButtons } from "../../../../components/ExtraHeaderButtons";
+import { settingsActions } from "../../store/settings.slice";
 
 type FormValues = {
     amountDaysPerYear: number,
 };
 
-export const SettingsVacationRequestsUpdate: FC = ({}) => {
+export const SettingsVacationRequestsUpdate: FC = ({ }) => {
     const [form] = useForm();
     const dispatch = useDispatch();
     const settingsLoadingUpdate = useSelector((s: RootState) => s.settings.loadingUpdate)
@@ -43,7 +43,7 @@ export const SettingsVacationRequestsUpdate: FC = ({}) => {
                     <Form.Item
                         label="Amount days per year"
                         name={nameof<FormValues>('amountDaysPerYear')}
-                        rules={[{required: true, message: 'Amount days per year is required'}]}
+                        rules={[{ required: true, message: 'Amount days per year is required' }]}
                     >
                         <InputNumber
                             className={'w-100'}

@@ -1,7 +1,7 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+
 using TimeTracker.Business.Abstraction;
-using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 
 namespace TimeTracker.Server.GraphQL.Modules.Cache
@@ -16,11 +16,11 @@ namespace TimeTracker.Server.GraphQL.Modules.Cache
                {
                    //if (!httpContextAccessor.HttpContext.IsAdministrator())
                    //    throw new ExecutionError("You do not have permissions for clear cache");
-                   foreach(var manager in managers)
+                   foreach (var manager in managers)
                        manager.ResetCache();
                    return true;
                })
-               .AuthorizeWith(AuthPolicies.Administrator);
+               .AuthorizeWith(AuthPolicies.Admin);
         }
     }
 }

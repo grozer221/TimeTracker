@@ -1,7 +1,6 @@
-import {combineEpics, Epic, ofType} from "redux-observable";
-import {RootState} from "../../../store/store";
-import {catchError, endWith, from, map, mergeMap, of, startWith} from "rxjs";
-import {client} from "../../../graphQL/client";
+import { combineEpics, Epic, ofType } from "redux-observable";
+import { RootState } from "../../../behaviour/store";
+import { catchError, endWith, from, map, mergeMap, of, startWith } from "rxjs";
 import {
     GET_TRACKS_BY_USER_ID_AND_DATE,
     GetCurrentTrackData, GetTracksByUserIdAndDateInputType, GetTracksByUserIdAndDateResponseType,
@@ -21,10 +20,11 @@ import {
     UpdateTrack,
     UpdateTrackInputType
 } from "../graphQL/tracks.mutations";
-import {tracksAction} from "./tracks.slice";
-import {notificationsActions} from "../../notifications/store/notifications.slice";
-import {calendarDaysActions} from "../../calendarDays/store/calendarDays.slice";
-import {usersActions} from "../../users/store/users.slice";
+import { tracksAction } from "./tracks.slice";
+import { notificationsActions } from "../../notifications/store/notifications.slice";
+import { calendarDaysActions } from "../../calendarDays/store/calendarDays.slice";
+import { usersActions } from "../../users/store/users.slice";
+import { client } from "../../../behaviour/client";
 
 export const getTracksEpic: Epic<ReturnType<typeof tracksAction.getTracksByUserIdAndDate>, any, RootState> = (action$, state$) => {
     return action$.pipe(
@@ -138,27 +138,27 @@ export const getCurrentTrackEpic: Epic<ReturnType<typeof tracksAction.getCurrent
 
 export const getTracksByUserIdAndDateEpic: Epic<ReturnType<typeof tracksAction.getTracksByUserIdAndDate>,
     any, RootState> = (action$, state$) => {
-    return action$.pipe(
-        ofType(tracksAction.getTracksByUserIdAndDate.type),
-        mergeMap(action =>
-            from(client.query<GetTracksByUserIdAndDateResponseType, GetTracksByUserIdAndDateInputType>({
-                query: GET_TRACKS_BY_USER_ID_AND_DATE,
-                variables: {
-                    UserId: action.payload.UserId,
-                    Date: action.payload.Date
-                }
-            })).pipe(
-                mergeMap(response => [
-                    tracksAction.addTracks(response.data.tracks.getTracksByUserIdAndDate),
+        return action$.pipe(
+            ofType(tracksAction.getTracksByUserIdAndDate.type),
+            mergeMap(action =>
+                from(client.query<GetTracksByUserIdAndDateResponseType, GetTracksByUserIdAndDateInputType>({
+                    query: GET_TRACKS_BY_USER_ID_AND_DATE,
+                    variables: {
+                        UserId: action.payload.UserId,
+                        Date: action.payload.Date
+                    }
+                })).pipe(
+                    mergeMap(response => [
+                        tracksAction.addTracks(response.data.tracks.getTracksByUserIdAndDate),
 
-                ]),
-                catchError(error => of(notificationsActions.addError(error.message))),
-                startWith(tracksAction.setLoadingGet(true)),
-                endWith(tracksAction.setLoadingGet(false)),
+                    ]),
+                    catchError(error => of(notificationsActions.addError(error.message))),
+                    startWith(tracksAction.setLoadingGet(true)),
+                    endWith(tracksAction.setLoadingGet(false)),
+                )
             )
         )
-    )
-}
+    }
 
 export const stopTrackEpic: Epic<ReturnType<typeof tracksAction.stopTrack>, any, RootState> = (action$, state$) => {
     return action$.pipe(

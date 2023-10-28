@@ -1,10 +1,10 @@
-import React, {FC, useEffect} from 'react';
-import {useSelector} from "react-redux";
-import {RootState} from "../../../../store/store";
+import React, { FC, useEffect } from 'react';
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../behaviour/store";
 import Favicon from '../../../../assets/images/clockify-logo.png';
 
 type Props = {};
-export const Settings: FC<Props> = ({}) => {
+export const Settings: FC<Props> = ({ }) => {
     const settings = useSelector((state: RootState) => state.settings.settings)
 
     useEffect(() => {
