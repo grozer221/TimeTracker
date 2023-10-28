@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.GraphQL.Modules.VacationRequests.DTO
 {
     public class VacationRequestsUpdateInputValidator : AbstractValidator<VacationRequestsUpdateInput>
     {
-        public VacationRequestsUpdateInputValidator(IVacationRequestRepository vacationRequestRepository)
+        public VacationRequestsUpdateInputValidator(VacationRequestRepository vacationRequestRepository)
         {
             RuleFor(l => l.Id)
                 .NotNull()
@@ -14,7 +15,7 @@ namespace TimeTracker.Server.GraphQL.Modules.VacationRequests.DTO
                     var vacationRequest = await vacationRequestRepository.GetByIdAsync(id);
                     return vacationRequest != null;
                 }).WithMessage("Vacation request with current id does not exsits");
-            
+
             RuleFor(l => l.DateStart)
                 .NotNull()
                 .Must((input, dateStart) =>

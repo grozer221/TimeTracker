@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.GraphQL.Modules.Auth.DTO
 {
     public class AuthRegisterInputValidator : AbstractValidator<AuthRegisterInput>
     {
-        public AuthRegisterInputValidator(IUserRepository userRepository)
+        public AuthRegisterInputValidator(UserRepository userRepository)
         {
             RuleFor(l => l.Email)
                 .EmailAddress()
@@ -21,15 +22,15 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth.DTO
                 .MinimumLength(5)
                 .NotEmpty()
                 .NotNull();
-            
+
             RuleFor(l => l.FirstName)
                 .NotEmpty()
                 .NotNull();
-            
+
             RuleFor(l => l.LastName)
                 .NotEmpty()
                 .NotNull();
-            
+
             RuleFor(l => l.MiddleName)
                 .NotEmpty()
                 .NotNull();

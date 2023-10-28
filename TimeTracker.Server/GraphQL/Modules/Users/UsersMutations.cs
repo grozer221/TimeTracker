@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+
 using GraphQL;
 using GraphQL.Types;
+
 using TimeTracker.Business.Enums;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.Users.DTO;
@@ -13,10 +15,10 @@ namespace TimeTracker.Server.GraphQL.Modules.Users
     public class UsersMutations : ObjectGraphType
     {
         public UsersMutations(
-            IUserRepository userRepository,
-            IUsers_UsersWhichCanApproveVacationRequestsRepository users_UsersWhichCanApproveVacationRequestsRepository,
+            UserRepository userRepository,
+            Users_UsersWhichCanApproveVacationRequestsRepository users_UsersWhichCanApproveVacationRequestsRepository,
             IHttpContextAccessor httpContextAccessor,
-            IAccessTokenRepository aceessTokenRepository,
+            AccessTokenRepository aceessTokenRepository,
             IValidator<UsersCreateInput> usersCreateInputValidator,
             IValidator<UsersUpdateInput> usersUpdateInputValidator,
             IValidator<UsersRemoveInput> usersRemoveInputValidator,

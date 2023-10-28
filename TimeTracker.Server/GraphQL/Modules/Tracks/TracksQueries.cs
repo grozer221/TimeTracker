@@ -1,9 +1,10 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+
 using TimeTracker.Business.Abstractions;
 using TimeTracker.Business.Enums;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Abstractions;
 using TimeTracker.Server.GraphQL.EnumTypes;
@@ -13,7 +14,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Tracks
 {
     public class TracksQueries : ObjectGraphType
     {
-        public TracksQueries(ITrackRepository trackRepository, IHttpContextAccessor httpContextAccessor)
+        public TracksQueries(TrackRepository trackRepository, IHttpContextAccessor httpContextAccessor)
         {
             Field<GetEntitiesResponseType<TrackType, TrackModel>, GetEntitiesResponse<TrackModel>>()
                 .Name("Get")
@@ -68,7 +69,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Tracks
 
             Field<TrackType, TrackModel>()
                 .Name("GetCurrentTrack")
-                .ResolveAsync(async context => 
+                .ResolveAsync(async context =>
                 {
                     Guid userId = httpContextAccessor.HttpContext.GetUserId();
                     var currentTrack = await trackRepository.GetCurrentAsync(userId);
@@ -77,7 +78,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Tracks
 
             Field<TrackType, TrackModel>()
                 .Name("GetById")
-                .Argument<NonNullGraphType<GuidGraphType>, Guid> ("Id", "Id of track")
+                .Argument<NonNullGraphType<GuidGraphType>, Guid>("Id", "Id of track")
                 .ResolveAsync(async context =>
                 {
                     var id = context.GetArgument<Guid>("Id");

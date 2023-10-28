@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
+
 using GraphQL;
 using GraphQL.Types;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Managers;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO;
@@ -14,8 +15,8 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays
     public class CalendarDaysMutations : ObjectGraphType
     {
         public CalendarDaysMutations(
-            ICalendarDayManager calendarDayManager, 
-            IHttpContextAccessor httpContextAccessor, 
+            CalendarDayManager calendarDayManager,
+            IHttpContextAccessor httpContextAccessor,
             IValidator<CalendarDaysCreateInput> calendarDaysCreateInputValidator,
             IValidator<CalendarDaysCreateRangeInput> calendarDaysCreateRangeInputValidator,
             IValidator<CalendarDaysUpdateInput> calendarDaysUpdateInputValidator,
@@ -80,7 +81,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays
                    return await calendarDayManager.RemoveAsync(date);
                })
                .AuthorizeWith(AuthPolicies.Authenticated);
-            
+
             Field<NonNullGraphType<ListGraphType<CalendarDayType>>, IEnumerable<CalendarDayModel>>()
                .Name("RemoveRange")
                .Argument<NonNullGraphType<CalendarDaysRemoveRangeInputType>, CalendarDaysRemoveRangeInput>("CalendarDaysRemoveRangeInputType", "Argument for remove calendar day")

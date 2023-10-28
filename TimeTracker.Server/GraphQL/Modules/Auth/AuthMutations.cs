@@ -1,25 +1,28 @@
-﻿using GraphQL;
+﻿using FluentValidation;
+
+using Google.Apis.Auth;
+
+using GraphQL;
 using GraphQL.Types;
+
+using Microsoft.Net.Http.Headers;
+
 using TimeTracker.Business.Enums;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
-using TimeTracker.Server.GraphQL.Modules.Auth.DTO;
-using TimeTracker.Server.Services;
-using TimeTracker.Server.Extensions;
-using Microsoft.Net.Http.Headers;
-using FluentValidation;
 using TimeTracker.Server.Abstractions;
-using Google.Apis.Auth;
+using TimeTracker.Server.DataAccess.Repositories;
+using TimeTracker.Server.Extensions;
+using TimeTracker.Server.GraphQL.Modules.Auth.DTO;
 
 namespace TimeTracker.Server.GraphQL.Modules.Auth
 {
     public class AuthMutations : ObjectGraphType
     {
         public AuthMutations(
-            IUserRepository userRepository,
+            UserRepository userRepository,
             IAuthService authService,
-            IAccessTokenRepository aceessTokenRepository,
-            IResetPassTokenRepository resetTokenRepository,
+            AccessTokenRepository aceessTokenRepository,
+            ResetPassTokenRepository resetTokenRepository,
             IHttpContextAccessor httpContextAccessor,
             INotificationService notificationService,
             IValidator<AuthLoginInput> authLoginInputValidator,

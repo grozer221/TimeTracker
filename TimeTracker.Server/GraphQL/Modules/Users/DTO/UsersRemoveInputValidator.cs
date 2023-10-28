@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.GraphQL.Modules.Users.DTO
 {
     public class UsersRemoveInputValidator : AbstractValidator<UsersRemoveInput>
     {
-        public UsersRemoveInputValidator(IUserRepository userRepository)
+        public UsersRemoveInputValidator(UserRepository userRepository)
         {
             RuleFor(l => l.Email)
                 .EmailAddress()

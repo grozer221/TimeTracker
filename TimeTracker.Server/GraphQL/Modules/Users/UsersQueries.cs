@@ -1,9 +1,10 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+
 using TimeTracker.Business.Abstractions;
 using TimeTracker.Business.Models;
 using TimeTracker.Business.Models.Filters;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.GraphQL.Abstractions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.Users.DTO;
@@ -12,7 +13,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Users
 {
     public class UsersQueries : ObjectGraphType
     {
-        public UsersQueries(IUserRepository userRepository)
+        public UsersQueries(UserRepository userRepository)
         {
             Field<NonNullGraphType<GetEntitiesResponseType<UserType, UserModel>>, GetEntitiesResponse<UserModel>>()
                .Name("Get")

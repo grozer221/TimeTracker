@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Managers;
 
 namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
 {
     public class CalendarDaysCreateInputValidator : AbstractValidator<CalendarDaysCreateInput>
     {
-        public CalendarDaysCreateInputValidator(ICalendarDayManager calendarDayManager, ISettingsManager settingsManager)
+        public CalendarDaysCreateInputValidator(CalendarDayManager calendarDayManager, SettingsManager settingsManager)
         {
             RuleFor(l => l.Title);
 
@@ -20,7 +20,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
                         await calendarDayManager.RemoveAsync(date);
                     return !exists;
                 }).WithMessage(input => $"Calendar day for {input.Date.ToString("yyyy-MM-dd")} already exists");
-            
+
             RuleFor(l => l.Kind)
                 .NotNull()
                 .Must((input, kind) =>

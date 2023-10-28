@@ -20,6 +20,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CloudinaryDotNet" Version="1.19.0" />
+		<PackageReference Include="Dapper" Version="2.1.15" />
 		<PackageReference Include="EPPlus" Version="6.0.6" />
 		<PackageReference Include="FluentMigrator" Version="3.3.2" />
 		<PackageReference Include="FluentMigrator.Runner" Version="3.3.2" />
@@ -40,13 +41,10 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.6" />
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.6" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="4.1.0" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="7.0.0" />
 		<PackageReference Include="Quartz" Version="3.4.0" />
 		<PackageReference Include="Quartz.Extensions.Hosting" Version="3.4.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\TimeTracker.Caching\TimeTracker.Caching.csproj" />
-		<ProjectReference Include="..\TimeTracker.MsSql\TimeTracker.MsSql.csproj" />
+		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
 	</ItemGroup>
 
 	<ItemGroup>

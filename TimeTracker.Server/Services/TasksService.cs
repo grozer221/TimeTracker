@@ -1,8 +1,8 @@
 ﻿using Quartz;
-using TimeTracker.Business.Managers;
-using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
+
 using TimeTracker.Server.Abstractions;
+using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Tasks;
 
 namespace TimeTracker.Server.Services
@@ -22,10 +22,10 @@ namespace TimeTracker.Server.Services
         {
             using var scope = serviceProvider.CreateScope();
             var tasks = scope.ServiceProvider.GetRequiredService<IEnumerable<ITask>>();
-            var completedTaskRepository = scope.ServiceProvider.GetRequiredService<ICompletedTaskRepository>();
+            var completedTaskRepository = scope.ServiceProvider.GetRequiredService<CompletedTaskRepository>();
             var autoCreateDaysOffTask = scope.ServiceProvider.GetRequiredService<AutoCreateDaysOffTask>();
             var autoCreateTracks = scope.ServiceProvider.GetRequiredService<AutoCreateTracksTask>();
-            var settingsManager = scope.ServiceProvider.GetRequiredService<ISettingsManager>();
+            var settingsManager = scope.ServiceProvider.GetRequiredService<SettingsManager>();
             var settings = await settingsManager.GetAsync();
 
             var scheduler = await schedulerFactory.GetScheduler();
@@ -39,7 +39,7 @@ namespace TimeTracker.Server.Services
             }
 
             var dateTimeOffsetNow = DateTimeOffset.UtcNow;
-            foreach(var task in tasks)
+            foreach (var task in tasks)
             {
                 var lastCompletedTask = await completedTaskRepository.GetLastExecutedAsync(task.JobName);
                 if (lastCompletedTask == null)

@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Managers;
 
 namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
 {
     public class CalendarDaysCreateRangeInputValidator : AbstractValidator<CalendarDaysCreateRangeInput>
     {
-        public CalendarDaysCreateRangeInputValidator(ISettingsManager settingsManager)
+        public CalendarDaysCreateRangeInputValidator(SettingsManager settingsManager)
         {
             RuleFor(l => l.From)
                 .NotNull();

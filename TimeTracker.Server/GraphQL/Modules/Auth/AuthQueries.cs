@@ -1,7 +1,9 @@
 ﻿using GraphQL;
 using GraphQL.Types;
+
 using Microsoft.Net.Http.Headers;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth.DTO;
 
@@ -9,7 +11,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
 {
     public class AuthQueries : ObjectGraphType
     {
-        public AuthQueries(IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
+        public AuthQueries(IHttpContextAccessor httpContextAccessor, UserRepository userRepository)
         {
             Field<NonNullGraphType<AuthResponseType>, AuthResponse>()
                 .Name("Me")

@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.GraphQL.Modules.Users.DTO
 {
     public class UsersUpdatePasswordValidator : AbstractValidator<UsersUpdatePasswordInput>
     {
-        public UsersUpdatePasswordValidator(IUserRepository userRepository)
+        public UsersUpdatePasswordValidator(UserRepository userRepository)
         {
 
             RuleFor(l => l.Id)
@@ -24,7 +25,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Users.DTO
             RuleFor(l => l.ConfirmPassword)
                 .NotEmpty()
                 .NotNull()
-                .Must((user, confirmPassword) => 
+                .Must((user, confirmPassword) =>
                 {
                     return confirmPassword == user.Password;
                 });

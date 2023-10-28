@@ -1,13 +1,13 @@
-﻿using TimeTracker.Business.Managers;
+﻿using TimeTracker.Server.DataAccess.Managers;
 
 namespace TimeTracker.Server.Services
 {
     public class CalendarDaysService
     {
-        private readonly ICalendarDayManager calendarDayManager;
-        private readonly ISettingsManager settingsManager;
+        private readonly CalendarDayManager calendarDayManager;
+        private readonly SettingsManager settingsManager;
 
-        public CalendarDaysService(ICalendarDayManager calendarDayManager, ISettingsManager settingsManager)
+        public CalendarDaysService(CalendarDayManager calendarDayManager, SettingsManager settingsManager)
         {
             this.calendarDayManager = calendarDayManager;
             this.settingsManager = settingsManager;
@@ -17,7 +17,7 @@ namespace TimeTracker.Server.Services
         {
             var from = new DateTime(dateTime.Year, dateTime.Month, 1);
             var to = from.AddMonths(1).AddDays(-1);
-            var calendarDaysInMonth =  await calendarDayManager.GetAsync(from, to);
+            var calendarDaysInMonth = await calendarDayManager.GetAsync(from, to);
             var settings = await settingsManager.GetAsync();
             var givenMonthDays = Enumerable.Range(0, 1 + to.Subtract(from).Days)
                 .Select(offset => from.AddDays(offset))

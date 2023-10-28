@@ -2,10 +2,12 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Text.Encodings.Web;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 
 namespace TimeTracker.Server.Middlewares
@@ -17,14 +19,14 @@ namespace TimeTracker.Server.Middlewares
     public class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
     {
         public const string SchemeName = "TimeTrackerSchemeName";
-        private readonly IAccessTokenRepository tokenRepository;
+        private readonly AccessTokenRepository tokenRepository;
 
         public BasicAuthenticationHandler(
             IOptionsMonitor<BasicAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            IAccessTokenRepository tokenRepository) : base(options, logger, encoder, clock)
+            AccessTokenRepository tokenRepository) : base(options, logger, encoder, clock)
         {
             this.tokenRepository = tokenRepository;
         }

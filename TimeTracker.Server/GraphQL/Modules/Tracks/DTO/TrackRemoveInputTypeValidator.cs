@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.GraphQL.Modules.Tracks.DTO
 {
     public class TrackRemoveInputTypeValidator : AbstractValidator<TrackRemoveInput>
     {
-        public TrackRemoveInputTypeValidator(ITrackRepository trackRepository)
+        public TrackRemoveInputTypeValidator(TrackRepository trackRepository)
         {
             RuleFor(l => l.Id)
                 .NotEmpty()

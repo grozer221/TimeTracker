@@ -1,12 +1,11 @@
 ﻿using Quartz;
-using TimeTracker.Business;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
-using TimeTracker.MsSql;
-using TimeTracker.MsSql.Extensions;
 using TimeTracker.Server.Abstractions;
+using TimeTracker.Server.DataAccess;
+using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.Tasks
 {
@@ -17,17 +16,17 @@ namespace TimeTracker.Server.Tasks
         public string TriggerName => JobName + "-Trigger";
         public TriggerKey TriggerKey => new TriggerKey(TriggerName);
 
-        private readonly ISettingsManager settingsManager;
-        private readonly ICalendarDayManager calendarDayManager;
+        private readonly SettingsManager settingsManager;
+        private readonly CalendarDayManager calendarDayManager;
         private readonly IServiceProvider serviceProvider;
-        private readonly ICompletedTaskRepository completedTaskRepository;
+        private readonly CompletedTaskRepository completedTaskRepository;
         private readonly DapperContext dapperContext;
 
         public AutoCreateDaysOffTask(
-            ISettingsManager settingsManager, 
-            ICalendarDayManager calendarDayManager, 
-            IServiceProvider serviceProvider, 
-            ICompletedTaskRepository completedTaskRepository,
+            SettingsManager settingsManager,
+            CalendarDayManager calendarDayManager,
+            IServiceProvider serviceProvider,
+            CompletedTaskRepository completedTaskRepository,
             DapperContext dapperContext
             )
         {
@@ -73,7 +72,7 @@ namespace TimeTracker.Server.Tasks
                                 Date = dateForCreateDayOff,
                                 Kind = DayKind.DayOff,
                             };
-                            await calendarDayManager.CreateAsync(newCalendarDay, connection, transaction);
+                            await CalendarDayRepository.CreateAsync(newCalendarDay, connection, transaction);
                         }
                     }
                     var completedTask = new CompletedTaskModel
@@ -81,11 +80,11 @@ namespace TimeTracker.Server.Tasks
                         DateExecute = dateTimeNow,
                         Name = JobName,
                     };
-                    await completedTaskRepository.CreateAsync(completedTask, connection, transaction);
+                    await CompletedTaskRepository.CreateAsync(connection, completedTask, transaction);
                     transaction.Commit();
                 }
             }
-            
+
             Console.WriteLine($"[{DateTime.UtcNow}] -- {JobName} for {mondayDate} - {saturdayDate}");
         }
 

@@ -1,20 +1,21 @@
 ﻿using FluentValidation;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
+using TimeTracker.Server.DataAccess.Managers;
 
 namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
 {
     public class CalendarDaysUpdateInputValidator : AbstractValidator<CalendarDaysUpdateInput>
     {
-        public CalendarDaysUpdateInputValidator(ISettingsManager settingsManager)
+        public CalendarDaysUpdateInputValidator(SettingsManager settingsManager)
         {
             RuleFor(l => l.Id)
                 .NotEmpty()
                 .NotNull();
-            
+
             RuleFor(l => l.Date)
                 .NotNull();
-            
+
             RuleFor(l => l.Kind)
                 .NotNull()
                 .Must((input, kind) =>

@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.GraphQL.Modules.Users.DTO
 {
     public class UsersUpdateInputValidator : AbstractValidator<UsersUpdateInput>
     {
-        public UsersUpdateInputValidator(IUserRepository userRepository)
+        public UsersUpdateInputValidator(UserRepository userRepository)
         {
             RuleFor(l => l.Id)
               .NotEmpty()

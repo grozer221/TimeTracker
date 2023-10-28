@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
+
 using GraphQL;
 using GraphQL.Types;
-using TimeTracker.Business.Managers;
+
 using TimeTracker.Business.Models;
+using TimeTracker.Server.DataAccess.Managers;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO;
 using TimeTracker.Server.Services;
@@ -12,7 +14,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays
     public class CalendarDaysQueries : ObjectGraphType
     {
         public CalendarDaysQueries(
-            ICalendarDayManager calendarDayManager,
+            CalendarDayManager calendarDayManager,
             IValidator<CalendarDaysGetInput> calendarDaysGetInputValidation,
             CalendarDaysService calendarDaysService
             )
@@ -40,7 +42,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays
                     return calendarDay;
                 })
                 .AuthorizeWith(AuthPolicies.Authenticated);
-            
+
             Field<NonNullGraphType<IntGraphType>, int>()
                 .Name("GetWorkingHoursInThisMonth")
                 .ResolveAsync(async context =>

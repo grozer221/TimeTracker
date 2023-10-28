@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
+
 using GraphQL;
 using GraphQL.Types;
+
 using TimeTracker.Business.Abstractions;
 using TimeTracker.Business.Enums;
 using TimeTracker.Business.Filters;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Abstractions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
@@ -18,7 +20,7 @@ namespace TimeTracker.Server.GraphQL.Modules.VacationRequests
     {
         public VacationRequestsQueries(
             IHttpContextAccessor httpContextAccessor,
-            IVacationRequestRepository vacationRequestRepository,
+            VacationRequestRepository vacationRequestRepository,
             IValidator<VacationRequestsGetInput> vacationRequestsGetInputValidator,
             VacationRequestsService vacationRequestsService
             )
@@ -31,7 +33,7 @@ namespace TimeTracker.Server.GraphQL.Modules.VacationRequests
                    return await vacationRequestsService.GetAvaliableDaysAsync(currentUserId);
                })
                .AuthorizeWith(AuthPolicies.Authenticated);
-            
+
             Field<NonNullGraphType<GetEntitiesResponseType<VacationRequestType, VacationRequestModel>>, GetEntitiesResponse<VacationRequestModel>>()
                .Name("Get")
                .Argument<NonNullGraphType<VacationRequestsGetInputType>, VacationRequestsGetInput>("VacationRequestsGetInputType", "Argument represent count of tracks on page")

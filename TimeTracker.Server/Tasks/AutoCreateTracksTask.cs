@@ -1,12 +1,11 @@
 ﻿using Quartz;
-using TimeTracker.Business;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
-using TimeTracker.MsSql;
-using TimeTracker.MsSql.Extensions;
 using TimeTracker.Server.Abstractions;
+using TimeTracker.Server.DataAccess;
+using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.Tasks
 {
@@ -17,26 +16,26 @@ namespace TimeTracker.Server.Tasks
         public string TriggerName => JobName + "-Trigger";
         public TriggerKey TriggerKey => new TriggerKey(TriggerName);
 
-        private readonly ISettingsManager settingsManager;
+        private readonly SettingsManager settingsManager;
         private readonly IServiceProvider serviceProvider;
-        private readonly IUserRepository userRepository;
-        private readonly ITrackRepository trackRepository;
-        private readonly ICompletedTaskRepository completedTaskRepository;
-        private readonly IVacationRequestRepository vacationRequestRepository;
-        private readonly ISickLeaveRepository sickLeaveRepository;
+        private readonly UserRepository userRepository;
+        private readonly TrackRepository trackRepository;
+        private readonly CompletedTaskRepository completedTaskRepository;
+        private readonly VacationRequestRepository vacationRequestRepository;
+        private readonly SickLeaveRepository sickLeaveRepository;
         private readonly DapperContext dapperContext;
-        private readonly ICalendarDayManager calendarDayManager;
+        private readonly CalendarDayManager calendarDayManager;
 
         public AutoCreateTracksTask(
-            ISettingsManager settingsManager, 
-            IServiceProvider serviceProvider, 
-            IUserRepository userRepository, 
-            ITrackRepository trackRepository, 
-            ICompletedTaskRepository completedTaskRepository, 
-            IVacationRequestRepository vacationRequestRepository,
-            ISickLeaveRepository sickLeaveRepository,
+            SettingsManager settingsManager,
+            IServiceProvider serviceProvider,
+            UserRepository userRepository,
+            TrackRepository trackRepository,
+            CompletedTaskRepository completedTaskRepository,
+            VacationRequestRepository vacationRequestRepository,
+            SickLeaveRepository sickLeaveRepository,
             DapperContext dapperContext,
-            ICalendarDayManager calendarDayManager
+            CalendarDayManager calendarDayManager
             )
         {
             this.settingsManager = settingsManager;
@@ -114,11 +113,11 @@ namespace TimeTracker.Server.Tasks
                         DateExecute = dateTimeNow,
                         Name = JobName,
                     };
-                    await completedTaskRepository.CreateAsync(compeltedTask, connection, transaction);
+                    await CompletedTaskRepository.CreateAsync(connection, compeltedTask, transaction);
                     transaction.Commit();
                 }
             }
-            
+
             Console.WriteLine($"[{DateTime.UtcNow}] -- {JobName} for {dateTimeNow}");
         }
 

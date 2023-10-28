@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
+
 using GraphQL;
 using GraphQL.Types;
+
 using TimeTracker.Business.Enums;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
-using TimeTracker.Server.GraphQL.Modules.FileManager.DTO;
-using TimeTracker.Server.GraphQL.Modules.FileManager;
 using TimeTracker.Server.GraphQL.Modules.SickLeave.DTO;
 using TimeTracker.Server.Services;
 
@@ -17,7 +17,7 @@ namespace TimeTracker.Server.GraphQL.Modules.SickLeave
     {
         public SickLeaveMutations(
             IHttpContextAccessor httpContextAccessor,
-            ISickLeaveRepository sickLeaveRepository,
+            SickLeaveRepository sickLeaveRepository,
             IValidator<SickLeaveCreateInput> sickLeaveInputValidator,
             IValidator<SickLeaveUpdateInput> sickLeaveUpdateInputValidator,
             FileManagerService fileManagerService
@@ -42,16 +42,16 @@ namespace TimeTracker.Server.GraphQL.Modules.SickLeave
                .Argument<NonNullGraphType<GuidGraphType>, Guid>("Id", "")
                .ResolveAsync(async context =>
                {
-                    var id = context.GetArgument<Guid>("Id");
-                    var sickLeave = await sickLeaveRepository.GetByIdAsync(id);
-                    if (sickLeave == null)
-                        throw new Exception("Vacation request not found");
+                   var id = context.GetArgument<Guid>("Id");
+                   var sickLeave = await sickLeaveRepository.GetByIdAsync(id);
+                   if (sickLeave == null)
+                       throw new Exception("Vacation request not found");
 
-                    if (!httpContextAccessor.HttpContext.User.Claims.IsAdministrator())
-                        throw new ExecutionError("You can not remove sick leave days");
+                   if (!httpContextAccessor.HttpContext.User.Claims.IsAdministrator())
+                       throw new ExecutionError("You can not remove sick leave days");
 
-                    if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.NoteTheAbsenceAndVacation))
-                        throw new ExecutionError("You do not have permissions for remove sick leave days");
+                   if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.NoteTheAbsenceAndVacation))
+                       throw new ExecutionError("You do not have permissions for remove sick leave days");
 
                    await sickLeaveRepository.RemoveAsync(id);
 
@@ -76,7 +76,7 @@ namespace TimeTracker.Server.GraphQL.Modules.SickLeave
                   return await sickLeaveRepository.GetByIdAsync(sickLeave.Id);
               })
               .AuthorizeWith(AuthPolicies.Authenticated);
-            
+
             Field<NonNullGraphType<SickLeaveType>, SickLeaveModel>()
               .Name("UploadFiles")
               .Argument<NonNullGraphType<SickLeaveUploadFilesInputType>, SickLeaveUploadFilesInput>("SickLeaveUploadFilesInputType", "")
@@ -85,7 +85,7 @@ namespace TimeTracker.Server.GraphQL.Modules.SickLeave
                   var sickLeaveUploadFilesInput = context.GetArgument<SickLeaveUploadFilesInput>("SickLeaveUploadFilesInputType");
                   var oldSickLeave = await sickLeaveRepository.GetByIdAsync(sickLeaveUploadFilesInput.Id);
 
-                  if(oldSickLeave == null)
+                  if (oldSickLeave == null)
                       throw new ExecutionError("Sick leave with current id does not exists");
 
                   var currentUserId = httpContextAccessor.HttpContext.GetUserId();

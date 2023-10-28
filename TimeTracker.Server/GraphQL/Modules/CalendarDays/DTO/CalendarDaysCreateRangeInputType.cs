@@ -1,8 +1,8 @@
 ﻿using GraphQL.Types;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Managers;
 using TimeTracker.Server.GraphQL.EnumTypes;
 
 namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
@@ -17,7 +17,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
         public int WorkHours { get; set; }
         public bool Override { get; set; }
 
-        public async Task<IEnumerable<CalendarDayModel>> ToListAsync(ICalendarDayManager calendarDayManager)
+        public async Task<IEnumerable<CalendarDayModel>> ToListAsync(CalendarDayManager calendarDayManager)
         {
             var list = new List<CalendarDayModel>();
             var fromCopy = From;
@@ -25,7 +25,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
             {
                 if (DaysOfWeek.Contains(fromCopy.DayOfWeek))
                 {
-                   
+
                     if (await calendarDayManager.GetByDateAsync(fromCopy) != null)
                     {
                         if (Override)
@@ -54,7 +54,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
             Field<StringGraphType, string?>()
                  .Name("Title")
                  .Resolve(context => context.Source.Title);
-            
+
             Field<NonNullGraphType<DateGraphType>, DateTime>()
                  .Name("From")
                  .Resolve(context => context.Source.From);
@@ -74,7 +74,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
             Field<NonNullGraphType<IntGraphType>, int>()
                  .Name("WorkHours")
                  .Resolve(context => context.Source.WorkHours);
-            
+
             Field<NonNullGraphType<BooleanGraphType>, bool>()
                  .Name("Override")
                  .Resolve(context => context.Source.Override);

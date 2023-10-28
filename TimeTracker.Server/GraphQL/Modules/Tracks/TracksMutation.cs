@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
+
 using GraphQL;
 using GraphQL.Types;
+
 using TimeTracker.Business.Enums;
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.Tracks.DTO;
@@ -12,9 +14,9 @@ namespace TimeTracker.Server.GraphQL.Modules.Tracks
 {
     public class TracksMutation : ObjectGraphType
     {
-        public TracksMutation(ITrackRepository trackRepository, 
-                              IHttpContextAccessor httpContextAccessor, 
-                              IUserRepository userRepository,
+        public TracksMutation(TrackRepository trackRepository,
+                              IHttpContextAccessor httpContextAccessor,
+                              UserRepository userRepository,
                               IValidator<TrackInput> trackInputTypeValidator,
                               IValidator<TrackOtherInput> trackOtherInputTypeValidator,
                               IValidator<TrackUpdateInput> trackUpdateInputTypeValidator,
@@ -33,7 +35,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Tracks
                     model.Id = Guid.NewGuid();
                     model.UserId = currentUserId;
                     var user = await userRepository.GetByIdAsync(currentUserId);
-                    if(user.Employment == Employment.FullTime)
+                    if (user.Employment == Employment.FullTime)
                         throw new ExecutionError("You do not have permissions for create tracks");
 
                     return await trackRepository.CreateAsync(model);
@@ -91,11 +93,11 @@ namespace TimeTracker.Server.GraphQL.Modules.Tracks
                         model.StartTime = track.StartTime;
                     if (track.EndTime != null)
                         model.EndTime = track.EndTime;
-                    if(track.EditedBy != null)
+                    if (track.EditedBy != null)
                         model.EditedBy = track.EditedBy;
                     model.Kind = track.Kind;
                     model.Creation = track.Creation;
-                    
+
                     if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.UpdateOthersTimeTracker) && model.UserId != currentUserId)
                         throw new ExecutionError("You do not have permissions for update others tracks");
 

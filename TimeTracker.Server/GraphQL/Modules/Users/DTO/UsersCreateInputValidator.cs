@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.GraphQL.Modules.Users.DTO
 {
     public class UsersCreateInputValidator : AbstractValidator<UsersCreateInput>
     {
-        public UsersCreateInputValidator(IUserRepository userRepository)
+        public UsersCreateInputValidator(UserRepository userRepository)
         {
             RuleFor(l => l.Email)
                 .EmailAddress()
@@ -33,7 +34,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Users.DTO
             RuleFor(l => l.MiddleName)
                 .NotEmpty()
                 .NotNull();
-            
+
             RuleFor(l => l.Permissions)
                 .NotNull()
                 .Must(permissions =>
@@ -46,7 +47,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Users.DTO
                 .NotNull()
                 .MustAsync(async (usersWhichCanApproveVacationRequestIds, _) =>
                 {
-                    foreach(var usersWhichCanApproveVacationRequestId in usersWhichCanApproveVacationRequestIds)
+                    foreach (var usersWhichCanApproveVacationRequestId in usersWhichCanApproveVacationRequestIds)
                     {
                         var user = await userRepository.GetByIdAsync(usersWhichCanApproveVacationRequestId);
                         if (user == null)

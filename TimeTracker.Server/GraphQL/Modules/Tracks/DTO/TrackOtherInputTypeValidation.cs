@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
-using TimeTracker.Business.Repositories;
+
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.GraphQL.Modules.Tracks.DTO
 {
     public class TrackOtherInputTypeValidation : AbstractValidator<TrackOtherInput>
     {
-        public TrackOtherInputTypeValidation(IUserRepository userRepository)
+        public TrackOtherInputTypeValidation(UserRepository userRepository)
         {
             RuleFor(l => l.Title);
 

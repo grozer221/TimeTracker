@@ -1,8 +1,10 @@
 ﻿using MailKit.Net.Smtp;
+
 using MimeKit;
-using TimeTracker.Server.Abstractions;
 using MimeKit.Text;
-using TimeTracker.Business.Managers;
+
+using TimeTracker.Server.Abstractions;
+using TimeTracker.Server.DataAccess.Managers;
 
 namespace TimeTracker.Server.Services
 {
@@ -18,7 +20,7 @@ namespace TimeTracker.Server.Services
         public async Task SendMessageAsync(string to, string title, string message)
         {
             using var scope = serviceProvider.CreateScope();
-            var settingsManager = scope.ServiceProvider.GetRequiredService<ISettingsManager>();
+            var settingsManager = scope.ServiceProvider.GetRequiredService<SettingsManager>();
             var settings = await settingsManager.GetAsync();
             var name = settings.Email.Name;
             var address = settings.Email.Address;

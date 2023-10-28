@@ -1,5 +1,3 @@
-using TimeTracker.Caching.Extensions;
-using TimeTracker.MsSql.Extensions;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL;
 
@@ -25,8 +23,8 @@ builder.Services.AddTasks();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment()) 
-{ 
+if (app.Environment.IsDevelopment())
+{
     app.UseCors("DefaultPolicy");
 }
 

@@ -1,28 +1,30 @@
 ﻿using FluentValidation;
+
 using GraphQL;
 using GraphQL.Types;
+
 using Quartz;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
 using TimeTracker.Business.Models;
 using TimeTracker.Server.Abstractions;
+using TimeTracker.Server.DataAccess.Managers;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.Settings.DTO;
 using TimeTracker.Server.GraphQL.Modules.Settings.DTO.SettingsTasksUpdate;
-using TimeTracker.Server.Tasks;
 
 namespace TimeTracker.Server.GraphQL.Modules.Settings
 {
     public class SettingsMutations : ObjectGraphType
     {
         public SettingsMutations(
-            ISettingsManager settingsManager,
+            SettingsManager settingsManager,
             IHttpContextAccessor httpContextAccessor,
             IValidator<SettingsEmploymentUpdateInput> settingsCommonUpdateInputValidator,
-            IValidator<SettingsApplicationUpdateInput> settingsApplicationUpdateInputValidator, 
-            IValidator<SettingsEmailUpdateInput> settingsEmailUpdateInputValidator, 
-            IValidator<SettingsVacationRequestsUpdateInput> settingsVacationRequestsUpdateInputValidator, 
+            IValidator<SettingsApplicationUpdateInput> settingsApplicationUpdateInputValidator,
+            IValidator<SettingsEmailUpdateInput> settingsEmailUpdateInputValidator,
+            IValidator<SettingsVacationRequestsUpdateInput> settingsVacationRequestsUpdateInputValidator,
             ISchedulerFactory schedulerFactory,
             IEnumerable<ITask> tasks
             )
@@ -40,7 +42,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Settings
                    return await settingsManager.UpdateEmploymentAsync(settingsCommon);
                })
                .AuthorizeWith(AuthPolicies.Authenticated);
-            
+
             Field<NonNullGraphType<SettingsType>, SettingsModel>()
                .Name("UpdateApplication")
                .Argument<NonNullGraphType<SettingsApplicationUpdateInputType>, SettingsApplicationUpdateInput>("SettingsApplicationUpdateInputType", "Argument for update application settings")
@@ -54,7 +56,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Settings
                    return await settingsManager.UpdateApplicationAsync(settingsCommon);
                })
                .AuthorizeWith(AuthPolicies.Authenticated);
-            
+
             Field<NonNullGraphType<SettingsType>, SettingsModel>()
                .Name("UpdateTasks")
                .Argument<NonNullGraphType<SettingsTasksUpdateInputType>, SettingsTasksUpdateInput>("SettingsTasksUpdateInputType", "Argument for update tasks settings")
@@ -66,7 +68,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Settings
                    var settingsCommon = settingsTasksUpdateInput.ToModel();
                    var newSettings = await settingsManager.UpdateTasksAsync(settingsCommon);
 
-                   foreach(var task in tasks)
+                   foreach (var task in tasks)
                    {
                        await task.RescheduleAsync();
                    }
@@ -74,7 +76,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Settings
                    return newSettings;
                })
                .AuthorizeWith(AuthPolicies.Authenticated);
-            
+
             Field<NonNullGraphType<SettingsType>, SettingsModel>()
                .Name("UpdateEmail")
                .Argument<NonNullGraphType<SettingsEmailUpdateInputType>, SettingsEmailUpdateInput>("SettingsEmailUpdateInputType", "Argument for update tasks settings")
@@ -88,7 +90,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Settings
                    return await settingsManager.UpdateEmailAsync(settingsEmail);
                })
                .AuthorizeWith(AuthPolicies.Authenticated);
-            
+
             Field<NonNullGraphType<SettingsType>, SettingsModel>()
                .Name("UpdateVacationRequests")
                .Argument<NonNullGraphType<SettingsVacationRequestsUpdateInputType>, SettingsVacationRequestsUpdateInput>("SettingsVacationRequestsUpdateInputType", "Argument for update tasks settings")

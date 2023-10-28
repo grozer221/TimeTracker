@@ -1,16 +1,16 @@
 ﻿using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
-using TimeTracker.Business.Repositories;
+using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.Services
 {
     public class VacationRequestsService
     {
-        private readonly IUserRepository userRepository;
-        private readonly IVacationRequestRepository vacationRequestRepository;
-        private readonly ISettingsManager settingsManager;
+        private readonly UserRepository userRepository;
+        private readonly VacationRequestRepository vacationRequestRepository;
+        private readonly SettingsManager settingsManager;
 
-        public VacationRequestsService(IUserRepository userRepository, IVacationRequestRepository vacationRequestRepository, ISettingsManager settingsManager)
+        public VacationRequestsService(UserRepository userRepository, VacationRequestRepository vacationRequestRepository, SettingsManager settingsManager)
         {
             this.userRepository = userRepository;
             this.vacationRequestRepository = vacationRequestRepository;

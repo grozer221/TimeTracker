@@ -1,13 +1,22 @@
-﻿using FluentValidation;
+﻿using FluentMigrator.Runner;
+
+using FluentValidation;
+
 using GraphQL;
 using GraphQL.Server;
 using GraphQL.SystemTextJson;
+
 using Quartz;
+
 using System.Reflection;
 using System.Security.Claims;
+
 using TimeTracker.Business.Enums;
-using TimeTracker.Business.Managers;
 using TimeTracker.Server.Abstractions;
+using TimeTracker.Server.DataAccess;
+using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
+using TimeTracker.Server.DataAccess.Services;
 using TimeTracker.Server.GraphQL;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.Middlewares;
@@ -89,6 +98,41 @@ namespace TimeTracker.Server.Extensions
                 q.AddJob<AutoCreateTracksTask>(configure => configure.WithIdentity(autoCreateTracks.JobKey));
                 q.AddTrigger(configure => autoCreateTracks.ConfigureTriggerConfiguratorAsync(configure).GetAwaiter().GetResult());
             });
+            return services;
+        }
+
+        public static IServiceCollection AddMsSql(this IServiceCollection services)
+        {
+            services.AddSingleton<DapperContext>();
+
+            services.AddHostedService<DatabaseService>();
+            services.AddSingleton<DatabaseService>();
+            services.AddLogging(c => c.AddFluentMigratorConsole())
+                .AddFluentMigratorCore()
+                .ConfigureRunner(c => c.AddSqlServer2016()
+                    .WithGlobalConnectionString(DapperContext.ConnectionString)
+                    .ScanIn(Assembly.GetExecutingAssembly()).For.Migrations());
+
+            services.AddScoped<CalendarDayRepository>();
+            services.AddScoped<SettingsRepository>();
+            services.AddScoped<AccessTokenRepository>();
+            services.AddScoped<TrackRepository>();
+            services.AddScoped<UserRepository>();
+            services.AddScoped<ResetPassTokenRepository>();
+            services.AddScoped<Users_UsersWhichCanApproveVacationRequestsRepository>();
+            services.AddScoped<VacationRequestRepository>();
+            services.AddScoped<ExcelExportRepository>();
+            services.AddScoped<CompletedTaskRepository>();
+            services.AddScoped<SickLeaveRepository>();
+            return services;
+        }
+
+        public static IServiceCollection AddCaching(this IServiceCollection services)
+        {
+            services.AddMemoryCache();
+
+            services.AddScoped<SettingsManager>();
+            services.AddScoped<CalendarDayManager>();
             return services;
         }
     }

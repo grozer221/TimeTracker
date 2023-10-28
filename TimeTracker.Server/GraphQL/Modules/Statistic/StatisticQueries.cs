@@ -1,9 +1,8 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using Microsoft.Net.Http.Headers;
+
 using TimeTracker.Business.Models;
-using TimeTracker.Business.Repositories;
-using TimeTracker.Server.Extensions;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.Services;
 
@@ -11,7 +10,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Statistic
 {
     public class StatisticQueries : ObjectGraphType
     {
-        public StatisticQueries(IExcelExportRepository excelExportRepository, IUserRepository userRepository, CalendarDaysService calendarService)
+        public StatisticQueries(ExcelExportRepository excelExportRepository, UserRepository userRepository, CalendarDaysService calendarService)
         {
             Field<StatisticType, StatisticModel>()
                 .Name("GetUserStatistic")
