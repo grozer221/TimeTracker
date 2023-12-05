@@ -1,15 +1,16 @@
 ﻿using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
 
 namespace TimeTracker.Server.Services
 {
     public class CalendarDaysService
     {
-        private readonly CalendarDayManager calendarDayManager;
+        private readonly CalendarDayRepository calendarDayRepository;
         private readonly SettingsManager settingsManager;
 
-        public CalendarDaysService(CalendarDayManager calendarDayManager, SettingsManager settingsManager)
+        public CalendarDaysService(CalendarDayRepository calendarDayRepository, SettingsManager settingsManager)
         {
-            this.calendarDayManager = calendarDayManager;
+            this.calendarDayRepository = calendarDayRepository;
             this.settingsManager = settingsManager;
         }
 
@@ -17,7 +18,7 @@ namespace TimeTracker.Server.Services
         {
             var from = new DateTime(dateTime.Year, dateTime.Month, 1);
             var to = from.AddMonths(1).AddDays(-1);
-            var calendarDaysInMonth = await calendarDayManager.GetAsync(from, to);
+            var calendarDaysInMonth = await calendarDayRepository.GetAsync(from, to);
             var settings = await settingsManager.GetAsync();
             var givenMonthDays = Enumerable.Range(0, 1 + to.Subtract(from).Days)
                 .Select(offset => from.AddDays(offset))

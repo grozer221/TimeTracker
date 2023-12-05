@@ -1,5 +1,6 @@
 ﻿using Quartz;
 
+using TimeTracker.Business.Models;
 using TimeTracker.Server.Abstractions;
 using TimeTracker.Server.DataAccess.Managers;
 using TimeTracker.Server.DataAccess.Repositories;
@@ -26,7 +27,15 @@ namespace TimeTracker.Server.Services
             var autoCreateDaysOffTask = scope.ServiceProvider.GetRequiredService<AutoCreateDaysOffTask>();
             var autoCreateTracks = scope.ServiceProvider.GetRequiredService<AutoCreateTracksTask>();
             var settingsManager = scope.ServiceProvider.GetRequiredService<SettingsManager>();
-            var settings = await settingsManager.GetAsync();
+            SettingsModel settings;
+            try
+            {
+                settings = await settingsManager.GetAsync();
+            }
+            catch
+            {
+                settings = new SettingsModel();
+            }
 
             var scheduler = await schedulerFactory.GetScheduler();
             if (!settings.Tasks.AutoCreateDaysOff.IsEnabled)

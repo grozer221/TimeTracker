@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Settings} from "../graphQL/settings.types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Settings } from "../graphQL/settings.types";
 import {
     SettingsApplicationUpdateInputType,
     SettingsEmailUpdateInputType,
@@ -28,7 +28,6 @@ export const settingsSlice = createSlice({
             state.settings = action.payload;
         },
         getForAdministratorOrHavePermissionUpdateAsync: (state, action: PayloadAction) => state,
-        getForUnAuthenticatedAsync: (state, action: PayloadAction) => state,
         getForEmployee: (state, action: PayloadAction) => state,
         setLoadingGet: (state, action: PayloadAction<boolean>) => {
             state.loadingGet = action.payload
@@ -40,6 +39,11 @@ export const settingsSlice = createSlice({
         updateVacationRequestsAsync: (state, action: PayloadAction<SettingsVacationRequestsUpdateInputType>) => state,
         setLoadingUpdate: (state, action: PayloadAction<boolean>) => {
             state.loadingUpdate = action.payload;
+        },
+        reset: (state, action: PayloadAction) => {
+            state.settings = null;
+            state.loadingGet = false;
+            state.loadingUpdate = false;
         },
     },
 })

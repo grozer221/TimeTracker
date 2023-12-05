@@ -24,7 +24,7 @@ namespace TimeTracker.Server.Tasks
         private readonly VacationRequestRepository vacationRequestRepository;
         private readonly SickLeaveRepository sickLeaveRepository;
         private readonly DapperContext dapperContext;
-        private readonly CalendarDayManager calendarDayManager;
+        private readonly CalendarDayRepository calendarDayRepository;
 
         public AutoCreateTracksTask(
             SettingsManager settingsManager,
@@ -35,8 +35,7 @@ namespace TimeTracker.Server.Tasks
             VacationRequestRepository vacationRequestRepository,
             SickLeaveRepository sickLeaveRepository,
             DapperContext dapperContext,
-            CalendarDayManager calendarDayManager
-            )
+            CalendarDayRepository calendarDayRepository)
         {
             this.settingsManager = settingsManager;
             this.serviceProvider = serviceProvider;
@@ -46,7 +45,7 @@ namespace TimeTracker.Server.Tasks
             this.vacationRequestRepository = vacationRequestRepository;
             this.sickLeaveRepository = sickLeaveRepository;
             this.dapperContext = dapperContext;
-            this.calendarDayManager = calendarDayManager;
+            this.calendarDayRepository = calendarDayRepository;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -61,7 +60,7 @@ namespace TimeTracker.Server.Tasks
             var hoursInWorkday = settings.Employment.HoursInWorkday;
             var workdayStartAt = settings.Employment.WorkdayStartAt;
             var workdayStartAtDateTime = new DateTime(dateTimeNow.Year, dateTimeNow.Month, dateTimeNow.Day, workdayStartAt.Hour, workdayStartAt.Minute, workdayStartAt.Second);
-            var currentCalendarDay = await calendarDayManager.GetByDateAsync(dateTimeNow);
+            var currentCalendarDay = await calendarDayRepository.GetByDateAsync(dateTimeNow);
             var workHours = currentCalendarDay != null ? currentCalendarDay.WorkHours : hoursInWorkday;
             if (workHours == 0)
                 return;

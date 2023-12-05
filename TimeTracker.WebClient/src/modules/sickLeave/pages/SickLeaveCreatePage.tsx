@@ -32,11 +32,12 @@ export const SickLeaveCreatePage: FC = () => {
     const loadingCreate = useAppSelector(s => s.sickLeave.loadingCreate)
 
     useEffect(() => {
-        dispatch(usersActions.fetchUsersInfinityLoad({
-            filter: { email: '', permissions: [], roles: [] },
-            take: 100,
-            skip: 0,
-        }))
+        if (!usersInfinityLoad?.entities.length)
+            dispatch(usersActions.fetchUsersInfinityLoad({
+                filter: { email: '', permissions: [], roles: [] },
+                take: 100,
+                skip: 0,
+            }))
     }, [])
 
     const onFinish = async () => {
@@ -102,6 +103,7 @@ export const SickLeaveCreatePage: FC = () => {
                         placeholder="User"
                         filterOption={false}
                         onSearch={(email) => {
+                            console.log('onSearch');
                             dispatch(usersActions.fetchUsersInfinityLoad({
                                 filter: { email, permissions: [], roles: [] },
                                 take: 100,

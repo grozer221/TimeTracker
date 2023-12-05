@@ -86,6 +86,30 @@ export const vacationRequestsSlice = createSlice({
         setLoadingRemove: (state, action: PayloadAction<boolean>) => {
             state.loadingRemove = action.payload;
         },
+
+        clear: (state, action: PayloadAction) => {
+            state.availableDays = 0;
+            state.loadingGetAvailableDays = false;
+            state.vacationRequests = {
+                pageSize: 0,
+                total: 0,
+                entities: [],
+            },
+                state.vacationRequestsGetInputType = {
+                    pageSize: 10,
+                    pageNumber: 1,
+                    filter: {
+                        statuses: [],
+                        userIds: [],
+                        kind: VacationRequestsFilterKind.Mine,
+                    }
+                },
+                state.loadingGetById = false;
+            state.loadingGet = false;
+            state.loadingCreate = false;
+            state.loadingUpdate = false;
+            state.loadingRemove = false;
+        },
     },
 })
 

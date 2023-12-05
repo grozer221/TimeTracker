@@ -48,7 +48,7 @@ export const AppLayout: FC<Props> = ({ children }) => {
                 {
                     key: 'Profile',
                     label: (
-                        <Link to={`/users/${authedUser?.email}`}>
+                        <Link to={`/users/profile/${authedUser?.email}`}>
                             <Space>
                                 <ProfileOutlined />
                                 <span>Profile</span>

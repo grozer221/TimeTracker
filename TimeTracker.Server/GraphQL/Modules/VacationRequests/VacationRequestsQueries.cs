@@ -43,6 +43,7 @@ namespace TimeTracker.Server.GraphQL.Modules.VacationRequests
                    if (vacationRequestsGetInput.Filter.Kind == VacationRequestsFilterKind.All)
                        if (!httpContextAccessor.HttpContext.IsAdministratorOrHavePermissions(Permission.NoteTheAbsenceAndVacation))
                            throw new ExecutionError("You can not get all vacation requests");
+
                    vacationRequestsGetInputValidator.ValidateAndThrow(vacationRequestsGetInput);
                    var currentUserId = httpContextAccessor.HttpContext.GetUserId();
                    return await vacationRequestRepository.GetAsync(vacationRequestsGetInput.PageNumber, vacationRequestsGetInput.PageSize, vacationRequestsGetInput.Filter, currentUserId);

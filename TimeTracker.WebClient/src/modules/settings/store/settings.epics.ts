@@ -4,7 +4,6 @@ import { catchError, endWith, from, map, mergeMap, of, startWith } from "rxjs";
 import {
     SETTINGS_GET_FOR_ADMINISTRATOR_OR_HAVE_PERMISSION_UPDATE_QUERY,
     SETTINGS_GET_FOR_EMPLOYEE_QUERY,
-    SETTINGS_GET_FOR_UN_AUTHENTICATED_QUERY,
     SettingsGetData,
     SettingsGetVars
 } from "../graphQL/settings.queries";
@@ -28,6 +27,7 @@ import {
 import { notificationsActions } from "../../notifications/store/notifications.slice";
 import { settingsActions } from "./settings.slice";
 import { client } from "../../../behaviour/client";
+import { authActions } from "../../auth/store/auth.slice";
 
 export const getForAdministratorOrHavePermissionUpdateEpic: Epic<ReturnType<typeof settingsActions.getForAdministratorOrHavePermissionUpdateAsync>, any, RootState> = (action$, state$) =>
     action$.pipe(
@@ -35,21 +35,6 @@ export const getForAdministratorOrHavePermissionUpdateEpic: Epic<ReturnType<type
         mergeMap(action =>
             from(client.query<SettingsGetData, SettingsGetVars>({
                 query: SETTINGS_GET_FOR_ADMINISTRATOR_OR_HAVE_PERMISSION_UPDATE_QUERY,
-            })).pipe(
-                map(response => settingsActions.setSettings(response.data.settings.get)),
-                catchError(error => of(notificationsActions.addError(error.message))),
-                startWith(settingsActions.setLoadingGet(true)),
-                endWith(settingsActions.setLoadingGet(false)),
-            )
-        )
-    );
-
-export const getSettingsForUnAuthenticatedEpic: Epic<ReturnType<typeof settingsActions.getForUnAuthenticatedAsync>, any, RootState> = (action$, state$) =>
-    action$.pipe(
-        ofType(settingsActions.getForUnAuthenticatedAsync.type),
-        mergeMap(action =>
-            from(client.query<SettingsGetData, SettingsGetVars>({
-                query: SETTINGS_GET_FOR_UN_AUTHENTICATED_QUERY,
             })).pipe(
                 map(response => settingsActions.setSettings(response.data.settings.get)),
                 catchError(error => of(notificationsActions.addError(error.message))),
@@ -185,10 +170,14 @@ export const updateVacationRequestsEpic: Epic<ReturnType<typeof settingsActions.
         )
     );
 
+export const logoutAsyncEpic: Epic<ReturnType<typeof authActions.logoutAsync>, any, RootState> = (action$, state$) =>
+    action$.pipe(
+        ofType(authActions.logoutAsync.type),
+        map(action => settingsActions.reset())
+    );
 
 export const settingsEpics = combineEpics(
     getForAdministratorOrHavePermissionUpdateEpic,
-    getSettingsForUnAuthenticatedEpic,
     getSettingsForEmployeeEpic,
     // @ts-ignore
     settingsEmploymentUpdateEpic,
@@ -196,4 +185,5 @@ export const settingsEpics = combineEpics(
     settingsTasksUpdateEpic,
     settingsEmailUpdateEpic,
     updateVacationRequestsEpic,
+    logoutAsyncEpic,
 )

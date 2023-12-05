@@ -28,9 +28,11 @@ import { client } from "../../../behaviour/client";
 
 const getSettingsAction = (role?: Role, permissions?: Permission[]) => {
     if (!role && !permissions)
-        return settingsActions.getForUnAuthenticatedAsync();
+        return null;
+
     if (role === Role.Admin || permissions?.some(p => p === Permission.UpdateSettings))
         return settingsActions.getForAdministratorOrHavePermissionUpdateAsync();
+
     return settingsActions.getForEmployee();
 }
 

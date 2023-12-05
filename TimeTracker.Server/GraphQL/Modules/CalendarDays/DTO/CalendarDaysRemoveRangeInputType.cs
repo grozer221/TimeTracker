@@ -1,6 +1,6 @@
 ﻿using GraphQL.Types;
 
-using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.GraphQL.EnumTypes;
 
 namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
@@ -11,7 +11,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
         public DateTime To { get; set; }
         public IEnumerable<DayOfWeek> DaysOfWeek { get; set; }
 
-        public async Task<IEnumerable<DateTime>> ToDatesListAsync(CalendarDayManager calendarDayManager)
+        public async Task<IEnumerable<DateTime>> ToDatesListAsync(CalendarDayRepository calendarDayRepository)
         {
             var list = new List<DateTime>();
             var fromCopy = From;
@@ -19,7 +19,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
             {
                 if (DaysOfWeek.Contains(fromCopy.DayOfWeek))
                 {
-                    if (await calendarDayManager.GetByDateAsync(fromCopy) != null)
+                    if (await calendarDayRepository.GetByDateAsync(fromCopy) != null)
                     {
                         list.Add(fromCopy);
                     }

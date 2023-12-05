@@ -17,26 +17,23 @@ namespace TimeTracker.Server.Tasks
         public TriggerKey TriggerKey => new TriggerKey(TriggerName);
 
         private readonly SettingsManager settingsManager;
-        private readonly CalendarDayManager calendarDayManager;
+        private readonly CalendarDayRepository calendarDayRepository;
         private readonly IServiceProvider serviceProvider;
         private readonly CompletedTaskRepository completedTaskRepository;
         private readonly DapperContext dapperContext;
-        private readonly CalendarDayRepository calendarDayRepository;
 
         public AutoCreateDaysOffTask(
             SettingsManager settingsManager,
-            CalendarDayManager calendarDayManager,
+            CalendarDayRepository calendarDayRepository,
             IServiceProvider serviceProvider,
             CompletedTaskRepository completedTaskRepository,
-            DapperContext dapperContext,
-            CalendarDayRepository calendarDayRepository)
+            DapperContext dapperContext)
         {
             this.settingsManager = settingsManager;
-            this.calendarDayManager = calendarDayManager;
+            this.calendarDayRepository = calendarDayRepository;
             this.serviceProvider = serviceProvider;
             this.completedTaskRepository = completedTaskRepository;
             this.dapperContext = dapperContext;
-            this.calendarDayRepository = calendarDayRepository;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -66,7 +63,7 @@ namespace TimeTracker.Server.Tasks
                 {
                     foreach (var dateForCreateDayOff in datesForCreateDayOff)
                     {
-                        var calendarDay = await calendarDayManager.GetByDateAsync(dateForCreateDayOff);
+                        var calendarDay = await calendarDayRepository.GetByDateAsync(dateForCreateDayOff);
                         if (calendarDay == null)
                         {
                             var newCalendarDay = new CalendarDayModel

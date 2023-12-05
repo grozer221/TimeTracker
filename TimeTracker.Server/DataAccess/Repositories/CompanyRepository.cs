@@ -2,11 +2,9 @@
 
 using TimeTracker.Business.Abstractions;
 using TimeTracker.Business.Models;
-using TimeTracker.Server.Extensions;
 
 namespace TimeTracker.Server.DataAccess.Repositories
 {
-    [InjectableService]
     public class CompanyRepository
     {
         private readonly DapperContext dapperContext;
@@ -51,6 +49,16 @@ namespace TimeTracker.Server.DataAccess.Repositories
                     Total = total,
                     PageSize = pageSize,
                 };
+            }
+        }
+
+        public async Task<IEnumerable<CompanyModel>> GetAsync()
+        {
+            string query = @"select * from Companies";
+
+            using (var connection = dapperContext.CreateConnection())
+            {
+                return await connection.QueryAsync<CompanyModel>(query);
             }
         }
 

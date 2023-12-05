@@ -17,10 +17,8 @@ export const Settings: FC<Props> = ({ }) => {
     }, [settings?.application.faviconUrl])
 
     useEffect(() => {
-        if (settings?.application.title) {
-            let title = document.querySelector("title") as HTMLTitleElement;
-            title.innerHTML = settings.application.title;
-        }
+        const title = document.querySelector("title") as HTMLTitleElement;
+        title.innerHTML = settings?.application.title ?? 'Time Tracker';
 
     }, [settings?.application.title])
 

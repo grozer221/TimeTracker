@@ -122,6 +122,7 @@ namespace TimeTracker.Server.Extensions
 
             services.AddScoped<CalendarDayRepository>();
             services.AddScoped<SettingsRepository>();
+            services.AddScoped<CompanyRepository>();
             services.AddScoped<AccessTokenRepository>();
             services.AddScoped<TrackRepository>();
             services.AddScoped<UserRepository>();
@@ -139,7 +140,6 @@ namespace TimeTracker.Server.Extensions
             services.AddMemoryCache();
 
             services.AddScoped<SettingsManager>();
-            services.AddScoped<CalendarDayManager>();
             return services;
         }
 

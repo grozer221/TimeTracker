@@ -2,6 +2,6 @@
 {
     public interface IManager
     {
-        public void ResetCache();
+        public Task ResetCache();
     }
 }

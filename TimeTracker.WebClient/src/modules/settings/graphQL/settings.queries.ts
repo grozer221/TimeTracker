@@ -20,19 +20,6 @@ export const SETTINGS_GET_FOR_ADMINISTRATOR_OR_HAVE_PERMISSION_UPDATE_QUERY = gq
     }
 `;
 
-export const SETTINGS_GET_FOR_UN_AUTHENTICATED_QUERY = gql`
-    ${SETTINGS_APPLICATION_FRAGMENT}
-    query SettingsGet {
-        settings {
-            get {
-                application {
-                    ...SettingsApplicationFragment
-                }
-            }
-        }
-    }
-`;
-
 export const SETTINGS_GET_FOR_EMPLOYEE_QUERY = gql`
     ${SETTINGS_APPLICATION_FRAGMENT}
     ${SETTINGS_EMPLOYMENT_FRAGMENT}

@@ -29,6 +29,7 @@ import {
 import { notificationsActions } from "../../notifications/store/notifications.slice";
 import { navigateActions } from "../../navigate/store/navigate.slice";
 import { client } from "../../../behaviour/client";
+import { authActions } from "../../auth/store/auth.slice";
 
 export const calendarDaysGetEpic: Epic<ReturnType<typeof calendarDaysActions.getAsync>, any, RootState> = (action$, state$) =>
     action$.pipe(
@@ -179,6 +180,12 @@ export const calendarDaysRemoveRangeEpic: Epic<ReturnType<typeof calendarDaysAct
         )
     );
 
+export const logoutAsyncEpic: Epic<ReturnType<typeof authActions.logoutAsync>, any, RootState> = (action$, state$) =>
+    action$.pipe(
+        ofType(authActions.logoutAsync.type),
+        map(action => calendarDaysActions.reset())
+    );
+
 export const calendarDaysEpics = combineEpics(
     calendarDaysGetEpic,
     // @ts-ignore
@@ -187,5 +194,6 @@ export const calendarDaysEpics = combineEpics(
     calendarDaysCreateRangeEpic,
     calendarDaysUpdateEpic,
     calendarDaysRemoveEpic,
-    calendarDaysRemoveRangeEpic
+    calendarDaysRemoveRangeEpic,
+    logoutAsyncEpic,
 )

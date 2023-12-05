@@ -3,33 +3,39 @@
 using TimeTracker.Business.Models;
 using TimeTracker.Business.Models.SettingsCategories;
 using TimeTracker.Business.Models.SettingsCategories.SettingsTasksCategories;
+using TimeTracker.Server.Extensions;
 
 namespace TimeTracker.Server.DataAccess.Repositories
 {
     public class SettingsRepository
     {
         private readonly DapperContext dapperContext;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public SettingsRepository(DapperContext dapperContext)
+        public SettingsRepository(DapperContext dapperContext, IHttpContextAccessor httpContextAccessor)
         {
             this.dapperContext = dapperContext;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<SettingsModel> GetAsync()
         {
-            string query = "select * from Settings";
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
+            string query = "select * from Settings WHERE CompanyId = @CompanyId";
             using (var connection = dapperContext.CreateConnection())
             {
-                var settings = await connection.QueryFirstOrDefaultAsync<SettingsModel>(query);
+                var settings = await connection.QueryFirstOrDefaultAsync<SettingsModel>(query, new { companyId });
                 if (settings == null)
                 {
                     string queryInsert = $@"insert into Settings 
-                            ( Id,  CreatedAt,  UpdatedAt) values 
-                            (@Id, @CreatedAt, @UpdatedAt)";
+                            ( Id, CompanyId,  CreatedAt,  UpdatedAt) values 
+                            (@Id, @CompanyId, @CreatedAt, @UpdatedAt)";
                     DateTime dateTimeNow = DateTime.UtcNow;
                     settings = new SettingsModel
                     {
                         Id = Guid.NewGuid(),
+                        CompanyId = companyId,
                         CreatedAt = dateTimeNow,
                         UpdatedAt = dateTimeNow,
                     };

@@ -2,7 +2,7 @@
 
 using TimeTracker.Business.Enums;
 using TimeTracker.Business.Models;
-using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.GraphQL.EnumTypes;
 
 namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
@@ -17,7 +17,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
         public int WorkHours { get; set; }
         public bool Override { get; set; }
 
-        public async Task<IEnumerable<CalendarDayModel>> ToListAsync(CalendarDayManager calendarDayManager)
+        public async Task<IEnumerable<CalendarDayModel>> ToListAsync(CalendarDayRepository calendarDayRepository)
         {
             var list = new List<CalendarDayModel>();
             var fromCopy = From;
@@ -26,10 +26,10 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO
                 if (DaysOfWeek.Contains(fromCopy.DayOfWeek))
                 {
 
-                    if (await calendarDayManager.GetByDateAsync(fromCopy) != null)
+                    if (await calendarDayRepository.GetByDateAsync(fromCopy) != null)
                     {
                         if (Override)
-                            await calendarDayManager.RemoveAsync(fromCopy);
+                            await calendarDayRepository.RemoveAsync(fromCopy);
                         else
                             throw new Exception($"Calendar day for {fromCopy.ToString("yyyy-MM-dd")} already exists");
                     }

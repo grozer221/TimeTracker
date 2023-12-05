@@ -4,7 +4,7 @@ using GraphQL;
 using GraphQL.Types;
 
 using TimeTracker.Business.Models;
-using TimeTracker.Server.DataAccess.Managers;
+using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.CalendarDays.DTO;
 using TimeTracker.Server.Services;
@@ -14,7 +14,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays
     public class CalendarDaysQueries : ObjectGraphType
     {
         public CalendarDaysQueries(
-            CalendarDayManager calendarDayManager,
+            CalendarDayRepository calendarDayRepository,
             IValidator<CalendarDaysGetInput> calendarDaysGetInputValidation,
             CalendarDaysService calendarDaysService
             )
@@ -26,7 +26,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays
                {
                    var calendarDaysGetInput = context.GetArgument<CalendarDaysGetInput>("CalendarDaysGetInputType");
                    calendarDaysGetInputValidation.ValidateAndThrow(calendarDaysGetInput);
-                   return await calendarDayManager.GetAsync(calendarDaysGetInput.From, calendarDaysGetInput.To);
+                   return await calendarDayRepository.GetAsync(calendarDaysGetInput.From, calendarDaysGetInput.To);
                })
                .AuthorizeWith(AuthPolicies.Authenticated);
 
@@ -36,9 +36,10 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays
                 .ResolveAsync(async context =>
                 {
                     var date = context.GetArgument<DateTime>("Date");
-                    var calendarDay = await calendarDayManager.GetByDateAsync(date);
+                    var calendarDay = await calendarDayRepository.GetByDateAsync(date);
                     if (calendarDay == null)
                         throw new ExecutionError("Calendar day not found");
+
                     return calendarDay;
                 })
                 .AuthorizeWith(AuthPolicies.Authenticated);

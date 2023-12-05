@@ -5,24 +5,33 @@ using TimeTracker.Business.Models;
 using TimeTracker.Business.Models.SettingsCategories;
 using TimeTracker.Business.Models.SettingsCategories.SettingsTasksCategories;
 using TimeTracker.Server.DataAccess.Repositories;
+using TimeTracker.Server.Extensions;
 
 namespace TimeTracker.Server.DataAccess.Managers
 {
     public class SettingsManager : IManager
     {
-        public const string GetAsyncKey = "GetAsyncKey";
+        public const string GetAsyncKey = "GetAsyncKey/{0}";
         private readonly IMemoryCache memoryCache;
         private readonly SettingsRepository settingsRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public SettingsManager(IMemoryCache memoryCache, SettingsRepository settingsRepository)
+        public SettingsManager(
+            IMemoryCache memoryCache,
+            SettingsRepository settingsRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
             this.memoryCache = memoryCache;
             this.settingsRepository = settingsRepository;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<SettingsModel> GetAsync()
         {
-            return await memoryCache.GetOrCreateAsync(GetAsyncKey, async cacheEntry =>
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+            var key = string.Format(GetAsyncKey, companyId);
+
+            return await memoryCache.GetOrCreateAsync(key, async cacheEntry =>
             {
                 cacheEntry.SetOptions(CachingContext.MemoryCacheEntryOptionsWeek1);
                 return await settingsRepository.GetAsync();
@@ -31,37 +40,38 @@ namespace TimeTracker.Server.DataAccess.Managers
 
         public async Task<SettingsModel> UpdateApplicationAsync(SettingsApplication settingsApplication)
         {
-            ResetCache();
+            await ResetCache();
             return await settingsRepository.UpdateApplicationAsync(settingsApplication);
         }
 
         public async Task<SettingsModel> UpdateEmploymentAsync(SettingsEmployment settingsEmployment)
         {
-            ResetCache();
+            await ResetCache();
             return await settingsRepository.UpdateEmploymentAsync(settingsEmployment);
         }
 
         public async Task<SettingsModel> UpdateTasksAsync(SettingsTasks settingsTasks)
         {
-            ResetCache();
+            await ResetCache();
             return await settingsRepository.UpdateTasksAsync(settingsTasks);
         }
 
         public async Task<SettingsModel> UpdateEmailAsync(SettingsEmail settingsEmail)
         {
-            ResetCache();
+            await ResetCache();
             return await settingsRepository.UpdateEmailAsync(settingsEmail);
         }
 
         public async Task<SettingsModel> UpdateVacationRequestsAsync(SettingsVacationRequests settingsVacationRequests)
         {
-            ResetCache();
+            await ResetCache();
             return await settingsRepository.UpdateVacationRequestsAsync(settingsVacationRequests);
         }
 
-        public void ResetCache()
+        public async Task ResetCache()
         {
-            memoryCache.Remove(GetAsyncKey);
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+            memoryCache.Remove(string.Format(GetAsyncKey, companyId));
         }
     }
 }

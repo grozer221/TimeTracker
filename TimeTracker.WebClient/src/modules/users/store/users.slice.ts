@@ -1,9 +1,9 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {User, UserFilter} from "../graphQL/users.types";
-import {CreateUserInput, RemoveUserInput, ResetUserPasswordInput, UpdateUserInput} from "../graphQL/users.mutations";
-import {Track} from "../../tracks/graphQL/tracks.types";
-import {GetTracksByUserIdAndDateInputType} from "../../tracks/graphQL/tracks.queries";
-import {RemoveTrackInput, UpdateTrackInput} from "../../tracks/graphQL/tracks.mutations";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User, UserFilter } from "../graphQL/users.types";
+import { CreateUserInput, RemoveUserInput, ResetUserPasswordInput, UpdateUserInput } from "../graphQL/users.mutations";
+import { Track } from "../../tracks/graphQL/tracks.types";
+import { GetTracksByUserIdAndDateInputType } from "../../tracks/graphQL/tracks.queries";
+import { RemoveTrackInput, UpdateTrackInput } from "../../tracks/graphQL/tracks.mutations";
 import { GetEntitiesResponse } from "../../../behaviour";
 
 type InitialState = {
@@ -63,12 +63,15 @@ export const usersSlice = createSlice({
         fetchUsersInfinityLoad: (state, action: PayloadAction<{ filter: UserFilter, take: number, skip: number }>) => state,
         addUsersInfinityLoad: (state, action: PayloadAction<GetEntitiesResponse<User>>) => {
             if (!state.usersInfinityLoad)
-                state.usersInfinityLoad = {entities: [], total: 0, pageSize: 0}
+                state.usersInfinityLoad = { entities: [], total: 0, pageSize: 0 }
             state.usersInfinityLoad = {
                 entities: [...state.usersInfinityLoad.entities, ...action.payload.entities],
                 total: action.payload.total,
                 pageSize: action.payload.pageSize,
             }
+        },
+        setUsersInfinityLoad: (state, action: PayloadAction<GetEntitiesResponse<User> | null>) => {
+            state.usersInfinityLoad = action.payload;
         },
         createUser: (state, action: PayloadAction<CreateUserInput>) => state,
         removeUserAsync: (state, action: PayloadAction<RemoveUserInput>) => state,

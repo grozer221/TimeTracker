@@ -40,11 +40,17 @@ export const VacationRequestsIndexPage: FC = () => {
 
     useEffect(() => {
         dispatch(vacationRequestsActions.getAvailableDaysAsync())
-        dispatch(usersActions.fetchUsersInfinityLoad({
-            take: 10,
-            skip: 0,
-            filter: { email: '', roles: [], permissions: [] }
-        }))
+
+        if (!usersInfinityLoad?.entities.length)
+            dispatch(usersActions.fetchUsersInfinityLoad({
+                take: 100,
+                skip: 0,
+                filter: { email: '', roles: [], permissions: [] }
+            }))
+
+        return () => {
+            dispatch(vacationRequestsActions.clear())
+        }
     }, [])
 
     useEffect(() => {

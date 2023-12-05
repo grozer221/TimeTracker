@@ -77,7 +77,26 @@ export const sickLeaveSlice = createSlice({
 
         setSickLeaveGetInputType: (state, action: PayloadAction<SickLeaveGetInputType>) => {
             state.sickLeaveGetInputType = action.payload
-        }
+        },
+
+        clear: (state, action: PayloadAction) => {
+            state.sickLeaveDays = {
+                pageSize: 0,
+                total: 0,
+                entities: [],
+            };
+            state.sickLeaveGetInputType = {
+                pageSize: 10,
+                pageNumber: 1,
+                filter: { kind: SickLeaveFilterKind.mine },
+            };
+            state.sickLeaveDay = null;
+            state.loadingGetById = false;
+            state.loadingGet = false;
+            state.loadingCreate = false;
+            state.loadingUpdate = false;
+            state.loadingRemove = false;
+        },
     },
 })
 

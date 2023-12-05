@@ -35,6 +35,12 @@ export const SickLeaveIndexPage: FC = () => {
         }))
     }, [searchParams])
 
+    useEffect(() => {
+        return () => {
+            dispatch(sickLeaveActions.clear())
+        }
+    }, [])
+
     const setParams = (pageNumber: number, pageSize: number, kind: string) => {
         setSearchParams({
             pageNumber: pageNumber.toString(),

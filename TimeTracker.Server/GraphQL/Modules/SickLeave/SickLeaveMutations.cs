@@ -92,6 +92,7 @@ namespace TimeTracker.Server.GraphQL.Modules.SickLeave
                   if (oldSickLeave.UserId != currentUserId)
                       if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.NoteTheAbsenceAndVacation))
                           throw new ExecutionError("You do not have permissions for update sick leave");
+
                   var files = new List<string>();
                   files.AddRange(sickLeaveUploadFilesInput.UploadedFiles);
                   foreach (var file in sickLeaveUploadFilesInput.UploadFiles)
