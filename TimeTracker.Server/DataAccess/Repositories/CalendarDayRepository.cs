@@ -3,58 +3,75 @@
 using System.Data;
 
 using TimeTracker.Business.Models;
+using TimeTracker.Server.Extensions;
 
 namespace TimeTracker.Server.DataAccess.Repositories
 {
     public class CalendarDayRepository
     {
         private readonly DapperContext dapperContext;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public CalendarDayRepository(DapperContext dapperContext)
+        public CalendarDayRepository(DapperContext dapperContext, IHttpContextAccessor httpContextAccessor)
         {
             this.dapperContext = dapperContext;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<CalendarDayModel> GetByDateAsync(DateTime date)
         {
-            string query = @"select * from CalendarDays where Date = @date";
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
+            string query = @"select * from CalendarDays where Date = @date AND CompanyId = @companyId";
             using (var connection = dapperContext.CreateConnection())
             {
-                return await connection.QueryFirstOrDefaultAsync<CalendarDayModel>(query, new { date });
+                return await connection.QueryFirstOrDefaultAsync<CalendarDayModel>(query, new { date, companyId });
             }
         }
 
-        public static async Task<CalendarDayModel> CreateAsync(CalendarDayModel model, IDbConnection connection, IDbTransaction transaction = null)
+        public async Task<CalendarDayModel> CreateAsync(CalendarDayModel model, IDbConnection connection, IDbTransaction transaction = null)
         {
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
             model.Id = Guid.NewGuid();
-            DateTime dateTimeNow = DateTime.Now;
+            model.CompanyId = model.CompanyId.GetOrDefault(companyId);
+            var dateTimeNow = DateTime.Now;
             model.CreatedAt = dateTimeNow;
             model.UpdatedAt = dateTimeNow;
             string query = @"insert into CalendarDays 
-                            ( Id,  Title,  Date,  Kind,  WorkHours,  CreatedAt,  UpdatedAt) values 
-                            (@Id, @Title, @Date, @Kind, @WorkHours, @CreatedAt, @UpdatedAt)";
+                            ( Id,  Title,  Date,  Kind,  WorkHours,  CompanyId,  CreatedAt,  UpdatedAt) values 
+                            (@Id, @Title, @Date, @Kind, @WorkHours, @companyId, @CreatedAt, @UpdatedAt)";
             await connection.ExecuteAsync(query, model, transaction);
             return model;
         }
 
         public async Task<IEnumerable<CalendarDayModel>> GetAsync(DateTime from, DateTime to)
         {
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
             string query = @"select * from CalendarDays
-                            where Date between @from and @to";
+                            where Date between @from and @to AND CompanyId = @companyId";
             string fromString = from.ToString("MM/dd/yyyy");
             string toString = to.ToString("MM/dd/yyyy");
             using (var connection = dapperContext.CreateConnection())
             {
-                return await connection.QueryAsync<CalendarDayModel>(query, new { from = fromString, to = toString });
+                return await connection.QueryAsync<CalendarDayModel>(query, new
+                {
+                    from = fromString,
+                    to = toString,
+                    companyId,
+                });
             }
         }
 
         public async Task<IEnumerable<CalendarDayModel>> GetAsync()
         {
-            string query = $"select * from CalendarDays";
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
+            string query = $"select * from CalendarDays WHERE CompanyId = @companyId";
             using (var connection = dapperContext.CreateConnection())
             {
-                return await connection.QueryAsync<CalendarDayModel>(query);
+                return await connection.QueryAsync<CalendarDayModel>(query, new { companyId });
             }
         }
 
@@ -62,19 +79,23 @@ namespace TimeTracker.Server.DataAccess.Repositories
         {
             using (var connection = dapperContext.CreateConnection())
             {
-                return await CalendarDayRepository.CreateAsync(model, connection);
+                return await CreateAsync(model, connection);
             }
         }
 
         public async Task<CalendarDayModel> UpdateAsync(CalendarDayModel model)
         {
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
             var previousModel = await GetByDateAsync(model.Date);
             if (previousModel == null)
                 throw new Exception("Calendar day not found");
+
+            model.CompanyId = model.CompanyId.GetOrDefault(companyId);
             model.UpdatedAt = DateTime.Now;
             string query = @"update CalendarDays
                             SET Title = @Title, Date = @Date, Kind = @Kind, 
-                                WorkHours = @WorkHours, UpdatedAt = @UpdatedAt
+                                WorkHours = @WorkHours, CompanyId = @companyId, UpdatedAt = @UpdatedAt
                             WHERE Id = @Id";
             using (var connection = dapperContext.CreateConnection())
             {
@@ -85,13 +106,16 @@ namespace TimeTracker.Server.DataAccess.Repositories
 
         public async Task<CalendarDayModel> RemoveAsync(DateTime date)
         {
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
             var previousModel = await GetByDateAsync(date);
             if (previousModel == null)
                 throw new Exception("Calendar day not found");
-            string query = "delete from CalendarDays where Date = @date";
+
+            string query = "delete from CalendarDays where Date = @date AND CompanyId = @companyId";
             using (var connection = dapperContext.CreateConnection())
             {
-                await connection.ExecuteAsync(query, new { date });
+                await connection.ExecuteAsync(query, new { date, companyId });
                 return previousModel;
             }
         }

@@ -8,7 +8,12 @@ export const isAuthenticated = (): boolean => {
 
 export const isAdministrator = (): boolean => {
     const auth = store.getState().auth;
-    return isAuthenticated() && (auth.authedUser?.role === Role.Administrator || auth.authedUser?.role === Role.SuperAdmin)
+    return isAuthenticated() && (auth.authedUser?.role === Role.Admin || isSuperAdmin())
+}
+
+export const isSuperAdmin = (): boolean => {
+    const auth = store.getState().auth;
+    return isAuthenticated() && auth.authedUser?.role === Role.SuperAdmin;
 }
 
 export const isHavePermission = (permissions: Permission[]): boolean => {

@@ -1,28 +1,31 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TimeTracker.Business.Enums;
-using TimeTracker.Server.Abstractions;
+
+using TimeTracker.Business.Models;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 
 namespace TimeTracker.Server.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService
     {
-        public string GenerateAccessToken(Guid userId, string email, Role role, IEnumerable<Permission>? permissions)
+        public string GenerateAccessToken(UserModel user)
         {
             SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("AuthIssuerSigningKey")));
             SigningCredentials signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             List<Claim> claims = new List<Claim>
             {
-                new Claim(AuthClaimsIdentity.DefaultIdClaimType, userId.ToString()),
-                new Claim(AuthClaimsIdentity.DefaultEmailClaimType, email),
-                new Claim(AuthClaimsIdentity.DefaultRoleClaimType, role.ToString()),
-                new Claim(AuthClaimsIdentity.DefaultPermissionsClaimType, JsonConvert.SerializeObject(permissions, new StringEnumConverter())),
+                new Claim(AuthClaimsIdentity.DefaultIdClaimType, user.Id.ToString()),
+                new Claim(AuthClaimsIdentity.DefaultEmailClaimType, user.Email),
+                new Claim(AuthClaimsIdentity.DefaultRoleClaimType, user.Role.ToString()),
+                new Claim(AuthClaimsIdentity.DefaultPermissionsClaimType, JsonConvert.SerializeObject(user.Permissions, new StringEnumConverter())),
+                new Claim(AuthClaimsIdentity.DefaultCompanyIdClaimType, user.CompanyId.ToString()),
             };
             JwtSecurityToken token = new JwtSecurityToken(
                 claims: claims,
@@ -67,7 +70,7 @@ namespace TimeTracker.Server.Services
                 var claimsPrincipal = handler.ValidateToken(token, validations, out var tokenSecure);
                 return claimsPrincipal.Claims.GetUserId();
             }
-            catch (Exception ex)
+            catch
             {
                 return null;
             }

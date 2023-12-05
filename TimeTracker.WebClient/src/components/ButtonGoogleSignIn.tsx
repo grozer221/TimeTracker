@@ -20,7 +20,7 @@ export const ButtonGoogleSignIn = () => {
         // @ts-ignore
         google.accounts.id.renderButton(
             document.getElementById("signInDiv"),
-            {theme: "filled_blue", size: "large", width: "291"}
+            {theme: "filled_blue", size: "large", width: "291", }
         )
     }, [])
 

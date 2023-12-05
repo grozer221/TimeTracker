@@ -32,6 +32,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Users
                {
                    if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.UpdateUsers))
                        throw new ExecutionError("You do not have permissions for create user");
+
                    var usersCreateInput = context.GetArgument<UsersCreateInput>("UsersCreateInputType");
                    await usersCreateInputValidator.ValidateAndThrowAsync(usersCreateInput);
                    var user = usersCreateInput.ToModel();

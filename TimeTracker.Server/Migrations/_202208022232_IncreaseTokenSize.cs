@@ -1,10 +1,4 @@
 ﻿using FluentMigrator;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TimeTracker.MsSql.Migrations
 {
@@ -16,7 +10,7 @@ namespace TimeTracker.MsSql.Migrations
             Execute.Sql("DROP INDEX [IX_Tokens_Token] ON [dbo].[AccessTokens]");
             Alter.Table("AccessTokens")
                 .AlterColumn("Token").AsString(600).NotNullable();
-            
+
         }
 
         public override void Down()

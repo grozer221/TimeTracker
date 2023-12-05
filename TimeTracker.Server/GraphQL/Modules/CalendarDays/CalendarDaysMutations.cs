@@ -43,6 +43,7 @@ namespace TimeTracker.Server.GraphQL.Modules.CalendarDays
                {
                    if (!httpContextAccessor.HttpContext.IsAdministratorOrHavePermissions(Permission.UpdateCalendar))
                        throw new ExecutionError("You do not have permissions for create calendar day");
+
                    var calendarDaysCreateRangeInput = context.GetArgument<CalendarDaysCreateRangeInput>("CalendarDaysCreateRangeInputType");
                    await calendarDaysCreateRangeInputValidator.ValidateAndThrowAsync(calendarDaysCreateRangeInput);
                    var calendarDays = await calendarDaysCreateRangeInput.ToListAsync(calendarDayManager);

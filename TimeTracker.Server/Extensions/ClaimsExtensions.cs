@@ -19,6 +19,12 @@ public static class ClaimExtensions
         return claims.First(c => c.Type == AuthClaimsIdentity.DefaultEmailClaimType).Value;
     }
 
+    public static Guid GetCompanyId(this IEnumerable<Claim> claims)
+    {
+        var companyId = claims.First(c => c.Type == AuthClaimsIdentity.DefaultCompanyIdClaimType).Value;
+        return string.IsNullOrEmpty(companyId) ? Guid.Empty : new(companyId);
+    }
+
     public static Role GetRole(this IEnumerable<Claim> claims)
     {
         Role role;
@@ -43,7 +49,13 @@ public static class ClaimExtensions
     public static bool IsAdministrator(this IEnumerable<Claim> claims)
     {
         var role = claims.GetRole();
-        return role == Role.Admin;
+        return role == Role.Admin || IsSuperAdmin(claims);
+    }
+
+    public static bool IsSuperAdmin(this IEnumerable<Claim> claims)
+    {
+        var role = claims.GetRole();
+        return role == Role.SuperAdmin;
     }
 
     public static bool IsAdministratOrHavePermissions(this IEnumerable<Claim> claims, params Permission[] requestPermissions)

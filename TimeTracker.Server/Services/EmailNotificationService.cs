@@ -23,7 +23,7 @@ namespace TimeTracker.Server.Services
             var settingsManager = scope.ServiceProvider.GetRequiredService<SettingsManager>();
             var settings = await settingsManager.GetAsync();
             var name = settings.Email.Name;
-            var address = settings.Email.Address;
+            var address = settings.Email.Address ?? "no-reply@gmail.com";
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress(name, address));
             emailMessage.To.Add(new MailboxAddress("", to));

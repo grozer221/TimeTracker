@@ -13,6 +13,7 @@ using TimeTracker.Server.Abstractions;
 using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth.DTO;
+using TimeTracker.Server.Services;
 
 namespace TimeTracker.Server.GraphQL.Modules.Auth
 {
@@ -20,7 +21,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
     {
         public AuthMutations(
             UserRepository userRepository,
-            IAuthService authService,
+            AuthService authService,
             AccessTokenRepository aceessTokenRepository,
             ResetPassTokenRepository resetTokenRepository,
             IHttpContextAccessor httpContextAccessor,
@@ -41,9 +42,10 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
                     var user = await userRepository.GetByEmailAsync(authLoginInput.Email);
                     if (user == null || !authService.ComparePasswords(authLoginInput.Password, user.Password, user.Salt))
                         throw new Exception("Bad credentials");
+
                     AceessTokenModel accessToken = new AceessTokenModel
                     {
-                        Token = authService.GenerateAccessToken(user.Id, user.Email, user.Role, user.Permissions),
+                        Token = authService.GenerateAccessToken(user),
                         UserId = user.Id,
                     };
                     accessToken = await aceessTokenRepository.CreateAsync(accessToken);
@@ -72,7 +74,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
 
                     AceessTokenModel accessToken = new AceessTokenModel
                     {
-                        Token = authService.GenerateAccessToken(user.Id, user.Email, user.Role, user.Permissions),
+                        Token = authService.GenerateAccessToken(user),
                         UserId = user.Id,
                     };
 
@@ -115,7 +117,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
                     user = await userRepository.CreateAsync(user);
                     AceessTokenModel token = new AceessTokenModel
                     {
-                        Token = authService.GenerateAccessToken(user.Id, user.Email, user.Role, user.Permissions),
+                        Token = authService.GenerateAccessToken(user),
                         UserId = user.Id,
                     };
                     token = await aceessTokenRepository.CreateAsync(token);
@@ -159,7 +161,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
                         throw new ExecutionError("User not found");
                     AceessTokenModel token = new AceessTokenModel
                     {
-                        Token = authService.GenerateAccessToken(impersonateUser.Id, impersonateUser.Email, impersonateUser.Role, impersonateUser.Permissions),
+                        Token = authService.GenerateAccessToken(impersonateUser),
                         UserId = impersonateUser.Id,
                     };
                     token = await aceessTokenRepository.CreateAsync(token);

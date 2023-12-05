@@ -13,19 +13,13 @@ import {
 } from "../../../tracks/graphQL/tracks.mutations";
 
 type InitialState = {
-    statistic: Statistic,
+    statistic: Statistic | null,
     getStatisticInputData: GetStatisticInputType,
     loadingGet: boolean
 }
 
 const initialState: InitialState = {
-    statistic: {
-        id: "",
-        createdAt: "",
-        updatedAt: "",
-        workerHours: 0,
-        monthHours: 160
-    },
+    statistic: null,
     getStatisticInputData: {
         UserId: "",
         Date: ""

@@ -6,6 +6,9 @@ import { Col, Row } from "antd";
 
 export const TracksStatistic: FC = () => {
     const statistic = useAppSelector(s => s.statistic.statistic)
+    if (!statistic)
+        return null;
+
     const totalWorkerHours = Math.floor(statistic.workerHours)
     const workerHoursMilliseconds = statistic.workerHours * 60 * 60 * 1000
     const workerHours = totalWorkerHours.toString().padStart(2, '0') + moment(workerHoursMilliseconds).format(':mm:ss')

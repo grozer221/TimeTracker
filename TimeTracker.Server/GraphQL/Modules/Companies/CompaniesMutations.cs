@@ -3,7 +3,11 @@
 using GraphQL;
 using GraphQL.Types;
 
+using TimeTracker.Business.Enums;
+using TimeTracker.Business.Models;
+using TimeTracker.Server.Abstractions;
 using TimeTracker.Server.DataAccess.Repositories;
+using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.Companies.Types;
 
@@ -11,7 +15,12 @@ namespace TimeTracker.Server.GraphQL.Modules.Companies
 {
     public class CompaniesMutations : ObjectGraphType
     {
-        public CompaniesMutations(CompanyRepository companyRepository, IValidator<CompanyInput> companyInputValidator)
+        public CompaniesMutations(
+            CompanyRepository companyRepository,
+            IValidator<CompanyInput> companyInputValidator,
+            INotificationService notificationService,
+            UserRepository userRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
             Field<NonNullGraphType<CompanyType>>()
               .Name("Create")
@@ -21,9 +30,30 @@ namespace TimeTracker.Server.GraphQL.Modules.Companies
                   var input = context.GetArgument<CompanyInput>("input");
                   companyInputValidator.ValidateAndThrow(input);
 
-                  var sickLeave = input.ToModel();
+                  var company = input.ToModel();
+                  company = await companyRepository.CreateAsync(company);
 
-                  return await companyRepository.CreateAsync(sickLeave);
+                  var password = "12345";
+                  var hashedPassword = password.CreateMD5WithSalt(out var salt);
+                  var user = new UserModel
+                  {
+                      Email = company.Email,
+                      FirstName = "Admin",
+                      LastName = company.Name,
+                      MiddleName = company.Name,
+                      Password = hashedPassword,
+                      Salt = salt,
+                      Role = Role.Admin,
+                      CompanyId = company.Id,
+                      Permissions = new List<Permission>(),
+                  };
+
+                  user = await userRepository.CreateAsync(user);
+                  var message = $"Your company \"{company.Name}\" has been created.\nAdmin creadentials for login:\nEmail: {user.Email}\nPassword: {password}";
+                  await notificationService.SendMessageAsync(company.Email, "Company has been created", message);
+                  await notificationService.SendMessageAsync(httpContextAccessor.HttpContext.GetUserEmail(), "Company has been created", message);
+
+                  return company;
               })
               .AuthorizeWith(AuthPolicies.SuperAdmin);
 

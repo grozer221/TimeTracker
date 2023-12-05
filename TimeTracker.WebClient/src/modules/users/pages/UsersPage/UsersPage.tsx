@@ -112,7 +112,7 @@ export const UsersPage = React.memo(() => {
             }),
             render: (role, user) => {
                 return <Tag key={role}
-                    color={role === Role.Administrator ? 'gold' : 'geekblue'}>
+                    color={role === Role.Admin ? 'gold' : 'geekblue'}>
                     {uppercaseToWords(role)}
                 </Tag>
             }

@@ -24,7 +24,7 @@ import { useAppSelector } from "../../behaviour/store";
 import Logo from '../../assets/images/clockify-logo-with-title.png';
 import { ItemType } from "antd/lib/menu/hooks/useItems";
 import { cacheActions } from "../../modules/cache/store/cache.slice";
-import { isAdministrator, isAdministratorOrHavePermissions } from "../../utils/permissions";
+import { isAdministrator, isAdministratorOrHavePermissions, isSuperAdmin } from "../../utils/permissions";
 import { Permission } from '../../behaviour/enums/Permission';
 
 const { Header, Content, Sider } = Layout;
@@ -93,11 +93,6 @@ export const AppLayout: FC<Props> = ({ children }) => {
             label: <Link to={'calendar'}>Calendar</Link>,
         },
         {
-            key: '/reports',
-            icon: <BarChartOutlined />,
-            label: <Link to={'reports'}>Reports</Link>,
-        },
-        {
             key: '/vacation-requests',
             icon: <AuditOutlined />,
             label: <Link to={'vacation-requests'}>Vacation requests</Link>,
@@ -112,11 +107,13 @@ export const AppLayout: FC<Props> = ({ children }) => {
             icon: <UsergroupAddOutlined />,
             label: <Link to={'users'}>Users</Link>,
         },
-        {
-            key: '/companies',
-            icon: <UsergroupAddOutlined />,
-            label: <Link to={'companies'}>Companies</Link>,
-        },
+        isSuperAdmin()
+            ? {
+                key: '/companies',
+                icon: <UsergroupAddOutlined />,
+                label: <Link to={'companies'}>Companies</Link>,
+            }
+            : null,
         {
             key: '/tools',
             icon: <ToolOutlined />,

@@ -74,7 +74,7 @@ namespace TimeTracker.Server.Extensions
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<AuthService>();
             services.AddSingleton<FileManagerService>();
             services.AddSingleton<INotificationService, EmailNotificationService>();
             services.AddScoped<VacationRequestsService>();

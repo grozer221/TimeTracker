@@ -21,20 +21,22 @@ namespace TimeTracker.Server.Tasks
         private readonly IServiceProvider serviceProvider;
         private readonly CompletedTaskRepository completedTaskRepository;
         private readonly DapperContext dapperContext;
+        private readonly CalendarDayRepository calendarDayRepository;
 
         public AutoCreateDaysOffTask(
             SettingsManager settingsManager,
             CalendarDayManager calendarDayManager,
             IServiceProvider serviceProvider,
             CompletedTaskRepository completedTaskRepository,
-            DapperContext dapperContext
-            )
+            DapperContext dapperContext,
+            CalendarDayRepository calendarDayRepository)
         {
             this.settingsManager = settingsManager;
             this.calendarDayManager = calendarDayManager;
             this.serviceProvider = serviceProvider;
             this.completedTaskRepository = completedTaskRepository;
             this.dapperContext = dapperContext;
+            this.calendarDayRepository = calendarDayRepository;
         }
 
         public async Task Execute(IJobExecutionContext context)
@@ -72,7 +74,7 @@ namespace TimeTracker.Server.Tasks
                                 Date = dateForCreateDayOff,
                                 Kind = DayKind.DayOff,
                             };
-                            await CalendarDayRepository.CreateAsync(newCalendarDay, connection, transaction);
+                            await calendarDayRepository.CreateAsync(newCalendarDay, connection, transaction);
                         }
                     }
                     var completedTask = new CompletedTaskModel
