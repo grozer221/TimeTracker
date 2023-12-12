@@ -6,6 +6,7 @@ import { navigateActions } from "../../navigate/store/navigate.slice";
 import { companiesActions } from "./slice";
 import { client } from "../../../behaviour/client";
 import { createCompanyMutation, getCompaniesQuery, getCompanyQuery, removeCompanyMutation, updateCompanyMutation } from "./queries";
+import { vacationRequestsActions } from "../../vacationRequests/store/vacationRequests.slice";
 
 
 export const getCompanyEpic: Epic<ReturnType<typeof companiesActions.getCompanyAsync>, any, RootState> = (action$, state$) =>
@@ -33,6 +34,7 @@ export const getCompaniesAsyncEpic: Epic<ReturnType<typeof companiesActions.getC
                 variables: action.payload
             })).pipe(
                 mergeMap(response => [
+                    companiesActions.setGetCompaniesInput(action.payload),
                     companiesActions.setCompanies(response.data.companies.get),
                 ]),
                 catchError(error => of(notificationsActions.addError(error.message))),
@@ -48,7 +50,15 @@ export const createAsyncEpic: Epic<ReturnType<typeof companiesActions.createAsyn
                 query: createCompanyMutation,
                 variables: action.payload,
             })).pipe(
-                mergeMap(response => [navigateActions.navigate(-1)]),
+                mergeMap(response => {
+                    const getCompaniesInput = state$.value.companies.getCompaniesInput;
+                    return response.errors?.length
+                        ? response.errors.map(e => notificationsActions.addError(e.message))
+                        : [
+                            companiesActions.getCompaniesAsync(getCompaniesInput),
+                            navigateActions.navigate(-1),
+                        ];
+                }),
                 catchError(error => of(notificationsActions.addError(error.message))),
             )
         )
@@ -62,7 +72,15 @@ export const updateAsyncEpic: Epic<ReturnType<typeof companiesActions.updateAsyn
                 query: updateCompanyMutation,
                 variables: action.payload
             })).pipe(
-                mergeMap(response => [navigateActions.navigate(-1)]),
+                mergeMap(response => {
+                    const getCompaniesInput = state$.value.companies.getCompaniesInput;
+                    return response.errors?.length
+                        ? response.errors.map(e => notificationsActions.addError(e.message))
+                        : [
+                            companiesActions.getCompaniesAsync(getCompaniesInput),
+                            navigateActions.navigate(-1),
+                        ];
+                }),
                 catchError(error => of(notificationsActions.addError(error.message))),
             )
         )
@@ -76,10 +94,15 @@ export const removeAsyncEpic: Epic<ReturnType<typeof companiesActions.removeAsyn
                 query: removeCompanyMutation,
                 variables: action.payload
             })).pipe(
-                mergeMap(response => [
-                    companiesActions.getCompaniesAsync({ paging: { pageNumber: 1, pageSize: 10 } }),
-                    notificationsActions.addSuccess('Company successfully removed')
-                ]),
+                mergeMap(response => {
+                    const getCompaniesInput = state$.value.companies.getCompaniesInput;
+                    return response.errors?.length
+                        ? response.errors.map(e => notificationsActions.addError(e.message))
+                        : [
+                            companiesActions.getCompaniesAsync(getCompaniesInput),
+                            notificationsActions.addSuccess('Company successfully removed')
+                        ]
+                }),
                 catchError(error => of(notificationsActions.addError(error.message))),
             )
         )

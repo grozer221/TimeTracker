@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Company, CompanyInput } from "./types";
+import { Company, CreateCompanyInput, GetCompaniesInput, UpdateCompanyInput } from "./types";
 import { GetEntitiesResponse, Paging } from "../../../behaviour";
 
 type InitialState = {
     companies: GetEntitiesResponse<Company>;
     company: Company | null;
+    getCompaniesInput: GetCompaniesInput
 };
 
 const initialState: InitialState = {
     companies: { entities: [], total: 0, pageSize: 10 },
     company: null,
+    getCompaniesInput: { paging: { pageNumber: 1, pageSize: 10 } }
 }
 
 export const slice = createSlice({
@@ -20,12 +22,15 @@ export const slice = createSlice({
         setCompany: (state, action: PayloadAction<Company>) => {
             state.company = action.payload
         },
-        getCompaniesAsync: (state, action: PayloadAction<{ paging: Paging }>) => state,
+        getCompaniesAsync: (state, action: PayloadAction<GetCompaniesInput>) => state,
         setCompanies: (state, action: PayloadAction<GetEntitiesResponse<Company>>) => {
             state.companies = action.payload
         },
-        createAsync: (state, action: PayloadAction<{ input: CompanyInput }>) => state,
-        updateAsync: (state, action: PayloadAction<{ id: string; input: CompanyInput }>) => state,
+        setGetCompaniesInput: (state, action: PayloadAction<GetCompaniesInput>) => {
+            state.getCompaniesInput = action.payload
+        },
+        createAsync: (state, action: PayloadAction<{ input: CreateCompanyInput }>) => state,
+        updateAsync: (state, action: PayloadAction<{ input: UpdateCompanyInput }>) => state,
         removeAsync: (state, action: PayloadAction<{ id: string }>) => state,
     },
 })

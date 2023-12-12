@@ -7,6 +7,7 @@ export type Settings = {
     tasks: SettingsTasks,
     email: SettingsEmail,
     vacationRequests: SettingsVacationRequests,
+    subscriptions: Subscriptions,
     createdAt: string,
     updatedAt: string,
 }
@@ -46,4 +47,22 @@ export type SettingsTasks_autoCreateTracks = {
 export type SettingsEmail = {
     name: string,
     address: string,
+}
+
+export type Subscriptions = {
+    all: Subscription[];
+    current: Subscription;
+}
+
+export type Subscription = {
+    kind: SubscriptionKind;
+    priceUsd: number;
+    companyEmploeeMaxCount: number;
+}
+
+export enum SubscriptionKind {
+    None = 'NONE',
+    Pro = 'PRO',
+    Advanced = 'ADVANCED',
+    Unlimited = 'UNLIMITED',
 }

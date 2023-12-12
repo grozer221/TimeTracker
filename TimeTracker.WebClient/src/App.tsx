@@ -53,6 +53,7 @@ import { SickLeaveUploadFilesPage } from "./modules/sickLeave/pages/SickLeaveUpl
 import { CompaniesIndexPage } from './modules/companies/pages/CompaniesIndexPage';
 import { CompaniesCreatePage } from './modules/companies/pages/CompaniesCreatePage';
 import { CompaniesUpdatePage } from './modules/companies/pages/CompaniesUpdatePage';
+import { isSuperAdmin } from './utils/permissions';
 
 export const App = () => {
     const initialised = useSelector((state: RootState) => state.app.initialised)
@@ -90,8 +91,8 @@ export const App = () => {
                         <Route path={'settings/:tab'} element={<SettingsPage />} />
                         <Route path={'my-settings/:tab'} element={<MySettingsPage />} />
                         <Route path={"auth/*"}>
-                            <Route path="login" element={<Navigate to={'/time-tracker'} />} />
-                            <Route path="reset-password/:token" element={<Navigate to={'/time-tracker'} />} />
+                            <Route path="login" element={<Navigate to={isSuperAdmin() ? '/companies' : '/time-tracker'} />} />
+                            <Route path="reset-password/:token" element={<Navigate to={isSuperAdmin() ? '/companies' : '/time-tracker'} />} />
                         </Route>
                         <Route path={"tools/*"}>
                             <Route path={"file-manager/*"}>

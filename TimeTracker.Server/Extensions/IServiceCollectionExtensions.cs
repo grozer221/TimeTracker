@@ -132,6 +132,7 @@ namespace TimeTracker.Server.Extensions
             services.AddScoped<ExcelExportRepository>();
             services.AddScoped<CompletedTaskRepository>();
             services.AddScoped<SickLeaveRepository>();
+            services.AddScoped<ActiveSubscriptionRepository>();
             return services;
         }
 

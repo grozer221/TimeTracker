@@ -158,9 +158,9 @@ namespace TimeTracker.Server.Services
                 throw new Exception(result.Error.Message);
         }
 
-        private FileManagerItemPermissions GetPermissionsForFile(Business.Enums.Role role, string filePath, string fileName)
+        private FileManagerItemPermissions GetPermissionsForFile(TimeTracker.Business.Enums.Role role, string filePath, string fileName)
         {
-            if (role == Business.Enums.Role.Admin)
+            if (role == TimeTracker.Business.Enums.Role.Admin)
                 return FileManagerItemPermissions.ReadAndWrite;
             foreach (var protectedFolder in ProtectedFolders)
             {
@@ -170,9 +170,9 @@ namespace TimeTracker.Server.Services
             return FileManagerItemPermissions.ReadAndWrite;
         }
 
-        private FileManagerItemPermissions GetPermissionsForFolder(Business.Enums.Role role, string folderPath)
+        private FileManagerItemPermissions GetPermissionsForFolder(TimeTracker.Business.Enums.Role role, string folderPath)
         {
-            if (role == Business.Enums.Role.Admin)
+            if (role == TimeTracker.Business.Enums.Role.Admin)
                 return FileManagerItemPermissions.ReadAndWrite;
             foreach (var protectedFolder in ProtectedFolders)
             {

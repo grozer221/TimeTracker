@@ -43,8 +43,7 @@ export const CompaniesUpdatePage: FC = () => {
             const name = form.getFieldValue(nameof<FromValues>("name"))
             const email = form.getFieldValue(nameof<FromValues>("email"))
             dispatch(companiesActions.updateAsync({
-                id,
-                input: { name, email }
+                input: { id, name, email }
             }))
         } catch (e) {
             console.log(e);

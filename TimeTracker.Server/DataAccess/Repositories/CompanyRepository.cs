@@ -23,6 +23,15 @@ namespace TimeTracker.Server.DataAccess.Repositories
             }
         }
 
+        public async Task<CompanyModel> GetByEmailAsync(string email)
+        {
+            string query = $"select * from Companies where email = @email";
+            using (var connection = dapperContext.CreateConnection())
+            {
+                return await connection.QueryFirstOrDefaultAsync<CompanyModel>(query, new { email });
+            }
+        }
+
         public async Task<GetEntitiesResponse<CompanyModel>> GetAsync(int pageNumber, int pageSize)
         {
             string query = @"select {0} from Companies";

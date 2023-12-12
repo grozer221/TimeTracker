@@ -70,19 +70,20 @@ export const UsersPage = React.memo(() => {
     const menu = (userEmail: string, userId: string) => {
         let items: ItemType[] = []
 
+        items.push({ key: 'profile', label: <Link to={"profile/" + userEmail}>Profile</Link> })
+
         if (isAdministratorOrHavePermissions([Permission.UpdateUsers])) {
             if (userId !== authedUser!.id) {
                 items.push(
-                    { key: '1', label: (<Link to={"update/" + userEmail} state={{ popup: location }}>Update</Link>) },
-                    { key: '2', label: (<Link to={"remove/" + userEmail} state={{ popup: location }}>Remove</Link>) })
+                    { key: 'update', label: (<Link to={"update/" + userEmail} state={{ popup: location }}>Update</Link>) },
+                    { key: 'remove', label: (<Link to={"remove/" + userEmail} state={{ popup: location }}>Remove</Link>) })
             }
             items.push({
-                key: '3',
+                key: 'reset-password',
                 label: (<Link to={"reset-password/" + userId} state={{ popup: location }}>Reset password</Link>)
             })
         }
 
-        items.push({ key: '4', label: <Link to={"profile/" + userEmail}>Profile</Link> })
 
         return <Menu items={items} />
     }
@@ -149,7 +150,7 @@ export const UsersPage = React.memo(() => {
         {
             title: 'Action', dataIndex: 'operation', key: 'operation',
             render: (text, record, index) => (
-                <Space size="middle" wrap>
+                <Space size="middle" wrap style={{ cursor: 'pointer' }}>
                     <Dropdown overlay={menu(record.email, record.id)}>
                         <DownCircleFilled />
                     </Dropdown>

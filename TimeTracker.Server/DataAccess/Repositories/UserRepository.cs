@@ -29,6 +29,17 @@ namespace TimeTracker.Server.DataAccess.Repositories
             }
         }
 
+        public async Task<int> GetTotalCount()
+        {
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
+            string query = $"select count(*) from Users where companyId = @companyId";
+            using (var connection = dapperContext.CreateConnection())
+            {
+                return await connection.QueryFirstOrDefaultAsync<int>(query, new { companyId });
+            }
+        }
+
         public async Task<UserModel> GetByEmailAsync(string email)
         {
             //var companyId = httpContextAccessor.HttpContext.GetCompanyId();
@@ -48,6 +59,15 @@ namespace TimeTracker.Server.DataAccess.Repositories
             using (var connection = dapperContext.CreateConnection())
             {
                 return await connection.QueryAsync<UserModel>(query, new { companyId });
+            }
+        }
+
+        public async Task<IEnumerable<UserModel>> GetAllAsync()
+        {
+            string query = $"select * from Users";
+            using (var connection = dapperContext.CreateConnection())
+            {
+                return await connection.QueryAsync<UserModel>(query);
             }
         }
 

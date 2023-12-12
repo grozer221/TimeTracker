@@ -61,11 +61,13 @@ export const CreateReportModal: FC<Props> = () => {
         >
             <Form
                 form={form}
-                labelCol={{ span: 24 }}>
+                labelCol={{ span: 24 }}
+                initialValues={{ month: moment(now()) }}
+            >
                 <Form.Item name={nameof<FormValues>("month")}
                     label={"Month:"}
                     rules={[{ required: true, message: 'Please, input report month!' }]}>
-                    <DatePicker defaultValue={moment(now())} picker="month" />
+                    <DatePicker picker="month" />
                 </Form.Item>
             </Form>
         </Modal>

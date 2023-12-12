@@ -5,20 +5,25 @@ using System.Data;
 using TimeTracker.Business.Enums;
 using TimeTracker.Business.Models;
 using TimeTracker.Business.Models.Filters;
+using TimeTracker.Server.Extensions;
 
 namespace TimeTracker.Server.DataAccess.Repositories
 {
     public class ExcelExportRepository
     {
         private readonly DapperContext dapperContext;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public ExcelExportRepository(DapperContext dapperContext)
+        public ExcelExportRepository(DapperContext dapperContext, IHttpContextAccessor httpContextAccessor)
         {
             this.dapperContext = dapperContext;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<IEnumerable<UserModel>> GetAsync(UserFilter filter, DateTime date)
+        public async Task<IEnumerable<UserModel>> GetAsync(UserFilter filter)
         {
+            var companyId = httpContextAccessor.HttpContext.GetCompanyId();
+
             IEnumerable<UserModel> users;
             string email = "%" + filter.Email + "%";
             string firstname = "%" + filter.FirstName + "%";
@@ -32,7 +37,8 @@ namespace TimeTracker.Server.DataAccess.Repositories
             string query = @"SELECT * FROM Users WHERE FirstName like @firstname
                              and LastName like @lastname
                              and MiddleName like @middlename
-                             and Email like @email ";
+                             and Email like @email 
+                             and CompanyId like @CompanyId ";
 
             if (filter.Roles != null && filter.Roles.Count() != 0)
                 query += "and RoleNumber in @rolesNumbers ";
@@ -44,7 +50,18 @@ namespace TimeTracker.Server.DataAccess.Repositories
                 query += "and Employment in @employments ";
 
             using IDbConnection db = dapperContext.CreateConnection();
-            users = await db.QueryAsync<UserModel>(query, new { email, firstname, lastname, middlename, allPremisions, permissionsCount, rolesNumbers, employments });
+            users = await db.QueryAsync<UserModel>(query, new
+            {
+                email,
+                firstname,
+                lastname,
+                middlename,
+                allPremisions,
+                permissionsCount,
+                rolesNumbers,
+                employments,
+                companyId,
+            });
 
             return users;
         }

@@ -19,7 +19,7 @@ namespace TimeTracker.Server.GraphQL.Modules.ExcelExport
                 {
                     List<ExcelModel> models = new List<ExcelModel>();
                     var excelExportInputType = context.GetArgument<ExcelExportInput>("ExcelExportInputType");
-                    var users = await excelExportRepository.GetAsync(excelExportInputType.Filter, excelExportInputType.Date);
+                    var users = await excelExportRepository.GetAsync(excelExportInputType.Filter);
 
                     foreach (var user in users)
                     {

@@ -17,18 +17,19 @@ namespace TimeTracker.Server.GraphQL.Modules.Companies
     {
         public CompaniesMutations(
             CompanyRepository companyRepository,
-            IValidator<CompanyInput> companyInputValidator,
+            IValidator<CreateCompanyInput> createCompanyInputValidator,
+            IValidator<UpdateCompanyInput> updateCompanyInputValidator,
             INotificationService notificationService,
             UserRepository userRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             Field<NonNullGraphType<CompanyType>>()
               .Name("Create")
-              .Argument<NonNullGraphType<CompanyInputType>>("input", "")
+              .Argument<NonNullGraphType<CreateCompanyInputType>>("input", "")
               .ResolveAsync(async context =>
               {
-                  var input = context.GetArgument<CompanyInput>("input");
-                  companyInputValidator.ValidateAndThrow(input);
+                  var input = context.GetArgument<CreateCompanyInput>("input");
+                  await createCompanyInputValidator.ValidateAndThrowAsync(input);
 
                   var company = input.ToModel();
                   company = await companyRepository.CreateAsync(company);
@@ -59,15 +60,13 @@ namespace TimeTracker.Server.GraphQL.Modules.Companies
 
             Field<NonNullGraphType<CompanyType>>()
                 .Name("Update")
-                .Argument<NonNullGraphType<GuidGraphType>>("id", "")
-                .Argument<NonNullGraphType<CompanyInputType>>("input", "")
+                .Argument<NonNullGraphType<UpdateCompanyInputType>>("input", "")
                 .ResolveAsync(async context =>
                 {
-                    var id = context.GetArgument<Guid>("id");
-                    var input = context.GetArgument<CompanyInput>("input");
-                    companyInputValidator.ValidateAndThrow(input);
+                    var input = context.GetArgument<UpdateCompanyInput>("input");
+                    await updateCompanyInputValidator.ValidateAndThrowAsync(input);
 
-                    var company = await companyRepository.GetByIdAsync(id)
+                    var company = await companyRepository.GetByIdAsync(input.Id)
                         ?? throw new Exception("Company not found");
 
                     company.Name = input.Name;

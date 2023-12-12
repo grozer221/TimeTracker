@@ -55,7 +55,9 @@ namespace TimeTracker.Server.Tasks
                 .Range(0, numDays)
                 .Select(x => mondayDate.AddDays(x))
                 .ToList();
-            var datesForCreateDayOff = currentWeekDates.Where(date => settings.Tasks.AutoCreateDaysOff.DaysOfWeek.Contains(date.DayOfWeek)).ToList();
+
+            var daysOff = new List<DayOfWeek> { DayOfWeek.Saturday, DayOfWeek.Sunday };
+            var datesForCreateDayOff = currentWeekDates.Where(date => daysOff.Contains(date.DayOfWeek)).ToList();
             using (var connection = dapperContext.CreateConnection())
             {
                 connection.Open();
@@ -87,39 +89,9 @@ namespace TimeTracker.Server.Tasks
             Console.WriteLine($"[{DateTime.UtcNow}] -- {JobName} for {mondayDate} - {saturdayDate}");
         }
 
-        public async Task ResumeAsync()
-        {
-            using var scope = serviceProvider.CreateScope();
-            var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
-            var scheduler = await schedulerFactory.GetScheduler();
-            await scheduler.ResumeJob(JobKey);
-        }
-
-        public async Task PauseAsync()
-        {
-            using var scope = serviceProvider.CreateScope();
-            var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
-            var scheduler = await schedulerFactory.GetScheduler();
-            await scheduler.PauseJob(JobKey);
-        }
-
-        public async Task RescheduleAsync()
-        {
-            using var scope = serviceProvider.CreateScope();
-            var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
-            var scheduler = await schedulerFactory.GetScheduler();
-            await scheduler.RescheduleJob(TriggerKey, await CreateTriggerAsync());
-
-            var settings = await settingsManager.GetAsync();
-            if (settings.Tasks.AutoCreateDaysOff.IsEnabled)
-                await ResumeAsync();
-            else
-                await PauseAsync();
-        }
-
         public async Task<ITrigger> CreateTriggerAsync()
         {
-            var cron = await GetCronAsync();
+            var cron = GetCronAsync();
             return TriggerBuilder.Create()
                 .ForJob(JobKey)
                 .WithIdentity(TriggerKey)
@@ -129,29 +101,16 @@ namespace TimeTracker.Server.Tasks
 
         public async Task<ITriggerConfigurator> ConfigureTriggerConfiguratorAsync(ITriggerConfigurator configurator)
         {
-            var cron = await GetCronAsync();
+            var cron = GetCronAsync();
             return configurator
                 .ForJob(JobKey)
                 .WithIdentity(TriggerKey)
                 .WithCronSchedule(cron, builder => builder.InTimeZone(TimeZoneInfo.Utc));
         }
 
-        public async Task<string> GetCronAsync()
+        public string GetCronAsync()
         {
-            SettingsModel settings;
-            try
-            {
-                settings = await settingsManager.GetAsync();
-            }
-            catch
-            {
-                settings = new SettingsModel();
-            }
-            var hour = settings.Tasks.AutoCreateDaysOff.TimeWhenCreate.Hour;
-            var minute = settings.Tasks.AutoCreateDaysOff.TimeWhenCreate.Minute;
-            var second = settings.Tasks.AutoCreateDaysOff.TimeWhenCreate.Second;
-            var daysOfWeek = (int)settings.Tasks.AutoCreateDaysOff.DayOfWeekWhenCreate + 1;
-            return $"{second} {minute} {hour} ? * {daysOfWeek}";
+            return $"0 0 1 ? * 1";
         }
     }
 }

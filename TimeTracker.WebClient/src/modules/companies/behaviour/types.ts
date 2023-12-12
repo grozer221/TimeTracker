@@ -1,3 +1,5 @@
+import { Paging } from "../../../behaviour";
+
 export type Company = {
     id: string;
     name: string;
@@ -7,7 +9,13 @@ export type Company = {
 }
 
 
-export type CompanyInput = {
+export type CreateCompanyInput = {
     name: string;
     email: string;
 }
+
+export type UpdateCompanyInput = CreateCompanyInput & {
+    id: string;
+}
+
+export type GetCompaniesInput = { paging: Paging }

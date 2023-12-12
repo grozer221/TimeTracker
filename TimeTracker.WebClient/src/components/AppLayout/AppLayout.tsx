@@ -45,17 +45,19 @@ export const AppLayout: FC<Props> = ({ children }) => {
     const headerMenu = (
         <Menu
             items={[
-                {
-                    key: 'Profile',
-                    label: (
-                        <Link to={`/users/profile/${authedUser?.email}`}>
-                            <Space>
-                                <ProfileOutlined />
-                                <span>Profile</span>
-                            </Space>
-                        </Link>
-                    ),
-                },
+                isSuperAdmin()
+                    ? null
+                    : {
+                        key: 'Profile',
+                        label: (
+                            <Link to={`/users/profile/${authedUser?.email}`}>
+                                <Space>
+                                    <ProfileOutlined />
+                                    <span>Profile</span>
+                                </Space>
+                            </Link>
+                        ),
+                    },
                 {
                     key: 'My settings',
                     label: (
@@ -81,61 +83,62 @@ export const AppLayout: FC<Props> = ({ children }) => {
         />
     );
 
-    const mainMenuItems: ItemType[] = [
-        {
-            key: '/time-tracker',
-            icon: <FieldTimeOutlined />,
-            label: <Link to={'./time-tracker'}>Time tracker</Link>,
-        },
-        {
-            key: '/calendar',
-            icon: <CalendarOutlined />,
-            label: <Link to={'calendar'}>Calendar</Link>,
-        },
-        {
-            key: '/vacation-requests',
-            icon: <AuditOutlined />,
-            label: <Link to={'vacation-requests'}>Vacation requests</Link>,
-        },
-        {
-            key: '/sick-leave-days',
-            icon: <AuditOutlined />,
-            label: <Link to={'sick-leave-days'}>Sick leave days</Link>,
-        },
-        {
-            key: '/users',
-            icon: <UsergroupAddOutlined />,
-            label: <Link to={'users'}>Users</Link>,
-        },
-        isSuperAdmin()
-            ? {
+    const mainMenuItems: ItemType[] = isSuperAdmin()
+        ? [
+            {
                 key: '/companies',
                 icon: <UsergroupAddOutlined />,
                 label: <Link to={'companies'}>Companies</Link>,
             }
-            : null,
-        {
-            key: '/tools',
-            icon: <ToolOutlined />,
-            label: <div>Tools</div>,
-            children: [
-                isAdministratorOrHavePermissions([Permission.UpdateFileManager])
-                    ? {
-                        key: '/tools/file-manager',
-                        icon: <FileSearchOutlined />,
-                        label: <Link to={'tools/file-manager'}>File manager</Link>,
-                    }
-                    : null,
-            ]
-        },
-        isAdministratorOrHavePermissions([Permission.UpdateSettings])
-            ? {
-                key: '/settings',
-                icon: <SettingOutlined />,
-                label: <Link to={'settings/application'}>Settings</Link>,
-            }
-            : null,
-    ]
+        ]
+        : [
+            {
+                key: '/time-tracker',
+                icon: <FieldTimeOutlined />,
+                label: <Link to={'./time-tracker'}>Time tracker</Link>,
+            },
+            {
+                key: '/calendar',
+                icon: <CalendarOutlined />,
+                label: <Link to={'calendar'}>Calendar</Link>,
+            },
+            {
+                key: '/vacation-requests',
+                icon: <AuditOutlined />,
+                label: <Link to={'vacation-requests'}>Vacation requests</Link>,
+            },
+            {
+                key: '/sick-leave-days',
+                icon: <AuditOutlined />,
+                label: <Link to={'sick-leave-days'}>Sick leave days</Link>,
+            },
+            {
+                key: '/users',
+                icon: <UsergroupAddOutlined />,
+                label: <Link to={'users'}>Users</Link>,
+            },
+            {
+                key: '/tools',
+                icon: <ToolOutlined />,
+                label: <div>Tools</div>,
+                children: [
+                    isAdministratorOrHavePermissions([Permission.UpdateFileManager])
+                        ? {
+                            key: '/tools/file-manager',
+                            icon: <FileSearchOutlined />,
+                            label: <Link to={'tools/file-manager'}>File manager</Link>,
+                        }
+                        : null,
+                ]
+            },
+            isAdministratorOrHavePermissions([Permission.UpdateSettings])
+                ? {
+                    key: '/settings',
+                    icon: <SettingOutlined />,
+                    label: <Link to={'settings/application'}>Settings</Link>,
+                }
+                : null,
+        ]
 
     return (
         <Layout className={s.layout}>
@@ -147,7 +150,7 @@ export const AppLayout: FC<Props> = ({ children }) => {
                             size={'large'}
                             onClick={() => setCollapsed(!collapsed)}
                         />
-                        <Link to={'/time-tracker'}>
+                        <Link to={isSuperAdmin() ? '/companies' : '/time-tracker'}>
                             <img
                                 alt={'Logo'}
                                 className={s.logo}
@@ -159,7 +162,7 @@ export const AppLayout: FC<Props> = ({ children }) => {
                         <div id={'headerExtraButtons'}>
 
                         </div>
-                        {isAdministrator() &&
+                        {!isSuperAdmin() && isAdministrator() &&
                             <Button
                                 icon={<ReloadOutlined />}
                                 loading={loadingRefreshApp}

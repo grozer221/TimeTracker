@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const companyFragment = gql`
     fragment CompanyFragment on CompanyType {
@@ -37,7 +37,7 @@ export const getCompaniesQuery = gql`
 `;
 
 export const createCompanyMutation = gql`
-    mutation ($input: CompanyInputType!) {
+    mutation ($input: CreateCompanyInputType!) {
         companies {
             create(input: $input) {
                 ...CompanyFragment
@@ -48,9 +48,9 @@ export const createCompanyMutation = gql`
 `;
 
 export const updateCompanyMutation = gql`
-    mutation ($id: Guid!, $input: CompanyInputType!) {
+    mutation ($input: UpdateCompanyInputType!) {
         companies {
-            update(id: $id, input: $input) {
+            update(input: $input) {
                 ...CompanyFragment
             }
         }

@@ -60,9 +60,9 @@ export const AuthLoginPage: FC = () => {
                         LOGIN
                     </Button>
                 </Form.Item>
-                <Form.Item>
+                {/* <Form.Item>
                     <ButtonGoogleSignIn />
-                </Form.Item>
+                </Form.Item> */}
             </Form>
         </div>
     )

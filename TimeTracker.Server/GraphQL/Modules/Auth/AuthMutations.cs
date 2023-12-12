@@ -103,7 +103,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Auth
                 .Argument<NonNullGraphType<AuthRegisterInputType>, AuthRegisterInput>("AuthRegisterInputType", "Argument for register User")
                 .ResolveAsync(async context =>
                 {
-                    var users = await userRepository.GetAsync();
+                    var users = await userRepository.GetAllAsync();
                     if (users.Count() > 0)
                         throw new Exception("You can not register manually. Contact an administrator");
 

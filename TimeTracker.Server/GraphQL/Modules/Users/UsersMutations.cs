@@ -22,8 +22,8 @@ namespace TimeTracker.Server.GraphQL.Modules.Users
             IValidator<UsersCreateInput> usersCreateInputValidator,
             IValidator<UsersUpdateInput> usersUpdateInputValidator,
             IValidator<UsersRemoveInput> usersRemoveInputValidator,
-            IValidator<UsersUpdatePasswordInput> usersUpdatePasswordValidator
-            )
+            IValidator<UsersUpdatePasswordInput> usersUpdatePasswordValidator,
+            ActiveSubscriptionRepository activeSubscriptionRepository)
         {
             Field<NonNullGraphType<UserType>, UserModel>()
                .Name("Create")
@@ -32,6 +32,15 @@ namespace TimeTracker.Server.GraphQL.Modules.Users
                {
                    if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.UpdateUsers))
                        throw new ExecutionError("You do not have permissions for create user");
+
+                   var activeSubscription = await activeSubscriptionRepository.GetCurrentAsync();
+                   var subscription = activeSubscription == null
+                       ? Business.Subscriptions.Subscriptions.None
+                       : activeSubscription.Enrichment;
+                   var totalCount = await userRepository.GetTotalCount();
+
+                   if (totalCount + 1 > subscription.CompanyEmploeeMaxCount)
+                       throw new ExecutionError("User can not be created because you rich your subscription limit of company emploee");
 
                    var usersCreateInput = context.GetArgument<UsersCreateInput>("UsersCreateInputType");
                    await usersCreateInputValidator.ValidateAndThrowAsync(usersCreateInput);
@@ -59,6 +68,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Users
                {
                    if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.UpdateUsers))
                        throw new ExecutionError("You do not have permissions for update user");
+
                    var usersUpdateInput = context.GetArgument<UsersUpdateInput>("UsersUpdateInputType");
                    await usersUpdateInputValidator.ValidateAndThrowAsync(usersUpdateInput);
                    var user = usersUpdateInput.ToModel();
@@ -84,6 +94,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Users
                {
                    if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.UpdateUsers))
                        throw new ExecutionError("You do not have permissions for update password");
+
                    var usersUpdateInput = context.GetArgument<UsersUpdatePasswordInput>("UsersUpdatePasswordInputType");
                    await usersUpdatePasswordValidator.ValidateAndThrowAsync(usersUpdateInput);
                    var user = await userRepository.GetByIdAsync(usersUpdateInput.Id);
@@ -103,6 +114,7 @@ namespace TimeTracker.Server.GraphQL.Modules.Users
                {
                    if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.UpdateUsers))
                        throw new ExecutionError("You do not have permissions for remove user");
+
                    var usersRemoveInput = context.GetArgument<UsersRemoveInput>("UsersRemoveInputType");
                    await usersRemoveInputValidator.ValidateAndThrowAsync(usersRemoveInput);
                    var user = await userRepository.GetByEmailAsync(usersRemoveInput.Email);

@@ -2,7 +2,6 @@
 
 using TimeTracker.Business.Models;
 using TimeTracker.Business.Models.SettingsCategories;
-using TimeTracker.Business.Models.SettingsCategories.SettingsTasksCategories;
 using TimeTracker.Server.Extensions;
 
 namespace TimeTracker.Server.DataAccess.Repositories
@@ -67,21 +66,6 @@ namespace TimeTracker.Server.DataAccess.Repositories
             settings.UpdatedAt = DateTime.UtcNow;
             string query = @"update Settings
                             SET EmploymentString = @EmploymentString, UpdatedAt = @UpdatedAt
-                            WHERE Id = @Id";
-            using (var connection = dapperContext.CreateConnection())
-            {
-                await connection.ExecuteAsync(query, settings);
-            }
-            return settings;
-        }
-
-        public async Task<SettingsModel> UpdateTasksAsync(SettingsTasks settingsTasks)
-        {
-            var settings = await GetAsync();
-            settings.Tasks = settingsTasks;
-            settings.UpdatedAt = DateTime.Now;
-            string query = @"update Settings
-                            SET TasksString = @TasksString, UpdatedAt = @UpdatedAt
                             WHERE Id = @Id";
             using (var connection = dapperContext.CreateConnection())
             {

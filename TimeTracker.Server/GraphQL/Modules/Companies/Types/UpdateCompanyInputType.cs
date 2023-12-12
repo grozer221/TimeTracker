@@ -5,8 +5,10 @@ using TimeTracker.Server.GraphQL.Abstractions;
 
 namespace TimeTracker.Server.GraphQL.Modules.Companies.Types;
 
-public class CompanyInput : IModelable<CompanyModel>
+public class UpdateCompanyInput : IModelable<CompanyModel>
 {
+    public Guid Id { get; set; }
+
     public string Name { get; set; }
 
     public string Email { get; set; }
@@ -14,15 +16,20 @@ public class CompanyInput : IModelable<CompanyModel>
     public CompanyModel ToModel()
         => new()
         {
+            Id = this.Id,
             Name = this.Name,
             Email = this.Email,
         };
 }
 
-public class CompanyInputType : InputObjectGraphType<CompanyInput>
+public class UpdateCompanyInputType : InputObjectGraphType<UpdateCompanyInput>
 {
-    public CompanyInputType()
+    public UpdateCompanyInputType()
     {
+        Field<NonNullGraphType<GuidGraphType>>()
+           .Name("Id")
+           .Resolve(context => context.Source.Id);
+
         Field<NonNullGraphType<StringGraphType>>()
            .Name("Name")
            .Resolve(context => context.Source.Name);

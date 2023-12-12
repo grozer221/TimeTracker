@@ -12,7 +12,6 @@ using TimeTracker.Server.DataAccess.Managers;
 using TimeTracker.Server.Extensions;
 using TimeTracker.Server.GraphQL.Modules.Auth;
 using TimeTracker.Server.GraphQL.Modules.Settings.DTO;
-using TimeTracker.Server.GraphQL.Modules.Settings.DTO.SettingsTasksUpdate;
 
 namespace TimeTracker.Server.GraphQL.Modules.Settings
 {
@@ -54,26 +53,6 @@ namespace TimeTracker.Server.GraphQL.Modules.Settings
                    settingsApplicationUpdateInputValidator.ValidateAndThrow(settingsApplicationUpdateInput);
                    var settingsCommon = settingsApplicationUpdateInput.ToModel();
                    return await settingsManager.UpdateApplicationAsync(settingsCommon);
-               })
-               .AuthorizeWith(AuthPolicies.Authenticated);
-
-            Field<NonNullGraphType<SettingsType>, SettingsModel>()
-               .Name("UpdateTasks")
-               .Argument<NonNullGraphType<SettingsTasksUpdateInputType>, SettingsTasksUpdateInput>("SettingsTasksUpdateInputType", "Argument for update tasks settings")
-               .ResolveAsync(async context =>
-               {
-                   if (!httpContextAccessor.HttpContext.User.Claims.IsAdministratOrHavePermissions(Permission.UpdateSettings))
-                       throw new ExecutionError("You do not have permissions for update tasks settings");
-                   var settingsTasksUpdateInput = context.GetArgument<SettingsTasksUpdateInput>("SettingsTasksUpdateInputType");
-                   var settingsCommon = settingsTasksUpdateInput.ToModel();
-                   var newSettings = await settingsManager.UpdateTasksAsync(settingsCommon);
-
-                   foreach (var task in tasks)
-                   {
-                       await task.RescheduleAsync();
-                   }
-
-                   return newSettings;
                })
                .AuthorizeWith(AuthPolicies.Authenticated);
 

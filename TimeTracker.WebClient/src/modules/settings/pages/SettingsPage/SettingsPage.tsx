@@ -3,7 +3,6 @@ import { Row, Tabs } from "antd";
 import { AppstoreOutlined, ClockCircleOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { SettingsEmploymentUpdate } from "../../components/SettingsEmploymentUpdate/SettingsEmploymentUpdate";
 import { useNavigate, useParams } from "react-router-dom";
-import { SettingsTasksUpdate } from "../../components/SettingsTasksUpdate/SettingsTasksUpdate";
 import { SettingsApplicationUpdate } from "../../components/SettingsApplicationUpdate/SettingsApplicationUpdate";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../behaviour/store";
@@ -15,10 +14,11 @@ import {
 import { isAdministratorOrHavePermissions } from "../../../../utils/permissions";
 import { Permission } from "../../../../behaviour/enums/Permission";
 import { Error } from "../../../../components/Error/Error";
+import { SubscriptionsUpdate } from '../../components/SubscriptionsUpdate/SubscriptionsUpdate';
 
 const { TabPane } = Tabs;
 
-type Tab = 'application' | 'employment' | 'vacation-requests' | 'tasks' | 'email';
+type Tab = 'application' | 'employment' | 'vacation-requests' | 'tasks' | 'email' | 'subscriptions';
 
 export const SettingsPage: FC = () => {
     const { tab } = useParams();
@@ -65,16 +65,16 @@ export const SettingsPage: FC = () => {
                     {selectedTab === 'vacation-requests' && <SettingsVacationRequestsUpdate />}
                 </TabPane>
                 <TabPane
-                    tab={<span><ClockCircleOutlined />Tasks</span>}
-                    key="tasks"
-                >
-                    {selectedTab === 'tasks' && <SettingsTasksUpdate />}
-                </TabPane>
-                <TabPane
                     tab={<span><MailOutlined />Email</span>}
                     key="email"
                 >
                     {selectedTab === 'email' && <SettingsEmailUpdate />}
+                </TabPane>
+                <TabPane
+                    tab={<span><MailOutlined />Subscriptions</span>}
+                    key="subscriptions"
+                >
+                    {selectedTab === 'subscriptions' && <SubscriptionsUpdate />}
                 </TabPane>
             </Tabs>
         </Row>

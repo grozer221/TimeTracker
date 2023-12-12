@@ -11,7 +11,6 @@ import {
     SETTINGS_APPLICATION_UPDATE_MUTATION,
     SETTINGS_EMAIL_UPDATE_MUTATION,
     SETTINGS_EMPLOYMENT_UPDATE_MUTATION,
-    SETTINGS_TASKS_UPDATE_MUTATION,
     SETTINGS_VACATION_REQUESTS_UPDATE_MUTATION,
     SettingsApplicationUpdateData,
     SettingsApplicationUpdateVars,
@@ -19,8 +18,6 @@ import {
     SettingsEmailUpdateVars,
     SettingsEmploymentUpdateData,
     SettingsEmploymentUpdateVars,
-    SettingsTasksUpdateData,
-    SettingsTasksUpdateVars,
     SettingsVacationRequestsUpdateData,
     SettingsVacationRequestsUpdateVars
 } from "../graphQL/settings.mutations";
@@ -99,30 +96,6 @@ export const settingsApplicationUpdateEpic: Epic<ReturnType<typeof settingsActio
         )
     );
 
-export const settingsTasksUpdateEpic: Epic<ReturnType<typeof settingsActions.updateTasksAsync>, any, RootState> = (action$, state$) =>
-    action$.pipe(
-        ofType(settingsActions.updateTasksAsync.type),
-        mergeMap(action =>
-            from(client.mutate<SettingsTasksUpdateData, SettingsTasksUpdateVars>({
-                mutation: SETTINGS_TASKS_UPDATE_MUTATION,
-                variables: { settingsTasksUpdateInputType: action.payload },
-            })).pipe(
-                mergeMap(response =>
-                    response.data
-                        ? [
-                            settingsActions.setSettings(response.data.settings.updateTasks),
-                            notificationsActions.addSuccess('Settings tasks successfully saved')
-                        ]
-                        : [notificationsActions.addError('Response is empty')]
-                ),
-                catchError(error => of(notificationsActions.addError(error.message))),
-                startWith(settingsActions.setLoadingUpdate(true)),
-                endWith(settingsActions.setLoadingUpdate(false)),
-            )
-        )
-    );
-
-
 export const settingsEmailUpdateEpic: Epic<ReturnType<typeof settingsActions.updateEmailAsync>, any, RootState> = (action$, state$) =>
     action$.pipe(
         ofType(settingsActions.updateEmailAsync.type),
@@ -182,7 +155,6 @@ export const settingsEpics = combineEpics(
     // @ts-ignore
     settingsEmploymentUpdateEpic,
     settingsApplicationUpdateEpic,
-    settingsTasksUpdateEpic,
     settingsEmailUpdateEpic,
     updateVacationRequestsEpic,
     logoutAsyncEpic,

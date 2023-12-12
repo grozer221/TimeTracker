@@ -1,4 +1,4 @@
-import {gql} from "@apollo/client";
+import { gql } from "@apollo/client";
 
 export const SETTINGS_EMPLOYMENT_FRAGMENT = gql`
     fragment SettingsEmploymentFragment on SettingsEmploymentType {
@@ -12,21 +12,6 @@ export const SETTINGS_APPLICATION_FRAGMENT = gql`
         title
         faviconUrl
         logoUrl
-    }
-`
-
-export const SETTINGS_TASKS_FRAGMENT = gql`
-    fragment SettingsTasksFragment on SettingsTasksType {
-        autoCreateTracks {
-            isEnabled
-            timeWhenCreate
-        }
-        autoCreateDaysOff {
-            isEnabled
-            dayOfWeekWhenCreate
-            timeWhenCreate
-            daysOfWeek
-        }
     }
 `
 
@@ -46,7 +31,6 @@ export const SETTINGS_VACATION_REQUESTS_FRAGMENT = gql`
 export const SETTINGS_FRAGMENT = gql`
     ${SETTINGS_EMPLOYMENT_FRAGMENT}
     ${SETTINGS_APPLICATION_FRAGMENT}
-    ${SETTINGS_TASKS_FRAGMENT}
     ${SETTINGS_EMAIL_FRAGMENT}
     ${SETTINGS_VACATION_REQUESTS_FRAGMENT}
     fragment SettingsFragment on SettingsType {
@@ -56,9 +40,6 @@ export const SETTINGS_FRAGMENT = gql`
         }
         application {
             ...SettingsApplicationFragment
-        }
-        tasks {
-            ...SettingsTasksFragment
         }
         email {
             ...SettingsEmailFragment

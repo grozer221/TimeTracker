@@ -3,7 +3,6 @@
 using TimeTracker.Business.Abstraction;
 using TimeTracker.Business.Models;
 using TimeTracker.Business.Models.SettingsCategories;
-using TimeTracker.Business.Models.SettingsCategories.SettingsTasksCategories;
 using TimeTracker.Server.DataAccess.Repositories;
 using TimeTracker.Server.Extensions;
 
@@ -29,8 +28,10 @@ namespace TimeTracker.Server.DataAccess.Managers
         public async Task<SettingsModel> GetAsync()
         {
             var companyId = httpContextAccessor.HttpContext.GetCompanyId();
-            var key = string.Format(GetAsyncKey, companyId);
+            if (companyId == Guid.Empty)
+                return new SettingsModel();
 
+            var key = string.Format(GetAsyncKey, companyId);
             return await memoryCache.GetOrCreateAsync(key, async cacheEntry =>
             {
                 cacheEntry.SetOptions(CachingContext.MemoryCacheEntryOptionsWeek1);
@@ -48,12 +49,6 @@ namespace TimeTracker.Server.DataAccess.Managers
         {
             await ResetCache();
             return await settingsRepository.UpdateEmploymentAsync(settingsEmployment);
-        }
-
-        public async Task<SettingsModel> UpdateTasksAsync(SettingsTasks settingsTasks)
-        {
-            await ResetCache();
-            return await settingsRepository.UpdateTasksAsync(settingsTasks);
         }
 
         public async Task<SettingsModel> UpdateEmailAsync(SettingsEmail settingsEmail)

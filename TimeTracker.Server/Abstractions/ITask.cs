@@ -1,5 +1,4 @@
 ﻿using Quartz;
-using TimeTracker.Business.Enums;
 
 namespace TimeTracker.Server.Abstractions
 {
@@ -10,12 +9,8 @@ namespace TimeTracker.Server.Abstractions
         string TriggerName { get; }
         TriggerKey TriggerKey { get; }
         Task ExecuteAsync(IJobExecutionContext? context, DateTime dateTimeNow);
-        Task ResumeAsync();
-        Task PauseAsync();
-        Task RescheduleAsync();
         Task<ITrigger> CreateTriggerAsync();
         Task<ITriggerConfigurator> ConfigureTriggerConfiguratorAsync(ITriggerConfigurator configurator);
-        Task<string> GetCronAsync();
-
+        string GetCronAsync();
     }
 }

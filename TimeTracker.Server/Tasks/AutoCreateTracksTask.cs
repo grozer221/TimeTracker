@@ -20,7 +20,6 @@ namespace TimeTracker.Server.Tasks
         private readonly IServiceProvider serviceProvider;
         private readonly UserRepository userRepository;
         private readonly TrackRepository trackRepository;
-        private readonly CompletedTaskRepository completedTaskRepository;
         private readonly VacationRequestRepository vacationRequestRepository;
         private readonly SickLeaveRepository sickLeaveRepository;
         private readonly DapperContext dapperContext;
@@ -31,7 +30,6 @@ namespace TimeTracker.Server.Tasks
             IServiceProvider serviceProvider,
             UserRepository userRepository,
             TrackRepository trackRepository,
-            CompletedTaskRepository completedTaskRepository,
             VacationRequestRepository vacationRequestRepository,
             SickLeaveRepository sickLeaveRepository,
             DapperContext dapperContext,
@@ -41,7 +39,6 @@ namespace TimeTracker.Server.Tasks
             this.serviceProvider = serviceProvider;
             this.userRepository = userRepository;
             this.trackRepository = trackRepository;
-            this.completedTaskRepository = completedTaskRepository;
             this.vacationRequestRepository = vacationRequestRepository;
             this.sickLeaveRepository = sickLeaveRepository;
             this.dapperContext = dapperContext;
@@ -66,7 +63,7 @@ namespace TimeTracker.Server.Tasks
                 return;
 
             var workdayEndAtDateTime = workdayStartAtDateTime.AddHours(workHours);
-            var users = await userRepository.GetAsync();
+            var users = await userRepository.GetAllAsync();
             using (var connection = dapperContext.CreateConnection())
             {
                 connection.Open();
@@ -120,39 +117,9 @@ namespace TimeTracker.Server.Tasks
             Console.WriteLine($"[{DateTime.UtcNow}] -- {JobName} for {dateTimeNow}");
         }
 
-        public async Task ResumeAsync()
-        {
-            using var scope = serviceProvider.CreateScope();
-            var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
-            var scheduler = await schedulerFactory.GetScheduler();
-            await scheduler.ResumeJob(JobKey);
-        }
-
-        public async Task PauseAsync()
-        {
-            using var scope = serviceProvider.CreateScope();
-            var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
-            var scheduler = await schedulerFactory.GetScheduler();
-            await scheduler.PauseJob(JobKey);
-        }
-
-        public async Task RescheduleAsync()
-        {
-            using var scope = serviceProvider.CreateScope();
-            var schedulerFactory = scope.ServiceProvider.GetRequiredService<ISchedulerFactory>();
-            var scheduler = await schedulerFactory.GetScheduler();
-            await scheduler.RescheduleJob(TriggerKey, await CreateTriggerAsync());
-
-            var settings = await settingsManager.GetAsync();
-            if (settings.Tasks.AutoCreateTracks.IsEnabled)
-                await ResumeAsync();
-            else
-                await PauseAsync();
-        }
-
         public async Task<ITrigger> CreateTriggerAsync()
         {
-            var cron = await GetCronAsync();
+            var cron = GetCronAsync();
             return TriggerBuilder.Create()
                 .ForJob(JobKey)
                 .WithIdentity(TriggerKey)
@@ -162,28 +129,16 @@ namespace TimeTracker.Server.Tasks
 
         public async Task<ITriggerConfigurator> ConfigureTriggerConfiguratorAsync(ITriggerConfigurator configurator)
         {
-            var cron = await GetCronAsync();
+            var cron = GetCronAsync();
             return configurator
                 .ForJob(JobKey)
                 .WithIdentity(TriggerKey)
                 .WithCronSchedule(cron, builder => builder.InTimeZone(TimeZoneInfo.Utc));
         }
 
-        public async Task<string> GetCronAsync()
+        public string GetCronAsync()
         {
-            SettingsModel settings;
-            try
-            {
-                settings = await settingsManager.GetAsync();
-            }
-            catch
-            {
-                settings = new SettingsModel();
-            }
-            var hour = settings.Tasks.AutoCreateTracks.TimeWhenCreate.Hour;
-            var minute = settings.Tasks.AutoCreateTracks.TimeWhenCreate.Minute;
-            var second = settings.Tasks.AutoCreateTracks.TimeWhenCreate.Second;
-            return $"{second} {minute} {hour} ? * *";
+            return $"0 0 1 ? * *";
         }
     }
 }
